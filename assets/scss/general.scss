@@ -1,0 +1,46 @@
+@import "~bootstrap/scss/bootstrap";
+@import "./variables";
+
+@font-face {
+  font-family: 'Poppins';
+  src: url("../fonts/Poppins.ttf");
+}
+
+html {
+  background-image: url("/public/build/wallpaper.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  body {
+    backdrop-filter: blur(10px);
+    background: none;
+    font-family: 'Poppins', serif;
+
+    @media only screen and (max-width: 1024px) {
+      backdrop-filter: blur(20px);
+    }
+
+    .bsfr {
+      color: white;
+
+      .logo {
+        border-radius: 10px;
+      }
+
+      .btn-discord {
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+.btn-discord {
+  color: white;
+  border-radius: 2rem;
+  background-color: $discord-color;
+}
+
+.fa-exclamation-triangle {
+  color: $warning;
+}
