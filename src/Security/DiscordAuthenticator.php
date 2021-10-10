@@ -83,7 +83,7 @@ class DiscordAuthenticator extends OAuth2Authenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $this->flash->add("success", "test.");
+        $this->flash->add("success", "Vous êtes bien connecté.");
         return new RedirectResponse($this->getPreviousUrl($request, "main") ?? $this->router->generate("home"));
     }
 
