@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BSFR - Soumission run YouTube{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('runYoutube') }}
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+        <div class="container w-50 d-block py-4">
+            <div class="form-entry form-title">
+                <h2 class="fw-bold">Vidéo YouTube BSFR</h2>
+                <p>
+                    Critères à respecter :<br>
+                    1. Les enregistrements doivent être minimum en 720p30<br>
+                    2. Utilisez le plugin Camera+ / Camera2 en 1ère personne<br>
+                    3. Évitez de nous envoyer des runs que vous avez déjà posté sur votre chaîne<br>
+                    4. Merci de donner uniquement des liens Google Drive, Dropbox ou OneDrive<br>
+                    5. La vidéo soumise ne doit pas avoir été éditée<br>
+                    6. Aucun overlay ne doit être présent sur votre vidéo<br>
+                    7. NoteSliceVisualizer rend la soumission invalide<br>
+                    8. 3 Go max par vidéo (excepté maps 8 minutes+)<br><br>
+
+                    Paramètres d'enregistrement recommandés : <a href="https://imgur.com/a/fswBbJe" target="_blank">Lien Imgur</a>
+                </p>
+                <hr>
+                <span>Connecté en tant que : <a href="https://discordapp.com/users/{{ app.user.discordId }}" target="_blank">{{ app.user.discordName }}#{{ app.user.discordDiscriminator }}</a> - <a href="{{ path("logout") }}">Se déconnecter</a></span>
+            </div>
+            <div class="form-entry my-4">
+                {{ form_label(form.videoLink) }}<br>
+                <div class="mb-3 mt-2">Liens acceptés : OneDrive, Google Drive, Dropbox | .mp4 conseillé, .mkv refusé</div>
+                {{ form_widget(form.videoLink) }}
+            </div>
+            <div class="form-entry my-4">
+                {{ form_label(form.description) }}<br>
+                <div class="mb-3 mt-2">Artiste - Nom de la map, Difficulté, Précision, FC/Miss</div>
+                {{ form_widget(form.description) }}
+            </div>
+            <div class="form-entry my-4">
+                {{ form_label(form.scoresaberLink) }}<br>
+                <div class="mb-3 mt-2"></div>
+                {{ form_widget(form.scoresaberLink) }}
+            </div>
+            <div class="form-entry my-4">
+                {{ form_label(form.mapLink) }}<br>
+                <div class="mb-3 mt-2">Ajoutez le lien scoresaber de la map que vous avez joué dans votre vidéo.</div>
+                {{ form_widget(form.mapLink) }}
+            </div>
+            <div class="form-entry my-4">
+                {{ form_label(form.headset) }}<br>
+                <div class="mb-3 mt-2"></div>
+                {{ form_widget(form.headset) }}
+            </div>
+            <div class="form-entry my-4">
+                {{ form_label(form.grip) }}<br>
+                <div class="mb-3 mt-2"></div>
+                {{ form_widget(form.grip) }}
+            </div>
+            <div class="form-entry my-4">
+                {{ form_label(form.twitchLink) }}<br>
+                <div class="mb-3 mt-2"></div>
+                {{ form_widget(form.twitchLink) }}
+            </div>
+            <div class="form-footer d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+                <button type="button" id="eraseForm" class="btn btn-danger">Effacer le formulaire</button>
+            </div>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('runYoutube') }}
+{% endblock %}
