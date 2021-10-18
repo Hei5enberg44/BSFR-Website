@@ -25,8 +25,10 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('general', './assets/js/general.js')
-
     .addEntry('home', './assets/js/home.js')
+
+    // Agent
+    .addEntry('agentGoogleRedirect', './assets/js/agent/google/redirect.js')
 
     // Forms
     .addEntry('runYoutube', './assets/js/forms/runYoutube.js')
