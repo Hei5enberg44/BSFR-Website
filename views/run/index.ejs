@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <title>BSFR - Soumission run YouTube</title>
+</head>
+<body>
+    <div class="container">
+        <form class="form">
+            <div class="card card-border">
+                <div class="card-title">Vidéo YouTube BSFR</div>
+                <div class="card-body">
+                    <p>
+                        Critères à respecter :<br>
+                        1. Les enregistrements doivent être minimum en 720p30<br>
+                        2. Utilisez le plugin Camera+ / Camera2 en 1ère personne<br>
+                        3. Évitez de nous envoyer des runs que vous avez déjà posté sur votre chaîne<br>
+                        4. Merci de donner uniquement des liens Google Drive, Dropbox ou OneDrive<br>
+                        5. La vidéo soumise ne doit pas avoir été éditée<br>
+                        6. Aucun overlay ne doit être présent sur votre vidéo<br>
+                        7. NoteSliceVisualizer rend la soumission invalide<br>
+                        8. 3 Go max par vidéo (excepté maps 8 minutes+)<br>
+                        <br>
+                        Paramètres d'enregistrement recommandés : <a href="https://imgur.com/a/fswBbJe" target="_blank">Lien Imgur</a>
+                    </p>
+
+                    <hr>
+
+                    <span>Connecté en tant que : <a href="https://discordapp.com/users/<%= user.id %>" target="_blank"><%= user.username %>#<%= user.discriminator %></a> - <a href="/discord/logout">Se déconnecter</a></span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-bloc">
+                        <label class="required">Lien vers la vidéo</label>
+                        <div class="text-muted">Liens acceptés : OneDrive, Google Drive, Dropbox | .mp4 conseillé, .mkv refusé</div>
+                        <input type="text" id="url" placeholder="https://drive.weezle.xyz/index.php/s/R9m2wL7JrtrG3H3" autocomplete="off" required>
+                    </div>
+                    <div class="form-bloc">
+                        <label class="required">Description de la vidéo</label>
+                        <div class="text-muted">Artiste - Nom de la map, Difficulté, Précision, FC/Miss</div>
+                        <input type="text" id="description" placeholder="" autocomplete="off" required>
+                    </div>
+                    <div class="form-bloc">
+                        <label class="required">Profil Scoresaber</label>
+                        <input type="text" id="scoresaber_profil" placeholder="https://scoresaber.com/u/76561198796531407" autocomplete="off" required>
+                    </div>
+                    <div class="form-bloc">
+                        <label class="required">Leaderboard de la map</label>
+                        <div class="text-muted">Ajoutez le lien scoresaber de la map que vous avez joué dans votre vidéo</div>
+                        <input type="text" id="scoresaber_leaderboard" placeholder="https://scoresaber.com/leaderboard/6286" autocomplete="off" required>
+                    </div>
+                    <div class="form-bloc">
+                        <label class="required">Votre casque VR</label>
+                        <select id="headset" required>
+                            <option value="HTC Vive">HTC Vive</option>
+                            <option value="HTC Vive Pro">HTC Vive Pro</option>
+                            <option value="HTC Vive Pro 2">HTC Vive Pro 2</option>
+                            <option value="Oculus Quest">Oculus Quest</option>
+                            <option value="Oculus Quest 2">Oculus Quest 2</option>
+                            <option value="Oculus Rift">Oculus Rift</option>
+                            <option value="Oculus Rift S">Oculus Rift S</option>
+                            <option value="Valve Index">Valve Index</option>
+                            <option value="WMR - Windows Mixed Reality">WMR - Windows Mixed Reality</option>
+                        </select>
+                    </div>
+                    <div class="form-bloc">
+                        <label class="required">Votre grip</label>
+                        <input type="text" id="grip" placeholder="Default grip" autocomplete="off" required>
+                    </div>
+                    <div class="form-bloc">
+                        <label>Votre chaîne Twitch</label>
+                        <input type="text" id="twitch_url" placeholder="https://twitch.tv/beatsaberfr" autocomplete="off">
+                    </div>
+                    <div class="form-bloc">
+                        <label>Commentaires sur la vidéo</label>
+                        <div class="text-muted">250 caractères max.</div>
+                        <textarea id="comments" rows="8" maxlength="250"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn-submit" type="submit">Envoyer</button>
+                <button class="btn-clear" type="button">Effacer le formulaire</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/run.js"></script>
+
+    <% if(typeof error !== 'undefined' || typeof success !== 'undefined') { %>
+    <script>
+        showAlert(<%= typeof error !== 'undefined' ? 'false' : 'true' %>, '<%= typeof error !== 'undefined' ? error : success %>')
+    </script>
+    <% } %>
+</body>
+</html>

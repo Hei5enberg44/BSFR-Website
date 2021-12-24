@@ -1,19 +1,9 @@
 {
-  "scripts": {
-    "dev-server": "encore dev-server",
-    "dev": "encore dev",
-    "watch": "encore dev --watch",
-    "build": "encore production --progress"
-  },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.4",
-    "@popperjs/core": "^2.10.1",
-    "@symfony/webpack-encore": "^1.6.1",
-    "bootstrap": "^5.1.1",
-    "core-js": "^3.18.2",
-    "file-loader": "^6.2.0",
-    "sass": "^1.42.1",
-    "sass-loader": "^12.1.0",
-    "webpack-notifier": "^1.13.0"
+    "cookie-session": "^2.0.0",
+    "dotenv": "^10.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.2",
+    "node-fetch": "^2.6.1"
   }
 }
