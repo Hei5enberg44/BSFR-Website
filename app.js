@@ -53,7 +53,7 @@ app.get('/discord/authorize', (req, res) => {
         client_id: process.env.DISCORD_CLIENT_ID,
         scope: 'identify',
         state: state,
-        redirect_uri: `${req.protocol}://${req.hostname}:${port}/discord/login`,
+        redirect_uri: proccess.env.DISCORD_REDIRECT_URI,
         prompt: 'consent'
     }).toString()
 
@@ -78,7 +78,7 @@ app.get('/discord/login', async (req, res) => {
             'client_secret': process.env.DISCORD_CLIENT_SECRET,
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': `${req.protocol}://${req.hostname}:${port}/discord/login`
+            'redirect_uri': proccess.env.DISCORD_REDIRECT_URI
         })
 
         const exchangeCodeRequest = await fetch('https://discord.com/api/oauth2/token', {
