@@ -88,6 +88,7 @@ module.exports = {
             content += `Profil Twitch : ${datas.twitch_url}\n`
             content += `Profil ScoreSaber : ${datas.scoresaber_profil}\n`
             content += `Leaderboard de la map : ${datas.scoresaber_leaderboard}\n`
+            content += `Lien Beatsaver : ${datas.beatsaver}\n`
             content += `Lien de la vidéo : ${datas.url}\n`
             content += `Commentaires :\n${datas.comments !== '' ? '```' + datas.comments + '```' : ''}`
 

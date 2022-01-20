@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-    <title>BSFR - Soumission run YouTube</title>
+    <title>Beat Saber FR - Soumission run YouTube</title>
 </head>
 <body>
     <div class="container">
@@ -18,16 +18,17 @@
                 <div class="card-title">Vidéo YouTube BSFR</div>
                 <div class="card-body">
                     <p>
-                        Critères à respecter :<br>
-                        1. Les enregistrements doivent être minimum en 720p30<br>
-                        2. Utilisez le plugin Camera+ / Camera2 en 1ère personne<br>
-                        3. Évitez de nous envoyer des runs que vous avez déjà posté sur votre chaîne<br>
-                        4. Merci de donner uniquement des liens Google Drive, Dropbox ou OneDrive<br>
-                        5. La vidéo soumise ne doit pas avoir été éditée<br>
-                        6. Aucun overlay ne doit être présent sur votre vidéo<br>
-                        7. NoteSliceVisualizer rend la soumission invalide<br>
-                        8. 3 Go max par vidéo (excepté maps 8 minutes+)<br>
-                        <br>
+                        Critères à respecter :
+                        <ul>
+                            <li>Les enregistrements doivent être minimum en 720p30</li>
+                            <li>Utilisez le plugin <a href="https://github.com/Snow1226/CameraPlus" target="_blank">Camera+</a> / <a href="https://github.com/kinsi55/CS_BeatSaber_Camera2" target="_blank">Camera2</a> en 1ère personne</li>
+                            <li>Les overlays ne sont pas acceptés (sauf exceptions: swing cam et camera ortho de taille raisonnable)</li>
+                            <li>Évitez de nous envoyer des runs que vous avez déjà posté sur votre chaîne</li>
+                            <li>Merci de donner uniquement des liens Google Drive, Dropbox ou OneDrive</li>
+                            <li>La vidéo soumise ne doit pas avoir été éditée</li>
+                            <li>Aucun overlay ne doit être présent sur votre vidéo</li>
+                            <li>Fichier de 3 Go maximum accepté</li>
+                        </ul>
                         Paramètres d'enregistrement recommandés : <a href="https://imgur.com/a/fswBbJe" target="_blank">Lien Imgur</a>
                     </p>
 
@@ -39,6 +40,9 @@
 
             <div class="card">
                 <div class="card-body">
+                    <div class="form-bloc">
+                        <span style="font-weight: bold; color: #FF0000;">*</span> : champ requis
+                    </div>
                     <div class="form-bloc">
                         <label class="required">Lien vers la vidéo</label>
                         <div class="text-muted">Liens acceptés : OneDrive, Google Drive, Dropbox | .mp4 conseillé, .mkv refusé</div>
@@ -59,6 +63,11 @@
                         <input type="text" id="scoresaber_leaderboard" placeholder="https://scoresaber.com/leaderboard/6286" autocomplete="off" required>
                     </div>
                     <div class="form-bloc">
+                        <label class="required">Lien Beatsaver</label>
+                        <div class="text-muted">Ajoutez le lien Beatsaver de la map que vous avez joué dans votre vidéo</div>
+                        <input type="text" id="beatsaver" placeholder="https://beatsaver.com/maps/3b5" autocomplete="off" required>
+                    </div>
+                    <div class="form-bloc">
                         <label class="required">Votre casque VR</label>
                         <select id="headset" required>
                             <option value="HTC Vive">HTC Vive</option>
@@ -70,6 +79,7 @@
                             <option value="Oculus Rift S">Oculus Rift S</option>
                             <option value="Valve Index">Valve Index</option>
                             <option value="WMR - Windows Mixed Reality">WMR - Windows Mixed Reality</option>
+                            <option value="Autre">Autre (indiquez-le en commentaire)</option>
                         </select>
                     </div>
                     <div class="form-bloc">
@@ -82,8 +92,8 @@
                     </div>
                     <div class="form-bloc">
                         <label>Commentaires sur la vidéo</label>
-                        <div class="text-muted">250 caractères max.</div>
-                        <textarea id="comments" rows="8" maxlength="250"></textarea>
+                        <div class="text-muted">250 caractères max. (<span id="remaining">250</span> restants)</div>
+                        <textarea id="comments" maxlength="250" style="min-height:98px"></textarea>
                     </div>
                 </div>
             </div>
@@ -94,8 +104,12 @@
         </form>
     </div>
 
+    <script src="/static/js/autosize.min.js"></script>
     <script src="/static/js/app.js"></script>
     <script src="/static/js/run.js"></script>
+    <script>
+        autosize(document.querySelector('#comments'))
+    </script>
 
     <% if(typeof error !== 'undefined' || typeof success !== 'undefined') { %>
     <script>
