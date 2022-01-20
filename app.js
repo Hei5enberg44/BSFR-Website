@@ -1,4 +1,4 @@
-var cookieSession = require('cookie-session')
+const cookieSession = require('cookie-session')
 const express = require('express')
 require('dotenv').config()
 const discord = require('./controllers/discord')
