@@ -1,15 +1,21 @@
+const commentaires = document.querySelector('#comments')
 const runForm = document.querySelector('.form')
 const btnClear = document.querySelector('.btn-clear')
 
+// Nombre de caractères restants dans le champ « Commentaires sur la vidéo »
+commentaires.addEventListener('keyup', function() {
+    document.querySelector('#remaining').innerText = this.maxLength - this.value.length
+})
+
+// Action à l'envoi du formulaire
 runForm.addEventListener('submit', async function(e) {
     e.preventDefault()
-
-    let valid = true
 
     const url = this.querySelector('#url')
     const description = this.querySelector('#description')
     const scoresaber_profil = this.querySelector('#scoresaber_profil')
     const scoresaber_leaderboard = this.querySelector('#scoresaber_leaderboard')
+    const beatsaver = this.querySelector('#beatsaver')
     const headset = this.querySelector('#headset')
     const grip = this.querySelector('#grip')
     const twitch_url = this.querySelector('#twitch_url')
@@ -19,6 +25,7 @@ runForm.addEventListener('submit', async function(e) {
     description.classList.remove('is-invalid')
     scoresaber_profil.classList.remove('is-invalid')
     scoresaber_leaderboard.classList.remove('is-invalid')
+    beatsaver.classList.remove('is-invalid')
     headset.classList.remove('is-invalid')
     grip.classList.remove('is-invalid')
     twitch_url.classList.remove('is-invalid')
@@ -30,6 +37,7 @@ runForm.addEventListener('submit', async function(e) {
     if(description.value === '') { error = true; description.classList.add('is-invalid') }
     if(scoresaber_profil.value === '') { error = true; scoresaber_profil.classList.add('is-invalid') }
     if(scoresaber_leaderboard.value === '') { error = true; scoresaber_leaderboard.classList.add('is-invalid') }
+    if(beatsaver.value === '') { error = true; beatsaver.classList.add('is-invalid') }
     if(headset.value === '') { error = true; headset.classList.add('is-invalid') }
     if(grip.value === '') { error = true; grip.classList.add('is-invalid') }
 
@@ -41,6 +49,7 @@ runForm.addEventListener('submit', async function(e) {
             description: description.value,
             scoresaber_profil: scoresaber_profil.value,
             scoresaber_leaderboard: scoresaber_leaderboard.value,
+            beatsaver: beatsaver.value,
             headset: headset.value,
             grip: grip.value,
             twitch_url: twitch_url.value,
@@ -64,6 +73,7 @@ runForm.addEventListener('submit', async function(e) {
     }
 })
 
+// Action au reset du formulaire
 btnClear.addEventListener('click', function() {
     runForm.reset()
 })
