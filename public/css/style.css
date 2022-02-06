@@ -85,7 +85,7 @@ a {
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     user-select: none;
     vertical-align: middle;
-    margin: 0 6px;
+    margin: 0 6px 12px 0;
 }
 
 .under_construction .btn-discord {
@@ -118,9 +118,15 @@ a {
     vertical-align: -0.4em;
 }
 
+.under_construction .btn-run {
+    background-color: #AEAEAE;
+    color: #FFFFFF;
+}
+
 .under_construction .btn-discord:hover,
 .under_construction .btn-twitter:hover,
-.under_construction .btn-youtube:hover {
+.under_construction .btn-youtube:hover,
+.under_construction .btn-run:hover {
     color: #212529;
 }
 
