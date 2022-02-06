@@ -70,6 +70,7 @@ module.exports = {
 
     getCurrentUser: async function(discord) {
         const datas = await module.exports.send(discord, 'GET', 'https://discord.com/api/users/@me')
+        datas.isBSFR = await module.exports.send(discord, 'GET', `https://discord.com/api/users/@me/guilds/${process.env.DISCORD_GUILD_ID}/member`) ? true : false
         return datas
     },
 
