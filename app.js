@@ -51,7 +51,7 @@ app.get('/discord/authorize', (req, res) => {
     const options = new URLSearchParams({
         response_type: 'code',
         client_id: process.env.DISCORD_CLIENT_ID,
-        scope: 'identify',
+        scope: 'identify guilds.members.read',
         state: state,
         redirect_uri: process.env.DISCORD_REDIRECT_URI,
         prompt: 'consent'

@@ -17,6 +17,7 @@
             <div class="card card-border">
                 <div class="card-title">Vidéo YouTube BSFR</div>
                 <div class="card-body">
+                    <% if(user.isBSFR) { %>
                     <p>
                         Critères à respecter :
                         <ul>
@@ -31,13 +32,25 @@
                         </ul>
                         Paramètres d'enregistrement recommandés : <a href="https://imgur.com/a/fswBbJe" target="_blank">Lien Imgur</a>
                     </p>
-
+                    <% } else { %>
+                    <p>
+                        Vous devez être membre du serveur Discord BSFR afin de pouvoir nous soumettre une run.
+                    </p>
+                    <p>
+                        Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="https://discord.gg/UZMg39cu" target="_blank">https://discord.gg/UZMg39cu</a>
+                    </p>
+                    <p>
+                        Actualisez la page après avoir rejoint le serveur Discord pour voir le formulaire.
+                    </p>
+                    <% } %>
+                    
                     <hr>
 
                     <span>Connecté en tant que : <a href="https://discordapp.com/users/<%= user.id %>" target="_blank"><%= user.username %>#<%= user.discriminator %></a> - <a href="/discord/logout">Se déconnecter</a></span>
                 </div>
             </div>
 
+            <% if(user.isBSFR) { %>
             <div class="card">
                 <div class="card-body">
                     <div class="form-bloc">
@@ -91,7 +104,7 @@
                         <input type="text" id="twitch_url" placeholder="https://twitch.tv/beatsaberfr" autocomplete="off">
                     </div>
                     <div class="form-bloc">
-                        <label>Commentaires sur la vidéo</label>
+                        <label>Commentaire du joueur (apparaitra en description de la vidéo)</label>
                         <div class="text-muted">250 caractères max. (<span id="remaining">250</span> restants)</div>
                         <textarea id="comments" maxlength="250" style="min-height:98px"></textarea>
                     </div>
@@ -101,15 +114,18 @@
                 <button class="btn-submit" type="submit">Envoyer</button>
                 <button class="btn-clear" type="button">Effacer le formulaire</button>
             </div>
+            <% } %>
         </form>
     </div>
 
     <script src="/static/js/autosize.min.js"></script>
     <script src="/static/js/app.js"></script>
+    <% if(user.isBSFR) { %>
     <script src="/static/js/run.js"></script>
     <script>
         autosize(document.querySelector('#comments'))
     </script>
+    <% } %>
 
     <% if(typeof error !== 'undefined' || typeof success !== 'undefined') { %>
     <script>
