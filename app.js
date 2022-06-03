@@ -18,7 +18,7 @@ app.use(cookieSession({
     name: 'session',
     keys: [ '0iiCr1etoh6sMsoi' ],
     maxAge: 24 * 60 * 60 * 1000
-  }))
+}))
 
 app.get('/', (req, res) => {
     res.render('index.ejs', {
@@ -67,13 +67,21 @@ app.get('/interactive-map', async (req, res) => {
 })
 
 app.get('/cities', async (req, res) => {
-    const cities = await city.get()
-    res.json(cities)
+    if(req.xhr) {
+        const cities = await city.get()
+        res.json(cities)
+    } else {
+        res.status(403).send('Unauthorized')
+    }
 })
 
 app.get('/guildMembers', async (req, res) => {
-    const members = await discord.getGuildMembers(req.session.discord)
-    res.json(members)
+    if(req.xhr) {
+        const members = await discord.getGuildMembers(req.session.discord)
+        res.json(members)
+    } else {
+        res.status(403).send('Unauthorized')
+    }
 })
 
 app.get('/discord/authorize', (req, res) => {

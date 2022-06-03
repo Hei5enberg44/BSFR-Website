@@ -1,14 +1,16 @@
 window.onload = async function() {
     const citiesRequest = await fetch('/cities', {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
         }
     })
     const cities = await citiesRequest.json()
 
     const membersRequest = await fetch('/guildMembers', {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
         }
     })
     const members = await membersRequest.json()
@@ -23,6 +25,6 @@ window.onload = async function() {
         const avatarURL = `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80`
 
         const marker = L.marker(coords).addTo(map)
-        marker.bindPopup(`<img src="${avatarURL}" class="discord-avatar"><b>${member.user.username}</b>`)
+        marker.bindPopup(`<img src="${avatarURL}" class="discord-avatar"><div style="display:inline-block;vertical-align:middle;"><b>${member.user.username}</b><br>${city.code_postal} ${city.nom_de_la_commune}</div>`)
     }
 }
