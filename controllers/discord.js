@@ -2,15 +2,15 @@ require('dotenv').config()
 const fetch = require('node-fetch')
 
 module.exports = {
-    send: async function(discord, method, endpoint, options = null) {
-        if(Math.floor(new Date().getTime() / 1000) > discord.tokens.expiration_date + 3600) {
+    send: async function(discord, method, endpoint, options = null, bot = false) {
+        if(!bot && Math.floor(new Date().getTime() / 1000) > discord.tokens.expiration_date + 3600) {
             discord.tokens = await module.exports.refreshToken(discord.tokens.refresh_token)
         }
 
         const request = await fetch(endpoint + (options || ''), {
             method: method,
             headers: {
-                'Authorization': 'Bearer ' + discord.tokens.access_token
+                'Authorization': `${bot ? 'Bot ' + process.env.DISCORD_BOT_TOKEN : 'Bearer ' + discord.tokens.access_token} `
             },
             body: options
         })
@@ -111,5 +111,10 @@ module.exports = {
                 error: 'Échec de l\'envoi de la run'
             }
         }
+    },
+
+    getGuildMembers: async function(discord) {
+        const datas = await module.exports.send(discord, 'GET', `https://discord.com/api/guilds/${process.env.DISCORD_GUILD_ID}/members?limit=1000`, null, true)
+        return datas
     }
 }

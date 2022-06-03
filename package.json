@@ -1,9 +1,25 @@
 {
+  "name": "bsfr-website",
+  "displayName": "BSFR Website",
+  "version": "2.0.0",
+  "description": "BSFR Website",
+  "main": "app.js",
+  "scripts": {
+    "run": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hei5enberg44/BSFR-Website"
+  },
+  "author": "BSFR",
+  "license": "ISC",
   "dependencies": {
     "cookie-session": "^2.0.0",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.2",
-    "node-fetch": "^2.6.1"
+    "mariadb": "^3.0.0",
+    "node-fetch": "^2.6.1",
+    "sequelize": "^6.20.1"
   }
 }
