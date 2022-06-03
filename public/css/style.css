@@ -282,3 +282,11 @@ input[type="text"].is-invalid, select.is-invalid, textarea.is-invalid {
     border-color:#F5C2C7;
     color:#842029;
 }
+
+#map .discord-avatar {
+    border-radius: 50%;
+    margin-right: 10px;
+    width: 35px;
+    height: 35px;
+    vertical-align: middle;
+}

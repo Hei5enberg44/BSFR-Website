@@ -2,6 +2,7 @@ const cookieSession = require('cookie-session')
 const express = require('express')
 require('dotenv').config()
 const discord = require('./controllers/discord')
+const city = require('./controllers/city')
 const fetch = require('node-fetch')
 const crypto = require('crypto')
 const app = express()
@@ -15,7 +16,7 @@ app.use(express.json({
 
 app.use(cookieSession({
     name: 'session',
-    keys: ['0iiCr1etoh6sMsoi'],
+    keys: [ '0iiCr1etoh6sMsoi' ],
     maxAge: 24 * 60 * 60 * 1000
   }))
 
@@ -30,7 +31,7 @@ app.get('/forms/run/youtube', async (req, res) => {
     if(!req.session.discord) {
         res.redirect('/discord/authorize')
     } else {
-        const user = await discord.getCurrentUser(req.session.discord)
+        const user = req.session.discord.user
 
         if(!user) {
             res.redirect('/discord/logout')
@@ -43,6 +44,36 @@ app.get('/forms/run/youtube', async (req, res) => {
             })
         }
     }
+})
+
+app.get('/interactive-map', async (req, res) => {
+    req.session.redirect = req.url
+    if(!req.session.discord) {
+        res.redirect('/discord/authorize')
+    } else {
+        const user = req.session.discord.user
+
+        if(!user) {
+            res.redirect('/discord/logout')
+        } else {
+            const loginSuccess = req.session.discord.login_success
+            req.session.discord.login_success = null
+            res.render('map/index.ejs', {
+                success: loginSuccess ? 'Connexion réussie' : null,
+                user: user
+            })
+        }
+    }
+})
+
+app.get('/cities', async (req, res) => {
+    const cities = await city.get()
+    res.json(cities)
+})
+
+app.get('/guildMembers', async (req, res) => {
+    const members = await discord.getGuildMembers(req.session.discord)
+    res.json(members)
 })
 
 app.get('/discord/authorize', (req, res) => {
@@ -93,6 +124,7 @@ app.get('/discord/login', async (req, res) => {
             const tokens = await exchangeCodeRequest.json()
             tokens.expiration_date = Math.floor(new Date().getTime() / 1000) + tokens.expires_in
             req.session.discord.tokens = tokens
+            req.session.discord.user = await discord.getCurrentUser(req.session.discord)
         } else {
             error = true
         }
