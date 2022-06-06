@@ -20,9 +20,11 @@ app.use(cookieSession({
     maxAge: 24 * 60 * 60 * 1000
 }))
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
+    const guild = await discord.getGuildPreview()
     res.render('index.ejs', {
-        error: req.session?.discord?.login_success ? null : 'Échec de connexion'
+        error: req.session?.discord?.login_success ? null : 'Échec de connexion',
+        guild: guild
     })
 })
 

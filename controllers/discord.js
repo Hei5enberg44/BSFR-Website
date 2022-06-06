@@ -116,5 +116,10 @@ module.exports = {
     getGuildMembers: async function(discord) {
         const datas = await module.exports.send(discord, 'GET', `https://discord.com/api/guilds/${process.env.DISCORD_GUILD_ID}/members?limit=1000`, null, true)
         return datas
+    },
+
+    getGuildPreview: async function(discord) {
+        const datas = await module.exports.send(discord, 'GET', `https://discord.com/api/guilds/${process.env.DISCORD_GUILD_ID}/preview`, null, true)
+        return datas
     }
 }
