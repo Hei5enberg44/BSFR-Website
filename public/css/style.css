@@ -11,12 +11,6 @@ body {
     -webkit-text-size-adjust: 100%;
     margin: 0;
     padding: 0;
-    background-image: url(/static/images/background.jpg);
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-    background-size: cover;
-    background-attachment: fixed;
-    backdrop-filter: blur(10px);
     font-family: 'Poppins', sans-serif;
     font-size: 1rem;
     color: #212529;
@@ -27,111 +21,44 @@ a {
     text-decoration: none;
 }
 
+.background {
+    position: fixed;
+    background-image: url(/static/images/background.jpg);
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    width: 100%;
+}
+
+.background .blur {
+    backdrop-filter: blur(10px);
+    height: 100vh;
+    width: 100%;
+}
+
 .container {
+    position: relative;
     display: flex;
     justify-content: center;
     width: 100%;
-    height: 100%;
-    overflow-y: scroll;
 }
 
 .container-centered {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 100%;
-    text-align: center;
 }
 
-.under_construction .bsfr_logo {
-    margin: 0 auto;
-    width: 128px;
-    height: 128px;
-    background-image: url(/static/images/logo.gif);
-    border-radius: 10px;
-}
-
-.under_construction .title h1 {
-    color: #FFFFFF;
-    font-weight: 500;
-    font-size: 2.2rem;
-    margin: 0.5rem 0;
-}
-
-.under_construction .alert-message {
-    color: #FFFFFF;
-    font-size: 1.5rem;
-    margin-bottom: 0.7rem;
-}
-
-.under_construction .alert-message .alert-triangle {
-    color: #FFFF00;
-    width: 1.125em;
-    vertical-align: -0.125em;
-}
-
-.under_construction .btn-brand {
-    border: 1px solid transparent;
-    display: inline-block;
-    border-radius: 2rem;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 1.5;
-    padding: 0.375rem 0.75rem;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    user-select: none;
-    vertical-align: middle;
-    margin: 0 6px 12px 0;
-}
-
-.under_construction .btn-discord {
-    background-color: #7289DA;
-    color: #FFFFFF;
-}
-
-.under_construction .btn-discord .discord-logo {
-    width: 1.25em;
-    vertical-align: -0.15em;
-}
-
-.under_construction .btn-twitter {
-    background-color: #00ACEE;
-    color: #FFFFFF;
-}
-
-.under_construction .btn-twitter .twitter-logo {
-    width: 1.15em;
-    vertical-align: -0.25em;
-}
-
-.under_construction .btn-youtube {
-    background-color: #FF0000;
-    color: #FFFFFF;
-}
-
-.under_construction .btn-youtube .youtube-logo {
-    width: 1.5em;
-    vertical-align: -0.4em;
-}
-
-.under_construction .btn-run {
-    background-color: #AEAEAE;
-    color: #FFFFFF;
-}
-
-.under_construction .btn-discord:hover,
-.under_construction .btn-twitter:hover,
-.under_construction .btn-youtube:hover,
-.under_construction .btn-run:hover {
-    color: #212529;
+.container-centered .discord-messages {
+    width: 960px;
 }
 
 .form {
-    width: 940px;
+    width: 960px;
 }
 
 .card {
