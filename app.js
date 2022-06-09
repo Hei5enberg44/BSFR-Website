@@ -70,20 +70,24 @@ app.get('/interactive-map', async (req, res) => {
 
 app.get('/cities', async (req, res) => {
     if(req.xhr) {
-        const cities = await city.get()
-        res.json(cities)
-    } else {
-        res.status(403).send('Unauthorized')
+        if(req.session.discord) {
+            const cities = await city.get()
+            res.json(cities)
+            return
+        }
     }
+    res.status(403).send('Unauthorized')
 })
 
 app.get('/guildMembers', async (req, res) => {
     if(req.xhr) {
-        const members = await discord.getGuildMembers(req.session.discord)
-        res.json(members)
-    } else {
-        res.status(403).send('Unauthorized')
+        if(req.session.discord) {
+            const members = await discord.getGuildMembers(req.session.discord)
+            res.json(members)
+            return
+        }
     }
+    res.status(403).send('Unauthorized')
 })
 
 app.get('/discord/authorize', (req, res) => {

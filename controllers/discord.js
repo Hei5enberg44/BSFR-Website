@@ -82,33 +82,48 @@ module.exports = {
 
             const user = await module.exports.getCurrentUser(discord)
 
-            let content = `Utilisateur : <@${user.id}>\n`
-            content += `Description : ${datas.description}\n`
-            content += `Casque : ${datas.headset}\n`
-            content += `Grip : ${datas.grip}\n`
-            content += `Profil Twitch : ${datas.twitch_url}\n`
-            content += `Profil ScoreSaber : ${datas.scoresaber_profil}\n`
-            content += `Leaderboard de la map : ${datas.scoresaber_leaderboard}\n`
-            content += `Lien Beatsaver : ${datas.beatsaver}\n`
-            content += `Lien de la vidéo : ${datas.url}\n`
-            content += `Commentaires :\n${datas.comments !== '' ? '```' + datas.comments + '```' : ''}`
+            const embed = {
+                title: `🎬 Nouvelle run`,
+                color: 3447003,
+                description: datas.description,
+                fields: [
+                    { name: 'Auteur·ice', value: `<@${user.id}>`, inline: true },
+                    { name: 'Casque', value: datas.headset, inline: true },
+                    { name: 'Grip', value: datas.grip, inline: true },
+                    { name: 'Profil ScoreSaber', value: `[Lien](${datas.scoresaber_profil})`, inline: true },
+                    { name: 'Profil Twitch', value: datas.twitch_url !== '' ? `[Lien](${datas.twitch_url})` : 'Non renseigné', inline: true },
+                    { name: '\u200b', value: '\u200b', inline: true },
+                    { name: 'Leaderboard de la map', value: `[Lien](${datas.scoresaber_leaderboard})`, inline: true },
+                    { name: 'Beatsaver', value: `[Lien](${datas.beatsaver})`, inline: true },
+                    { name: '\u200b', value: '\u200b', inline: true },
+                    { name: 'Vidéo', value: `[${datas.url}](${datas.url})` },
+                    { name: 'Commentaires', value: datas.comments !== '' ? '```' + datas.comments + '```' : 'Pas de commentaires' }
+                ],
+                thumbnail: {
+                    url: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.webp`
+                }
+            }
 
-            await fetch(process.env.DISCORD_WEBHOOK_VOTERUN, {
+            const response = await fetch(process.env.DISCORD_WEBHOOK_VOTERUN, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    content: content
+                    embeds: [embed]
                 })
             })
+
+            if(!response.ok) {
+                throw new Error('Échec de l\'envoi de la run')
+            }
 
             return {
                 success: 'La run a bien été envoyée'
             }
         } catch(error) {
             return {
-                error: 'Échec de l\'envoi de la run'
+                error: error.message
             }
         }
     },
