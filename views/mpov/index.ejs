@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
     <link rel="stylesheet" href="/static/assets/css/background.css">
-    <title>Beat Saber FR - Soumission run Multi POV</title>
+    <title>Beat Saber FR - Soumissions de run Multi POV #3</title>
 </head>
 <body class="" style="background: none;">
     <div class="background"><div class="blur"></div></div>
@@ -47,7 +47,7 @@
                     <div class="row g-2 align-items-center">
                         <div class="col">
                             <h2 class="page-title text-white">
-                                Soumission run Multi POV
+                                Soumissions de run Multi POV #3
                             </h2>
                         </div>
                     </div>
@@ -58,9 +58,9 @@
                     <% if(user.isBSFR) { %>
                     <div class="card mb-3">
                         <div class="card-body">
-                            <h3 class="card-title">Vidéo Multi POV BSFR</h3>
+                            <h3 class="card-title">Vidéo Multi POV BSFR #3</h3>
 
-                            <h4>La map :</h4>
+                            <h4>Map sélectionnée :</h4>
                             <div class="row">
                                 <div class="col-12 col-lg-6">
                                     <a class="card mb-3" href="https://beatsaver.com/maps/21380" target="_blank">
@@ -83,18 +83,22 @@
 
                             <h4>Critères à respecter :</h4>
                             <ul>
-                                <li>Les enregistrements doivent être minimum en 720p30</li>
-                                <li>Utilisez le plugin <a href="https://github.com/Snow1226/CameraPlus" target="_blank">Camera+</a> / <a href="https://github.com/kinsi55/CS_BeatSaber_Camera2" target="_blank">Camera2</a> en 1ère personne</li>
-                                <li>Les overlays ne sont pas acceptés</li>
+                                <li>Utiliser la configuration Camera2 fournie (obligatoire)</li>
+                                <li>Enregistrez en 1080p (minimum) 60fps</li>
+                                <li>Jouez sans aucun HUD (jeu, tchat twitch, etc...)</li>
+                                <li>Mode replay non autorisé</li>
+                                <li>Les lights doivent être activées</li>
+                                <li>Format obligatoire MP4</li>
+                                <li>Fichier de 3 Go maximum</li>
+                                <li>Notes par défaut mais taille au choix</li>
                                 <li>La vidéo soumise ne doit pas avoir été éditée</li>
-                                <li>Fichier de 3 Go maximum accepté</li>
                             </ul>
                             Paramètres d'enregistrement recommandés : <a href="https://imgur.com/a/fswBbJe" target="_blank">Lien Imgur</a>
                         </div>
                     </div>
                     <% } else { %>
                         <div class="alert alert-danger" role="alert">
-                            Vous devez être membre du serveur Discord BSFR afin de pouvoir nous soumettre une run.<br>
+                            Vous devez être membre du serveur Discord BSFR afin de pouvoir nous soumettre une run Multi POV.<br>
                             Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="<%= process.env.DISCORD_INVITATION_URL %>" target="_blank"><%= process.env.DISCORD_INVITATION_URL %></a><br>
                             <i>Actualisez la page après avoir rejoint le serveur Discord pour voir le formulaire.</i>
                         </div>
