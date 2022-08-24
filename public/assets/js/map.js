@@ -57,7 +57,7 @@ window.onload = async function() {
 
         const popupUsers = []
         for(const u of p.users) {
-            popupUsers.push(`<div><img src="${u.avatar}" class="discord-avatar"><div style="display:inline-block;vertical-align:middle;"><b>${u.username}</b><br>${p.postalCode} ${p.cityName}</div></div>`)
+            popupUsers.push(`<table><tbody><tr><td><span class="avatar avatar-rounded me-2" style="background-image: url(${u.avatar})"></span></td><td><b>${u.username}</b><br>${p.postalCode} ${p.cityName}</td></tr></tbody></table>`)
         }
         marker.bindPopup(popupUsers.join('<hr style="border:none">'))
     }

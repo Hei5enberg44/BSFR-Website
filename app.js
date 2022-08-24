@@ -3,8 +3,13 @@ const express = require('express')
 require('dotenv').config()
 const discord = require('./controllers/discord')
 const city = require('./controllers/city')
+const webdav = require('./controllers/webdav')
 const fetch = require('node-fetch')
 const crypto = require('crypto')
+const multer = require('multer')
+const upload = multer({ dest: './uploads/' })
+const Logger = require('./utils/logger')
+const fs = require('node:fs')
 const app = express()
 const port = 3020
 
@@ -41,6 +46,26 @@ app.get('/forms/run/youtube', async (req, res) => {
             const loginSuccess = req.session.discord.login_success
             req.session.discord.login_success = null
             res.render('run/index.ejs', {
+                success: loginSuccess ? 'Connexion réussie' : null,
+                user: user
+            })
+        }
+    }
+})
+
+app.get('/forms/run/mpov', async (req, res) => {
+    req.session.redirect = req.url
+    if(!req.session.discord) {
+        res.redirect('/discord/authorize')
+    } else {
+        const user = req.session.discord.user
+
+        if(!user) {
+            res.redirect('/discord/logout')
+        } else {
+            const loginSuccess = req.session.discord.login_success
+            req.session.discord.login_success = null
+            res.render('mpov/index.ejs', {
                 success: loginSuccess ? 'Connexion réussie' : null,
                 user: user
             })
@@ -174,6 +199,66 @@ app.post('/forms/run/youtube', async (req, res) => {
         const result = await discord.submitRun(req.session.discord, body)
 
         res.json(result)
+    }
+
+    if(error) res.json({ error: 'Invalid request' })
+})
+
+app.post('/forms/run/mpov', upload.array('files', 1), async (req, res) => {
+    let error = true
+
+    if(req.files && req.files.length === 1) {
+        error = false
+
+        const file = req.files[0]
+
+        try {
+            if(!file.mimetype.match(/^video\//)) {
+                res.json({ success: false, message: 'Le format du fichier sélectionné n\'est pas autorisé' })
+            } else if(file.size > 3 * 1024 * 1024 * 1024) {
+                res.json({ success: false, message: 'La taille du fichier ne doit pas exéder 3 Go' })
+            } else {
+                const token = crypto.randomBytes(10).toString('hex').slice(0, 20)
+                req.session.uploadToken = token
+                res.json({ success: true, message: 'Le fichier a bien été envoyé', file: file, token: token })
+            }
+        } catch(error) {
+            fs.unlinkSync(file.destination + '/' + file.filename)
+            res.json({ success: false, message: 'Erreur lors de l\'envoi de la run' })
+        }
+    }
+
+    if(error) res.json({ error: 'Invalid request' })
+})
+
+app.post('/forms/run/mpov/upload', async (req, res) => {
+    let error = true
+
+    if(req.session.uploadToken && req.body.file && req.body.token) {
+        if(req.body.token === req.session.uploadToken) {
+            error = false
+
+            const file = req.body.file
+            const user = req.session.discord.user
+
+            delete req.session.uploadToken
+
+            try {
+                Logger.log('MultiPOV', 'INFO', `Upload de la run de ${user.username} dans le drive`)
+
+                await webdav.createFolder(process.env.MPOV_LOCATION + '/' + user.username)
+                await webdav.uploadFile(fs.createReadStream(file.destination + file.filename), process.env.MPOV_LOCATION + '/' + user.username + '/' + file.originalname)
+
+                Logger.log('MultiPOV', 'SUCCESS', `La run de ${user.username} a bien été uploadée dans le drive`)
+
+                res.json({ success: true, message: 'La run a bien été envoyée' })
+            } catch(error) {
+                console.log(error)
+                Logger.log('MultiPOV', 'ERROR', `L'upload de la run de ${user.username} dans le drive a échouée`)
+                fs.unlinkSync(file.destination + '/' + file.filename)
+                res.json({ success: false, message: 'Erreur lors de l\'upload de la run sur le drive' })
+            }
+        }
     }
 
     if(error) {
