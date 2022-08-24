@@ -69,23 +69,6 @@ $runForm.addEventListener('submit', async function(e) {
         // Affichage du popup d'upload de run
         runModal.show()
 
-        // const request = await fetch('/forms/run/mpov', {
-        //     method: 'POST',
-        //     header: {
-        //         'Content-Type': 'multipart/form-data'
-        //     },
-        //     body: formData
-        // })
-
-        // const response = await request.json()
-
-        // $runModalUploadStatus.textContent = response.message
-        // $runModalCloseBtn.removeAttribute('disabled')
-
-        // $runForm.reset()
-
-
-
         const xhr = new XMLHttpRequest()
         xhr.responseType = 'json'
 
@@ -97,6 +80,8 @@ $runForm.addEventListener('submit', async function(e) {
                 $runModalUploadProgress.classList.add('bg-danger')
             } else {
                 $runModalUploadProgress.classList.add('bg-success')
+
+                $runForm.reset()
 
                 const token = xhr.response.token
                 const file = xhr.response.file
