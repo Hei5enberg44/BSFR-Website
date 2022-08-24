@@ -4,32 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="/static/css/discord.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
+    <link rel="stylesheet" href="/static/assets/css/style.css">
+    <link rel="stylesheet" href="/static/assets/css/background.css">
+    <link rel="stylesheet" href="/static/assets/css/discord.min.css">
     <title>Beat Saber FR</title>
-    <style>
-        .discord-messages {
-            color: #fff;
-            background-color: #36393f;
-            border: 1px solid rgba(255, 255, 255, .05);
-            border-radius: .375rem;
-        }
-
-        .discord-message {
-            margin: 1em 0;
-            padding: .25em 1em 0;
-        }
-
-        .discord-message:hover {
-            background-color: #32353b
-        }
-    </style>
 </head>
-<body>
+<body class="theme-dark" style="background: none;">
     <div class="background"><div class="blur"></div></div>
 
     <div class="container-centered">
@@ -50,7 +32,7 @@
                                 --></span><!---
                             --></h2><!---
                             --><div id="message-content-983352546015998014" class="markup-eYLPri messageContent-2t3eCI"><!---
-                                --><span class="emojiContainer-2XKwXX" role="button" tabindex="0"><img aria-label=":Discord:" src="/static/images/discord.png" alt=":Discord:" draggable="false" class="emoji" data-type="emoji"></span><!--
+                                --><span class="emojiContainer-2XKwXX" role="button" tabindex="0"><img aria-label=":Discord:" src="/static/assets/images/discord.png" alt=":Discord:" draggable="false" class="emoji" data-type="emoji"></span><!--
                                 -->  <strong>Discord :</strong><br><!---
                                 --><a class="anchor-1MIwyf anchorUnderlineOnHover-2qPutX" title="<%= process.env.DISCORD_INVITATION_URL %>" href="<%= process.env.DISCORD_INVITATION_URL %>" rel="noreferrer noopener" target="_blank" role="button" tabindex="0"><%= process.env.DISCORD_INVITATION_URL %></a><br><!---
                                 --><div id="message-accessories-983352546015998014" class="container-2sjPya"><!---
@@ -60,7 +42,7 @@
                                         --></div><!---
                                         --><h5 class="colorStandard-1Xxp1s size14-k_3Hy4 h5-2RwDNl title-3hptVQ header-3anOjb">Tu as été invité(e) à rejoindre un serveur</h5><!---
                                         --><div class="content-1r-J1r"><!---
-                                            --><div class="icon-1zKOXL guildIconImage-74OdmM guildIcon-3ZfRfI iconSizeLarge-_r2zCK iconActiveLarge-ac-EDu" style="background-image: url(&quot;https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.gif?size=56&quot;);"></div><!---
+                                            --><div class="icon-1zKOXL guildIconImage-74OdmM guildIcon-3ZfRfI iconSizeLarge-_r2zCK iconActiveLarge-ac-EDu" style="background-image: url(https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.gif?size=56);"></div><!---
                                             --><div class="flex-2S1XBF flex-3BkGQD vertical-3aLnqW flex-3BkGQD directionColumn-3pi1nm justifyCenter-rrurWZ alignStretch-Uwowzr noWrap-hBpHBz guildInfo-UCKhrV" style="flex: 1 1 auto;"><!---
                                                 --><h3 class="defaultColor-24IHKz heading-md-medium-2DVCeJ defaultColor-HXu-5n inviteDestination-1rM5rX" data-text-variant="heading-md/medium"><!---
                                                     --><span class="infoTitle-367C0l"><!---
@@ -97,11 +79,11 @@
                                     --></div><!---
                                 --></div><!---
                                 --><br><!--
-                                --><span class="emojiContainer-2XKwXX" role="button" tabindex="0"><img aria-label=":Twitter:" src="/static/images/twitter.png" alt=":Twitter:" draggable="false" class="emoji" data-type="emoji"></span><!--
+                                --><span class="emojiContainer-2XKwXX" role="button" tabindex="0"><img aria-label=":Twitter:" src="/static/assets/images/twitter.png" alt=":Twitter:" draggable="false" class="emoji" data-type="emoji"></span><!--
                                 -->  <strong>Twitter :</strong><br><!---
                                 --><a class="anchor-1MIwyf anchorUnderlineOnHover-2qPutX" title="https://twitter.com/beatsaberfr" href="https://twitter.com/beatsaberfr" rel="noreferrer noopener" target="_blank" role="button" tabindex="0">https://twitter.com/beatsaberfr</a><br><!---
                                 --><br><!--
-                                --><span class="emojiContainer-2XKwXX" role="button" tabindex="0"><img aria-label=":YouTube:" src="/static/images/youtube.png" alt=":YouTube:" draggable="false" class="emoji" data-type="emoji"></span><!--
+                                --><span class="emojiContainer-2XKwXX" role="button" tabindex="0"><img aria-label=":YouTube:" src="/static/assets/images/youtube.png" alt=":YouTube:" draggable="false" class="emoji" data-type="emoji"></span><!--
                                 -->  <strong>YouTube :</strong><br><!---
                                 --><a class="anchor-1MIwyf anchorUnderlineOnHover-2qPutX" title="https://www.youtube.com/c/BeatSaberFR" href="https://www.youtube.com/c/BeatSaberFR" rel="noreferrer noopener" target="_blank" role="button" tabindex="0">https://www.youtube.com/c/BeatSaberFR</a><br><!---
                                     
@@ -109,7 +91,7 @@
                                     --><div><!---
                                         --><div class="reaction-3vwAF2" style="opacity: 1; transform: scale(1);"><!---
                                             --><div class="reactionInner-YJjOtT" aria-controls="popout_53" aria-expanded="false" aria-label="peepoFR, 42&nbsp;réaction, appuie pour réagir" aria-pressed="false" role="button" tabindex="0"><!---
-                                                --><img src="/static/images/peepoFR.png" alt="peepoFR" draggable="false" class="emoji" data-type="emoji"><!---
+                                                --><img src="/static/assets/images/peepoFR.png" alt="peepoFR" draggable="false" class="emoji" data-type="emoji"><!---
                                                 --><div class="reactionCount-26U4As" style="min-width: 9px;">42</div><!---
                                             --></div><!---
                                         --></div><!---

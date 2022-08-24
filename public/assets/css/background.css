@@ -1,0 +1,15 @@
+.background {
+    position: fixed;
+    background-image: url(/static/assets/images/background.jpg);
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    width: 100%;
+}
+
+.background .blur {
+    backdrop-filter: blur(10px);
+    height: 100vh;
+    width: 100%;
+}

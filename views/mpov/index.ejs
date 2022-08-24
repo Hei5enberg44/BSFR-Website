@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
+    <link rel="stylesheet" href="/static/assets/css/background.css">
+    <title>Beat Saber FR - Soumission run Multi POV</title>
+</head>
+<body class="" style="background: none;">
+    <div class="background"><div class="blur"></div></div>
+
+    <div class="page">
+        <header class="navbar navbar-expand-md navbar-dark sticky-top d-print-none">
+            <div class="container-xl">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <h1 class="navbar-brand d-none-navbar-horizontal pe-0 pe-md-3">
+                    <a href="/">
+                        <img src="/static/assets/images/logo.gif" width="32" height="32" alt="BSFR" class="navbar-brand-image me-2">
+                        Beat Saber FR
+                    </a>
+                </h1>
+                <div class="navbar-nav flex-row order-md-last">
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu" aria-expanded="false">
+                            <span class="avatar avatar-sm" style="background-image: url(https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.webp?size=80)"></span>
+                            <div class="d-none d-xl-block ps-2">
+                                <div><%= user.username %></div>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <a href="/discord/logout" class="dropdown-item">Déconnexion</a>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="page-wrapper">
+            <div class="container-xl">
+                <!-- Page title -->
+                <div class="page-header d-print-none">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <h2 class="page-title text-white">
+                                Soumission run Multi POV
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-body">
+                <div class="container-xl">
+                    <% if(user.isBSFR) { %>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h3 class="card-title">Vidéo Multi POV BSFR</h3>
+
+                            <h4>La map :</h4>
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <a class="card mb-3" href="https://beatsaver.com/maps/21380" target="_blank">
+                                        <div class="card-status-start bg-blue"></div>
+                                        <div class="card-body">
+                                            <div class="row d-flex align-items-center">
+                                                <div class="col-auto">
+                                                    <span class="avatar avatar-xl" style="background-image: url(https://eu.cdn.beatsaver.com/7b593a99940898b637846a875c5b8405a9d63722.jpg)"></span>
+                                                </div>
+                                                <div class="col">
+                                                    <h3>Akatsuki Records - HELLOHELL</h3>
+                                                    <div class="text-muted"><strong>Mapper par:</strong> Skeelie, AaltopahWi & Yaomin</div>
+                                                    <div class="text-muted"><strong>Difficulté:</strong> <span class="badge bg-purple">Expert+</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <h4>Critères à respecter :</h4>
+                            <ul>
+                                <li>Les enregistrements doivent être minimum en 720p30</li>
+                                <li>Utilisez le plugin <a href="https://github.com/Snow1226/CameraPlus" target="_blank">Camera+</a> / <a href="https://github.com/kinsi55/CS_BeatSaber_Camera2" target="_blank">Camera2</a> en 1ère personne</li>
+                                <li>Les overlays ne sont pas acceptés</li>
+                                <li>La vidéo soumise ne doit pas avoir été éditée</li>
+                                <li>Fichier de 3 Go maximum accepté</li>
+                            </ul>
+                            Paramètres d'enregistrement recommandés : <a href="https://imgur.com/a/fswBbJe" target="_blank">Lien Imgur</a>
+                        </div>
+                    </div>
+                    <% } else { %>
+                        <div class="alert alert-danger" role="alert">
+                            Vous devez être membre du serveur Discord BSFR afin de pouvoir nous soumettre une run.<br>
+                            Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="<%= process.env.DISCORD_INVITATION_URL %>" target="_blank"><%= process.env.DISCORD_INVITATION_URL %></a><br>
+                            <i>Actualisez la page après avoir rejoint le serveur Discord pour voir le formulaire.</i>
+                        </div>
+                    <% } %>
+
+                    <% if(user.isBSFR) { %>
+                    <form class="card form">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label"><span style="font-weight: bold; color: #FF0000;">*</span> : champ requis</label>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label required">Fichier de la run</label>
+                                <input type="file" class="form-control" id="video" required>
+                                <small class="form-hint">Fichier .mp4 conseillé, .mkv refusé</small>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col me-auto">
+                                    <button type="button" class="btn btn-danger btn-clear">Effacer le formulaire</button>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" id="modalRun">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-status bg-blue"></div>
+                <div class="modal-body text-center py-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-blue icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path><polyline points="7 9 12 4 17 9"></polyline><line x1="12" y1="4" x2="12" y2="16"></line></svg>
+                    <h3>Envoi d'une run</h3>
+                    <div id="upload-status" class="text-muted mb-2"></div>
+                    <div class="progress">
+                        <div class="progress-bar" id="upload-progress" style="width: 0%" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white w-100" id="close-modal-run">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/assets/libs/tabler/script.min.js"></script>
+    <script src="/static/assets/js/app.js"></script>
+    <% if(user.isBSFR) { %>
+    <script src="/static/assets/js/mpov.js"></script>
+    <% } %>
+</body>
+</html>

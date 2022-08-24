@@ -4,134 +4,170 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
+    <link rel="stylesheet" href="/static/assets/css/background.css">
     <title>Beat Saber FR - Soumission run YouTube</title>
 </head>
-<body>
+<body class="" style="background: none;">
     <div class="background"><div class="blur"></div></div>
-    
-    <div class="container">
-        <form class="form">
-            <div class="card card-border">
-                <div class="card-title">Vidéo YouTube BSFR</div>
-                <div class="card-body">
-                    <% if(user.isBSFR) { %>
-                    <p>
-                        Critères à respecter :
-                        <ul>
-                            <li>Les enregistrements doivent être minimum en 720p30</li>
-                            <li>Utilisez le plugin <a href="https://github.com/Snow1226/CameraPlus" target="_blank">Camera+</a> / <a href="https://github.com/kinsi55/CS_BeatSaber_Camera2" target="_blank">Camera2</a> en 1ère personne</li>
-                            <li>Les overlays ne sont pas acceptés (sauf exceptions: swing cam et camera ortho de taille raisonnable)</li>
-                            <li>Évitez de nous envoyer des runs que vous avez déjà posté sur votre chaîne</li>
-                            <li>Merci de donner uniquement des liens Google Drive, Dropbox ou OneDrive</li>
-                            <li>La vidéo soumise ne doit pas avoir été éditée</li>
-                            <li>Aucun overlay ne doit être présent sur votre vidéo</li>
-                            <li>Fichier de 3 Go maximum accepté</li>
-                        </ul>
-                        Paramètres d'enregistrement recommandés : <a href="https://imgur.com/a/fswBbJe" target="_blank">Lien Imgur</a>
-                    </p>
-                    <% } else { %>
-                    <p>
-                        Vous devez être membre du serveur Discord BSFR afin de pouvoir nous soumettre une run.
-                    </p>
-                    <p>
-                        Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="<%= process.env.DISCORD_INVITATION_URL %>" target="_blank"><%= process.env.DISCORD_INVITATION_URL %></a>
-                    </p>
-                    <p>
-                        Actualisez la page après avoir rejoint le serveur Discord pour voir le formulaire.
-                    </p>
-                    <% } %>
-                    
-                    <hr>
 
-                    <span>Connecté en tant que : <a href="https://discordapp.com/users/<%= user.id %>" target="_blank"><%= user.username %>#<%= user.discriminator %></a> - <a href="/discord/logout">Se déconnecter</a></span>
+    <div class="page">
+        <header class="navbar navbar-expand-md navbar-dark sticky-top d-print-none">
+            <div class="container-xl">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <h1 class="navbar-brand d-none-navbar-horizontal pe-0 pe-md-3">
+                    <a href="/">
+                        <img src="/static/assets/images/logo.gif" width="32" height="32" alt="BSFR" class="navbar-brand-image me-2">
+                        Beat Saber FR
+                    </a>
+                </h1>
+                <div class="navbar-nav flex-row order-md-last">
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu" aria-expanded="false">
+                            <span class="avatar avatar-sm" style="background-image: url(https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.webp?size=80)"></span>
+                            <div class="d-none d-xl-block ps-2">
+                                <div><%= user.username %></div>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <a href="/discord/logout" class="dropdown-item">Déconnexion</a>
+                        </div>
+                      </div>
                 </div>
             </div>
-
-            <% if(user.isBSFR) { %>
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-bloc">
-                        <span style="font-weight: bold; color: #FF0000;">*</span> : champ requis
-                    </div>
-                    <div class="form-bloc">
-                        <label class="required">Lien vers la vidéo</label>
-                        <div class="text-muted">Liens acceptés : OneDrive, Google Drive, Dropbox | .mp4 conseillé, .mkv refusé</div>
-                        <input type="text" id="url" placeholder="https://drive.weezle.xyz/index.php/s/R9m2wL7JrtrG3H3" autocomplete="off" required>
-                    </div>
-                    <div class="form-bloc">
-                        <label class="required">Description de la vidéo</label>
-                        <div class="text-muted">Artiste - Nom de la map, Difficulté, Précision, FC/Miss</div>
-                        <input type="text" id="description" placeholder="" autocomplete="off" required>
-                    </div>
-                    <div class="form-bloc">
-                        <label class="required">Profil Scoresaber</label>
-                        <input type="text" id="scoresaber_profil" placeholder="https://scoresaber.com/u/76561198796531407" autocomplete="off" required>
-                    </div>
-                    <div class="form-bloc">
-                        <label class="required">Leaderboard de la map</label>
-                        <div class="text-muted">Ajoutez le lien scoresaber de la map que vous avez joué dans votre vidéo</div>
-                        <input type="text" id="scoresaber_leaderboard" placeholder="https://scoresaber.com/leaderboard/6286" autocomplete="off" required>
-                    </div>
-                    <div class="form-bloc">
-                        <label class="required">Lien Beatsaver</label>
-                        <div class="text-muted">Ajoutez le lien Beatsaver de la map que vous avez joué dans votre vidéo</div>
-                        <input type="text" id="beatsaver" placeholder="https://beatsaver.com/maps/3b5" autocomplete="off" required>
-                    </div>
-                    <div class="form-bloc">
-                        <label class="required">Votre casque VR</label>
-                        <select id="headset" required>
-                            <option value="HTC Vive">HTC Vive</option>
-                            <option value="HTC Vive Pro">HTC Vive Pro</option>
-                            <option value="HTC Vive Pro 2">HTC Vive Pro 2</option>
-                            <option value="Oculus Quest">Oculus Quest</option>
-                            <option value="Oculus Quest 2">Oculus Quest 2</option>
-                            <option value="Oculus Rift">Oculus Rift</option>
-                            <option value="Oculus Rift S">Oculus Rift S</option>
-                            <option value="Valve Index">Valve Index</option>
-                            <option value="WMR - Windows Mixed Reality">WMR - Windows Mixed Reality</option>
-                            <option value="Autre">Autre (indiquez-le en commentaire)</option>
-                        </select>
-                    </div>
-                    <div class="form-bloc">
-                        <label class="required">Votre grip</label>
-                        <input type="text" id="grip" placeholder="Default grip" autocomplete="off" required>
-                    </div>
-                    <div class="form-bloc">
-                        <label>Votre chaîne Twitch</label>
-                        <input type="text" id="twitch_url" placeholder="https://twitch.tv/beatsaberfr" autocomplete="off">
-                    </div>
-                    <div class="form-bloc">
-                        <label>Commentaire du joueur (apparaitra en description de la vidéo)</label>
-                        <div class="text-muted">250 caractères max. (<span id="remaining">250</span> restants)</div>
-                        <textarea id="comments" maxlength="250" style="min-height:98px"></textarea>
+        </header>
+        
+        <div class="page-wrapper">
+            <div class="container-xl">
+                <!-- Page title -->
+                <div class="page-header d-print-none">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <h2 class="page-title text-white">
+                                Soumission run YouTube
+                            </h2>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="button-group">
-                <button class="btn-submit" type="submit">Envoyer</button>
-                <button class="btn-clear" type="button">Effacer le formulaire</button>
+            <div class="page-body">
+                <div class="container-xl">
+                    <form class="form">
+                        <% if(user.isBSFR) { %>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h3 class="card-title">Vidéo YouTube BSFR</h3>
+
+                                <p>
+                                    Critères à respecter :
+                                    <ul>
+                                        <li>Les enregistrements doivent être minimum en 720p30</li>
+                                        <li>Utilisez le plugin <a href="https://github.com/Snow1226/CameraPlus" target="_blank">Camera+</a> / <a href="https://github.com/kinsi55/CS_BeatSaber_Camera2" target="_blank">Camera2</a> en 1ère personne</li>
+                                        <li>Les overlays ne sont pas acceptés (sauf exceptions: swing cam et camera ortho de taille raisonnable)</li>
+                                        <li>Évitez de nous envoyer des runs que vous avez déjà posté sur votre chaîne</li>
+                                        <li>Merci de donner uniquement des liens Google Drive, Dropbox ou OneDrive</li>
+                                        <li>La vidéo soumise ne doit pas avoir été éditée</li>
+                                        <li>Fichier de 3 Go maximum accepté</li>
+                                    </ul>
+                                    Paramètres d'enregistrement recommandés : <a href="https://imgur.com/a/fswBbJe" target="_blank">Lien Imgur</a>
+                                </p>
+                            </div>
+                        </div>
+                        <% } else { %>
+                            <div class="alert alert-danger" role="alert">
+                                Vous devez être membre du serveur Discord BSFR afin de pouvoir nous soumettre une run.<br>
+                                Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="<%= process.env.DISCORD_INVITATION_URL %>" target="_blank"><%= process.env.DISCORD_INVITATION_URL %></a><br>
+                                <i>Actualisez la page après avoir rejoint le serveur Discord pour voir le formulaire.</i>
+                            </div>
+                        <% } %>
+
+                        <% if(user.isBSFR) { %>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label"><span style="font-weight: bold; color: #FF0000;">*</span> : champ requis</label>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label required">Lien vers la vidéo</label>
+                                    <input type="text" class="form-control" id="url" placeholder="https://drive.weezle.xyz/index.php/s/R9m2wL7JrtrG3H3" autocomplete="off" required>
+                                    <small class="form-hint">Liens acceptés : OneDrive, Google Drive, Dropbox | .mp4 conseillé, .mkv refusé</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label required">Description de la vidéo</label>
+                                    <input type="text" class="form-control" id="description" placeholder="" autocomplete="off" required>
+                                    <small class="form-hint">Artiste - Nom de la map, Difficulté, Précision, FC/Miss</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label required">Profil Scoresaber</label>
+                                    <input type="text" class="form-control" id="scoresaber_profil" placeholder="https://scoresaber.com/u/76561198796531407" autocomplete="off" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label required">Leaderboard de la map</label>
+                                    <input type="text" class="form-control" id="scoresaber_leaderboard" placeholder="https://scoresaber.com/leaderboard/6286" autocomplete="off" required>
+                                    <small class="form-hint">Ajoutez le lien scoresaber de la map que vous avez joué dans votre vidéo</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label required">Lien Beatsaver</label>
+                                    <input type="text" class="form-control" id="beatsaver" placeholder="https://beatsaver.com/maps/3b5" autocomplete="off" required>
+                                    <small class="form-hint">Ajoutez le lien Beatsaver de la map que vous avez joué dans votre vidéo</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label required">Votre casque VR</label>
+                                    <select class="form-select" id="headset" required>
+                                        <option value="HTC Vive">HTC Vive</option>
+                                        <option value="HTC Vive Pro">HTC Vive Pro</option>
+                                        <option value="HTC Vive Pro 2">HTC Vive Pro 2</option>
+                                        <option value="Oculus Quest">Oculus Quest</option>
+                                        <option value="Oculus Quest 2">Oculus Quest 2</option>
+                                        <option value="Oculus Rift">Oculus Rift</option>
+                                        <option value="Oculus Rift S">Oculus Rift S</option>
+                                        <option value="Valve Index">Valve Index</option>
+                                        <option value="WMR - Windows Mixed Reality">WMR - Windows Mixed Reality</option>
+                                        <option value="Autre">Autre (indiquez-le en commentaire)</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label required">Votre grip</label>
+                                    <input type="text" class="form-control" id="grip" placeholder="Default grip" autocomplete="off" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Votre chaîne Twitch</label>
+                                    <input type="text" class="form-control" id="twitch_url" placeholder="https://twitch.tv/beatsaberfr" autocomplete="off">
+                                </div>
+                                <div>
+                                    <label class="form-label">Commentaire du joueur (apparaitra en description de la vidéo)</label>
+                                    <textarea class="form-control" id="comments" maxlength="250" style="min-height:98px"></textarea>
+                                    <small class="form-hint">250 caractères max. (<span id="remaining">250</span> restants)</small>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col me-auto">
+                                        <button type="button" class="btn btn-danger btn-clear">Effacer le formulaire</button>
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+                    </form>
+                </div>
             </div>
-            <% } %>
-        </form>
+        </div>
     </div>
 
-    <script src="/static/js/autosize.min.js"></script>
-    <script src="/static/js/app.js"></script>
+    <script src="/static/assets/libs/tabler/script.min.js"></script>
+    <script src="/static/assets/libs/autosize/autosize.min.js"></script>
+    <script src="/static/assets/js/app.js"></script>
     <% if(user.isBSFR) { %>
-    <script src="/static/js/run.js"></script>
+    <script src="/static/assets/js/run.js"></script>
     <script>
         autosize(document.querySelector('#comments'))
-    </script>
-    <% } %>
-
-    <% if(typeof error !== 'undefined' || typeof success !== 'undefined') { %>
-    <script>
-        showAlert(<%= typeof error !== 'undefined' ? 'false' : 'true' %>, '<%= typeof error !== 'undefined' ? error : success %>')
     </script>
     <% } %>
 </body>
