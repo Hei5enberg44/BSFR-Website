@@ -1,6 +1,22 @@
 const $commentaires = document.querySelector('#comments')
 const $runForm = document.querySelector('.form')
 const $btnClear = document.querySelector('.btn-clear')
+const $runModal = document.querySelector('#modalRun')
+const $modalStatus = $runModal.querySelector('.modal-status')
+const $modalIconSuccess = $runModal.querySelector('svg.text-green')
+const $modalIconFail = $runModal.querySelector('svg.text-red')
+const $runModalUploadStatus = document.querySelector('#upload-status')
+
+const runModal = new bootstrap.Modal($runModal)
+
+// Action à la fermeture du popup d'envoi de run
+$runModal.addEventListener('hidden.bs.modal', function() {
+    $modalStatus.classList.remove('bg-success')
+    $modalStatus.classList.remove('bg-danger')
+    $modalIconSuccess.classList.add('d-none')
+    $modalIconFail.classList.add('d-none')
+    $runModalUploadStatus.textContent = ''
+})
 
 // Nombre de caractères restants dans le champ « Commentaires sur la vidéo »
 $commentaires.addEventListener('keyup', function() {
@@ -69,7 +85,17 @@ $runForm.addEventListener('submit', async function(e) {
 
         $runForm.reset()
 
-        showAlert(response.error ? false : true, response.error ? response.error : response.success)
+        if(response.error) {
+            $modalStatus.classList.add('bg-danger')
+            $modalIconFail.classList.remove('d-none')
+            $runModalUploadStatus.textContent = response.error
+        } else {
+            $modalStatus.classList.add('bg-success')
+            $modalIconSuccess.classList.remove('d-none')
+            $runModalUploadStatus.textContent = response.success
+        }
+
+        runModal.show()
     }
 })
 
