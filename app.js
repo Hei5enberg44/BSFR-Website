@@ -25,76 +25,48 @@ app.use(cookieSession({
     maxAge: 24 * 60 * 60 * 1000
 }))
 
+const requireLogin = function(req, res, next) {
+    req.session.redirect = req.url
+    if(!req.session.discord) {
+        res.redirect('/discord/authorize')
+    } else {
+        if(!req.session.discord.user) {
+            res.redirect('/discord/logout')
+        } else {
+            next()
+        }
+    }
+}
+
 app.get('/', async (req, res) => {
     const guild = await discord.getGuildPreview()
     res.render('index.ejs', {
-        error: req.session?.discord?.login_success ? null : 'Échec de connexion',
+        login_success: req.session?.discord?.login_success ?? undefined,
         guild: guild
     })
 })
 
-app.get('/forms/run/youtube', async (req, res) => {
-    req.session.redirect = req.url
-    if(!req.session.discord) {
-        res.redirect('/discord/authorize')
-    } else {
-        const user = req.session.discord.user
-
-        if(!user) {
-            res.redirect('/discord/logout')
-        } else {
-            const loginSuccess = req.session.discord.login_success
-            req.session.discord.login_success = null
-            res.render('run/index.ejs', {
-                success: loginSuccess ? 'Connexion réussie' : null,
-                user: user
-            })
-        }
-    }
+app.get('/forms/run/youtube', requireLogin, async (req, res) => {
+    res.render('run/index.ejs', {
+        login_success: req.session?.discord?.login_success ?? undefined,
+        user: req.session.discord.user
+    })
 })
 
-const mpovStartDate = (new Date(2022, 7, 26, 0, 0, 0)).getTime()
-const mpovEndDate = (new Date(2022, 8, 30, 0, 0, 0)).getTime()
-app.get('/forms/run/mpov', async (req, res) => {
-    req.session.redirect = req.url
-    if(!req.session.discord) {
-        res.redirect('/discord/authorize')
-    } else {
-        const user = req.session.discord.user
-
-        if(!user) {
-            res.redirect('/discord/logout')
-        } else {
-            const loginSuccess = req.session.discord.login_success
-            req.session.discord.login_success = null
-            const mpovInfos = await mpov.getMPOVInfos()
-            res.render('mpov/index.ejs', {
-                success: loginSuccess ? 'Connexion réussie' : null,
-                user: user,
-                mpovInfos: mpovInfos
-            })
-        }
-    }
+app.get('/forms/run/mpov', requireLogin, async (req, res) => {
+    const mpovInfos = await mpov.getMPOVInfos()
+    res.render('mpov/index.ejs', {
+        login_success: req.session?.discord?.login_success ?? undefined,
+        user: req.session.discord.user,
+        mpovInfos: mpovInfos
+    })
 })
 
-app.get('/interactive-map', async (req, res) => {
-    req.session.redirect = req.url
-    if(!req.session.discord) {
-        res.redirect('/discord/authorize')
-    } else {
-        const user = req.session.discord.user
-
-        if(!user) {
-            res.redirect('/discord/logout')
-        } else {
-            const loginSuccess = req.session.discord.login_success
-            req.session.discord.login_success = null
-            res.render('map/index.ejs', {
-                success: loginSuccess ? 'Connexion réussie' : null,
-                user: user
-            })
-        }
-    }
+app.get('/interactive-map', requireLogin, async (req, res) => {
+    res.render('map/index.ejs', {
+        login_success: req.session?.discord?.login_success ?? undefined,
+        user: req.session.discord.user
+    })
 })
 
 app.get('/cities', async (req, res) => {
@@ -210,10 +182,11 @@ app.post('/forms/run/youtube', async (req, res) => {
 
 const mpovUpload = multer({
     dest: './uploads/',
-    fileFilter: (req, file, cb) => {
+    fileFilter: async (req, file, cb) => {
         let error = true
         const fileSize = req.headers['content-length']
-        if(Date.now() < mpovStartDate || Date.now() >= mpovEndDate) {
+        const mpovInfos = await mpov.getMPOVInfos()
+        if(Date.now() < mpovInfos.dateStart || Date.now() >= mpovInfos.dateEnd) {
             req.fileValidationError = 'La soumission de vidéo Multi POV BSFR est fermée'
         } else if(file.mimetype !== 'video/mp4') {
             req.fileValidationError = 'Le format du fichier sélectionné n\'est pas autorisé'
