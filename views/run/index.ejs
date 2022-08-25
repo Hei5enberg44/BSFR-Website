@@ -55,36 +55,28 @@
             </div>
             <div class="page-body">
                 <div class="container-xl">
-                    <form class="form">
-                        <% if(user.isBSFR) { %>
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h3 class="card-title">Vidéo YouTube BSFR</h3>
+                    <% if(user.isBSFR) { %>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h3 class="card-title">Vidéo YouTube BSFR</h3>
 
-                                <p>
-                                    Critères à respecter :
-                                    <ul>
-                                        <li>Les enregistrements doivent être minimum en 720p30</li>
-                                        <li>Utilisez le plugin <a href="https://github.com/Snow1226/CameraPlus" target="_blank">Camera+</a> / <a href="https://github.com/kinsi55/CS_BeatSaber_Camera2" target="_blank">Camera2</a> en 1ère personne</li>
-                                        <li>Les overlays ne sont pas acceptés (sauf exceptions: swing cam et camera ortho de taille raisonnable)</li>
-                                        <li>Évitez de nous envoyer des runs que vous avez déjà posté sur votre chaîne</li>
-                                        <li>Merci de donner uniquement des liens Google Drive, Dropbox ou OneDrive</li>
-                                        <li>La vidéo soumise ne doit pas avoir été éditée</li>
-                                        <li>Fichier de 3 Go maximum accepté</li>
-                                    </ul>
-                                    Paramètres d'enregistrement recommandés : <a href="https://imgur.com/a/fswBbJe" target="_blank">Lien Imgur</a>
-                                </p>
-                            </div>
+                            <p>
+                                Critères à respecter :
+                                <ul>
+                                    <li>Les enregistrements doivent être minimum en 720p30</li>
+                                    <li>Utilisez le plugin <a href="https://github.com/Snow1226/CameraPlus" target="_blank">Camera+</a> / <a href="https://github.com/kinsi55/CS_BeatSaber_Camera2" target="_blank">Camera2</a> en 1ère personne</li>
+                                    <li>Les overlays ne sont pas acceptés (sauf exceptions: swing cam et camera ortho de taille raisonnable)</li>
+                                    <li>Évitez de nous envoyer des runs que vous avez déjà posté sur votre chaîne</li>
+                                    <li>Merci de donner uniquement des liens Google Drive, Dropbox ou OneDrive</li>
+                                    <li>La vidéo soumise ne doit pas avoir été éditée</li>
+                                    <li>Fichier de 3 Go maximum accepté</li>
+                                </ul>
+                                <i>Paramètres d'enregistrement recommandés : <a href="https://imgur.com/a/fswBbJe" target="_blank">Lien Imgur</a></i>
+                            </p>
                         </div>
-                        <% } else { %>
-                            <div class="alert alert-danger" role="alert">
-                                Vous devez être membre du serveur Discord BSFR afin de pouvoir nous soumettre une run.<br>
-                                Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="<%= process.env.DISCORD_INVITATION_URL %>" target="_blank"><%= process.env.DISCORD_INVITATION_URL %></a><br>
-                                <i>Actualisez la page après avoir rejoint le serveur Discord pour voir le formulaire.</i>
-                            </div>
-                        <% } %>
+                    </div>
 
-                        <% if(user.isBSFR) { %>
+                    <form class="form">
                         <div class="card">
                             <div class="card-body">
                                 <div class="mb-3">
@@ -154,8 +146,16 @@
                                 </div>
                             </div>
                         </div>
-                        <% } %>
                     </form>
+                    <% } else { %>
+                        <div class="alert alert-danger" role="alert">
+                            <div class="text-muted">
+                                Vous devez être membre du serveur Discord BSFR afin de pouvoir nous soumettre une run.<br>
+                                Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="<%= process.env.DISCORD_INVITATION_URL %>" target="_blank"><%= process.env.DISCORD_INVITATION_URL %></a><br>
+                                <i>Actualisez la page après avoir rejoint le serveur Discord pour voir le formulaire.</i>
+                            </div>
+                        </div>
+                    <% } %>
                 </div>
             </div>
         </div>
