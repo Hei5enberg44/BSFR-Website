@@ -4,6 +4,7 @@ require('dotenv').config()
 const discord = require('./controllers/discord')
 const city = require('./controllers/city')
 const webdav = require('./controllers/webdav')
+const mpov = require('./controllers/mpov')
 const fetch = require('node-fetch')
 const crypto = require('crypto')
 const multer = require('multer')
@@ -66,11 +67,11 @@ app.get('/forms/run/mpov', async (req, res) => {
         } else {
             const loginSuccess = req.session.discord.login_success
             req.session.discord.login_success = null
+            const mpovInfos = await mpov.getMPOVInfos()
             res.render('mpov/index.ejs', {
                 success: loginSuccess ? 'Connexion réussie' : null,
                 user: user,
-                startDate: mpovStartDate,
-                endDate: mpovEndDate
+                mpovInfos: mpovInfos
             })
         }
     }

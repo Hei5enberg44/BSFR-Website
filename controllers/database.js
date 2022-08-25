@@ -23,6 +23,21 @@ const Cities = sequelize.define('cities', {
     freezeTableName: true
 })
 
+const MPOV = sequelize.define('multi_pov', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    map_id: DataTypes.STRING(255),
+    difficulty: DataTypes.STRING(255),
+    date_start: { type: 'TIMESTAMP' },
+    date_end: { type: 'TIMESTAMP' }
+}, {
+    timestamps: false,
+    freezeTableName: true
+})
+
 module.exports = {
-    Cities
+    Cities, MPOV
 }

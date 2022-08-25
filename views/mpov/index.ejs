@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
     <link rel="stylesheet" href="/static/assets/css/background.css">
-    <title>Beat Saber FR - Soumissions de run Multi POV #3</title>
+    <title>Beat Saber FR - Soumissions de run Multi POV</title>
 </head>
 <body class="" style="background: none;">
     <div class="background"><div class="blur"></div></div>
@@ -47,7 +47,7 @@
                     <div class="row g-2 align-items-center">
                         <div class="col">
                             <h2 class="page-title text-white">
-                                Soumissions de run Multi POV #3
+                                Soumissions de run Multi POV
                             </h2>
                         </div>
                     </div>
@@ -56,80 +56,116 @@
             <div class="page-body">
                 <div class="container-xl">
                     <% if(user.isBSFR) { %>
+
+                    <%
+                        if(!mpovInfos.error) {
+                            const difficulties = [
+                                { difficulty: 'ExpertPlus', color: 'purple' },
+                                { difficulty: 'Expert+', color: 'purple' },
+                                { difficulty: 'Expert', color: 'red' },
+                                { difficulty: 'Hard', color: 'orange' },
+                                { difficulty: 'Normal', color: 'blue' },
+                                { difficulty: 'Easy', color: 'green' },
+                            ]
+                            const difficulty = difficulties.find(c => c.difficulty.toLowerCase() === mpovInfos.map.difficulty.toLowerCase())
+                            const diffColor = difficulty ? difficulty.color : 'white'
+                    %>
                     <div class="card mb-3">
                         <div class="card-body">
-                            <h3 class="card-title">Vidéo Multi POV BSFR #3</h3>
+                            <h3 class="card-title">Vidéo Multi POV BSFR #<%= mpovInfos.id %></h3>
 
-                            <h4>Map sélectionnée :</h4>
-                            <div class="row">
+                            <div class="row row-lg">
                                 <div class="col-12 col-lg-6">
-                                    <a class="card mb-3" href="https://beatsaver.com/maps/1f4ca" target="_blank">
+                                    <h4>Map sélectionnée :</h4>
+                                    <a class="card mb-3" href="https://beatsaver.com/maps/<%= mpovInfos.map.id %>" target="_blank">
                                         <div class="card-status-start bg-blue"></div>
                                         <div class="card-body">
                                             <div class="row d-flex align-items-center">
                                                 <div class="col-auto">
-                                                    <span class="avatar avatar-xl" style="background-image: url(https://eu.cdn.beatsaver.com/994ab1b532176e158d0ad095cd7a97398a8c53e0.jpg)"></span>
+                                                    <span class="avatar avatar-xl" style="background-image: url(<%= mpovInfos.map.cover %>)"></span>
                                                 </div>
                                                 <div class="col">
-                                                    <h3>USAO - Phalanx</h3>
-                                                    <div class="text-muted"><strong>Mapper:</strong> Timbo</div>
-                                                    <div class="text-muted"><strong>Difficulté:</strong> <span class="badge bg-purple">Expert+</span></div>
+                                                    <h3><%= mpovInfos.map.songName %></h3>
+                                                    <div class="text-muted"><strong>Mapper:</strong> <%= mpovInfos.map.levelAuthorName %></div>
+                                                    <div class="text-muted"><strong>Difficulté:</strong> <span class="badge bg-<%= diffColor %>"><%= mpovInfos.map.difficulty %></span></div>
                                                 </div>
                                             </div>
                                         </div>
                                     </a>
+
+                                    <table class="table table-sm table-vcenter">
+                                        <tbody>
+                                            <tr>
+                                                <th class="text-muted">Date de début</th>
+                                                <td><%- new Intl.DateTimeFormat('fr-FR', { dateStyle: 'full', timeStyle: 'short' }).format(new Date(mpovInfos.dateStart)) %></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Date de fin</th>
+                                                <td><%- new Intl.DateTimeFormat('fr-FR', { dateStyle: 'full', timeStyle: 'short' }).format(new Date(mpovInfos.dateEnd)) %></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-12 col-lg-6">
+                                    <h4>Critères à respecter :</h4>
+                                    <ul>
+                                        <li>Utiliser la configuration Camera2 fournie (obligatoire)</li>
+                                        <li>Enregistrez en 1080p (minimum) 60fps</li>
+                                        <li>Jouez sans aucun HUD (jeu, tchat Twitch, etc...)</li>
+                                        <li>Mode replay non autorisé</li>
+                                        <li>Les lights doivent être activées</li>
+                                        <li>Format obligatoire MP4</li>
+                                        <li>Fichier de 3 Go maximum</li>
+                                        <li>Notes par défaut mais taille au choix</li>
+                                        <li>La vidéo soumise ne doit pas avoir été éditée</li>
+                                    </ul>
+                                    <i>Paramètres d'enregistrement recommandés : <a href="https://imgur.com/a/fswBbJe" target="_blank">Lien Imgur</a></i>
                                 </div>
                             </div>
-
-                            <h4>Critères à respecter :</h4>
-                            <ul>
-                                <li>Utiliser la configuration Camera2 fournie (obligatoire)</li>
-                                <li>Enregistrez en 1080p (minimum) 60fps</li>
-                                <li>Jouez sans aucun HUD (jeu, tchat twitch, etc...)</li>
-                                <li>Mode replay non autorisé</li>
-                                <li>Les lights doivent être activées</li>
-                                <li>Format obligatoire MP4</li>
-                                <li>Fichier de 3 Go maximum</li>
-                                <li>Notes par défaut mais taille au choix</li>
-                                <li>La vidéo soumise ne doit pas avoir été éditée</li>
-                            </ul>
-                            Paramètres d'enregistrement recommandés : <a href="https://imgur.com/a/fswBbJe" target="_blank">Lien Imgur</a>
                         </div>
                     </div>
+
+                    <% if(Date.now() >= mpovInfos.dateStart && Date.now() < mpovInfos.dateEnd) { %>
+                    <form class="card form">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label"><span style="font-weight: bold; color: #FF0000;">*</span> : champ requis</label>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label required">Fichier de la run</label>
+                                <input type="file" class="form-control" id="video" required>
+                                <small class="form-hint">Fichier .mp4 conseillé, .mkv refusé</small>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-auto ms-auto">
+                                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <% } else { %>
+                    <div class="alert alert-info" role="alert">
+                        <div class="text-muted">La soumission de vidéo Multi POV BSFR #<%= mpovInfos.id %> est fermée</div>
+                    </div>
+                    <% } %>
+
                     <% } else { %>
                         <div class="alert alert-danger" role="alert">
-                            Vous devez être membre du serveur Discord BSFR afin de pouvoir nous soumettre une run Multi POV.<br>
-                            Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="<%= process.env.DISCORD_INVITATION_URL %>" target="_blank"><%= process.env.DISCORD_INVITATION_URL %></a><br>
-                            <i>Actualisez la page après avoir rejoint le serveur Discord pour voir le formulaire.</i>
+                            <div class="text-muted"><%= mpovInfos.error %></div>
                         </div>
                     <% } %>
 
-                    <% if(user.isBSFR) { %>
-                        <% if(Date.now() >= startDate && Date.now() < endDate) { %>
-                        <form class="card form">
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label class="form-label"><span style="font-weight: bold; color: #FF0000;">*</span> : champ requis</label>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label required">Fichier de la run</label>
-                                    <input type="file" class="form-control" id="video" required>
-                                    <small class="form-hint">Fichier .mp4 conseillé, .mkv refusé</small>
-                                </div>
+                    <% } else { %>
+                        <div class="alert alert-danger" role="alert">
+                            <div class="text-muted">
+                                Vous devez être membre du serveur Discord BSFR afin de pouvoir nous soumettre une run Multi POV.<br>
+                                Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="<%= process.env.DISCORD_INVITATION_URL %>" target="_blank"><%= process.env.DISCORD_INVITATION_URL %></a><br>
+                                <i>Actualisez la page après avoir rejoint le serveur Discord pour voir le formulaire.</i>
                             </div>
-                            <div class="card-footer">
-                                <div class="row">
-                                    <div class="col-auto ms-auto">
-                                        <button type="submit" class="btn btn-primary">Envoyer</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                        <% } else { %>
-                        <div class="alert alert-info" role="alert">
-                            <div class="text-muted">La soumission de vidéo Multi POV BSFR #3 est fermée</div>
                         </div>
-                        <% } %>
                     <% } %>
                 </div>
             </div>
