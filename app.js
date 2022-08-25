@@ -213,7 +213,7 @@ app.post('/forms/run/mpov', upload.array('files', 1), async (req, res) => {
         const file = req.files[0]
 
         try {
-            if(!file.mimetype.match(/^video\//)) {
+            if(!file.mimetype.match(/^video\/mp4$/)) {
                 res.json({ success: false, message: 'Le format du fichier sélectionné n\'est pas autorisé' })
             } else if(file.size > 3 * 1024 * 1024 * 1024) {
                 res.json({ success: false, message: 'La taille du fichier ne doit pas exéder 3 Go' })

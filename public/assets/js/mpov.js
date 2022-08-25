@@ -45,7 +45,8 @@ $runForm.addEventListener('submit', async function(e) {
         $video.classList.add('is-invalid')
     } else {
         const file = $video.files[0]
-        if(!file.type.match(/^video\//)) {
+        console.log(file.type)
+        if(!file.type.match(/^video\/mp4$/)) {
             error = true
             message = 'Le format du fichier sélectionné n\'est pas autorisé'
             $video.classList.add('is-invalid')
