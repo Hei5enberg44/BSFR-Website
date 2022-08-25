@@ -7,7 +7,6 @@ const webdav = require('./controllers/webdav')
 const fetch = require('node-fetch')
 const crypto = require('crypto')
 const multer = require('multer')
-const upload = multer({ dest: './uploads/' })
 const Logger = require('./utils/logger')
 const fs = require('node:fs')
 const app = express()
@@ -53,6 +52,8 @@ app.get('/forms/run/youtube', async (req, res) => {
     }
 })
 
+const mpovStartDate = (new Date(2022, 7, 26, 0, 0, 0)).getTime()
+const mpovEndDate = (new Date(2022, 8, 30, 0, 0, 0)).getTime()
 app.get('/forms/run/mpov', async (req, res) => {
     req.session.redirect = req.url
     if(!req.session.discord) {
@@ -67,7 +68,9 @@ app.get('/forms/run/mpov', async (req, res) => {
             req.session.discord.login_success = null
             res.render('mpov/index.ejs', {
                 success: loginSuccess ? 'Connexion réussie' : null,
-                user: user
+                user: user,
+                startDate: mpovStartDate,
+                endDate: mpovEndDate
             })
         }
     }
@@ -204,31 +207,33 @@ app.post('/forms/run/youtube', async (req, res) => {
     if(error) res.json({ error: 'Invalid request' })
 })
 
-app.post('/forms/run/mpov', upload.array('files', 1), async (req, res) => {
-    let error = true
-
-    if(req.files && req.files.length === 1) {
-        error = false
-
-        const file = req.files[0]
-
-        try {
-            if(!file.mimetype.match(/^video\/mp4$/)) {
-                res.json({ success: false, message: 'Le format du fichier sélectionné n\'est pas autorisé' })
-            } else if(file.size > 3 * 1024 * 1024 * 1024) {
-                res.json({ success: false, message: 'La taille du fichier ne doit pas exéder 3 Go' })
-            } else {
-                const token = crypto.randomBytes(10).toString('hex').slice(0, 20)
-                req.session.uploadToken = token
-                res.json({ success: true, message: 'Le fichier a bien été envoyé', file: file, token: token })
-            }
-        } catch(error) {
-            fs.unlinkSync(file.destination + '/' + file.filename)
-            res.json({ success: false, message: 'Erreur lors de l\'envoi de la run' })
-        }
+const mpovUpload = multer({
+    dest: './uploads/',
+    fileFilter: (req, file, cb) => {
+        let error = true
+        const fileSize = req.headers['content-length']
+        if(Date.now() < mpovStartDate || Date.now() >= mpovEndDate) {
+            req.fileValidationError = 'La soumission de vidéo Multi POV BSFR est fermée'
+        } else if(file.mimetype !== 'video/mp4') {
+            req.fileValidationError = 'Le format du fichier sélectionné n\'est pas autorisé'
+        } else if(fileSize > 3 * 1024 * 1024 * 1024) {
+            req.fileValidationError = 'La taille du fichier ne doit pas exéder 3 Go'
+        } else { error = false }
+        cb(null, !error)
     }
+})
 
-    if(error) res.json({ error: 'Invalid request' })
+app.post('/forms/run/mpov', mpovUpload.single('file'), (req, res) => {
+    const error = req.fileValidationError
+    if(error) {
+        res.json({ success: false, message: error })
+    } else if(!req.file) {
+        res.json({ error: 'Invalid request' })
+    } else {
+        const token = crypto.randomBytes(10).toString('hex').slice(0, 20)
+        req.session.uploadToken = token
+        res.json({ success: true, message: 'Le fichier a bien été envoyé', file: req.file, token: token })
+    }
 })
 
 app.post('/forms/run/mpov/upload', async (req, res) => {

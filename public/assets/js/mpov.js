@@ -41,18 +41,14 @@ $runForm.addEventListener('submit', async function(e) {
     if($video.files.length === 0) {
         error = true
         message = 'Veuillez sélectionner un fichier'
-        $video.classList.add('is-invalid')
     } else {
         const file = $video.files[0]
-        console.log(file.type)
-        if(!file.type.match(/^video\/mp4$/)) {
+        if(file.type !== 'video/mp4') {
             error = true
             message = 'Le format du fichier sélectionné n\'est pas autorisé'
-            $video.classList.add('is-invalid')
         } else if(file.size > 3 * 1024 * 1024 * 1024) {
             error = true
             message = 'La taille du fichier ne doit pas exéder 3 Go'
-            $video.classList.add('is-invalid')
         }
     }
 
@@ -60,11 +56,15 @@ $runForm.addEventListener('submit', async function(e) {
     runModal.show()
 
     if(error) {
+        $video.classList.add('is-invalid')
         $runModalUploadStatus.textContent = message
         $runModalCloseBtn.removeAttribute('disabled')
+        $runModalUploadProgress.classList.add('bg-danger')
+        $runModalUploadProgress.style.width = '100%'
+        $runModalUploadProgress.setAttribute('aria-valuenow', 100)
     } else {
         const formData = new FormData()
-        formData.append('files', $video.files[0])
+        formData.append('file', $video.files[0])
 
         // Affichage du popup d'upload de run
         runModal.show()
