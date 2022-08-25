@@ -1,6 +1,5 @@
 const $video = document.querySelector('#video')
 const $runForm = document.querySelector('.form')
-const $btnClear = document.querySelector('.btn-clear')
 const $runModal = document.querySelector('#modalRun')
 const $runModalUploadStatus = document.querySelector('#upload-status')
 const $runModalUploadProgress = document.querySelector('#upload-progress')
@@ -115,9 +114,4 @@ $runForm.addEventListener('submit', async function(e) {
 
         xhr.send(formData)
     }
-})
-
-// Action au reset du formulaire
-$btnClear.addEventListener('click', function() {
-    $runForm.reset()
 })
