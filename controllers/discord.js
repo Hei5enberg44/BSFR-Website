@@ -1,5 +1,5 @@
-require('dotenv').config()
 const fetch = require('node-fetch')
+const config = require('../config.json')
 
 module.exports = {
     send: async function(discord, method, endpoint, options = null, bot = false) {
@@ -10,7 +10,7 @@ module.exports = {
         const request = await fetch(endpoint + (options || ''), {
             method: method,
             headers: {
-                'Authorization': `${bot ? 'Bot ' + process.env.DISCORD_BOT_TOKEN : 'Bearer ' + discord.tokens.access_token} `
+                'Authorization': `${bot ? 'Bot ' + config.discord.bot_token : 'Bearer ' + discord.tokens.access_token} `
             },
             body: options
         })
@@ -25,8 +25,8 @@ module.exports = {
 
     refreshToken: async function(refreshToken) {
         const options = new URLSearchParams({
-            'client_id': process.env.DISCORD_CLIENT_ID,
-            'client_secret': process.env.DISCORD_CLIENT_SECRET,
+            'client_id': config.discord.client_id,
+            'client_secret': config.discord.client_secret,
             'grant_type': 'refresh_token',
             'refresh_token': refreshToken
         })
@@ -50,8 +50,8 @@ module.exports = {
 
     revokeToken: async function(discord) {
         const options = new URLSearchParams({
-            'client_id': process.env.DISCORD_CLIENT_ID,
-            'client_secret': process.env.DISCORD_CLIENT_SECRET,
+            'client_id': config.discord.client_id,
+            'client_secret': config.discord.client_secret,
             'access_token': discord.tokens.access_token
         })
 
@@ -70,7 +70,7 @@ module.exports = {
 
     getCurrentUser: async function(discord) {
         const datas = await module.exports.send(discord, 'GET', 'https://discord.com/api/users/@me')
-        datas.isBSFR = await module.exports.send(discord, 'GET', `https://discord.com/api/users/@me/guilds/${process.env.DISCORD_GUILD_ID}/member`) ? true : false
+        datas.isBSFR = await module.exports.send(discord, 'GET', `https://discord.com/api/users/@me/guilds/${config.discord.guild_id}/member`) ? true : false
         return datas
     },
 
@@ -104,7 +104,7 @@ module.exports = {
                 }
             }
 
-            const response = await fetch(process.env.DISCORD_WEBHOOK_VOTERUN, {
+            const response = await fetch(config.discord.webhook_voterun, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -129,12 +129,12 @@ module.exports = {
     },
 
     getGuildMembers: async function(discord) {
-        const datas = await module.exports.send(discord, 'GET', `https://discord.com/api/guilds/${process.env.DISCORD_GUILD_ID}/members?limit=1000`, null, true)
+        const datas = await module.exports.send(discord, 'GET', `https://discord.com/api/guilds/${config.discord.guild_id}/members?limit=1000`, null, true)
         return datas
     },
 
     getGuildPreview: async function(discord) {
-        const datas = await module.exports.send(discord, 'GET', `https://discord.com/api/guilds/${process.env.DISCORD_GUILD_ID}/preview`, null, true)
+        const datas = await module.exports.send(discord, 'GET', `https://discord.com/api/guilds/${config.discord.guild_id}/preview`, null, true)
         return datas
     }
 }

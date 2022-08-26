@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
+    <link rel="stylesheet" href="/static/assets/css/alert.css">
     <link rel="stylesheet" href="/static/assets/css/background.css">
+    <link rel="stylesheet" href="/static/assets/libs/animate/animate.min.css">
     <title>Beat Saber FR - Soumissions de run Multi POV</title>
 </head>
 <body class="" style="background: none;">
@@ -162,7 +164,7 @@
                         <div class="alert alert-danger" role="alert">
                             <div class="text-muted">
                                 Vous devez être membre du serveur Discord BSFR afin de pouvoir nous soumettre une run Multi POV.<br>
-                                Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="<%= process.env.DISCORD_INVITATION_URL %>" target="_blank"><%= process.env.DISCORD_INVITATION_URL %></a><br>
+                                Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="<%= inviteUrl %>" target="_blank"><%= inviteUrl %></a><br>
                                 <i>Actualisez la page après avoir rejoint le serveur Discord pour voir le formulaire.</i>
                             </div>
                         </div>
@@ -193,8 +195,9 @@
 
     <script src="/static/assets/libs/tabler/script.min.js"></script>
     <script src="/static/assets/js/app.js"></script>
-    <% if(user.isBSFR) { %>
+    <% if(user.isBSFR && Date.now() >= mpovInfos.dateStart && Date.now() < mpovInfos.dateEnd) { %>
     <script src="/static/assets/js/mpov.js"></script>
     <% } %>
+    <% if(login_success !== null) { %><script>showAlert(<%= login_success %>, '<%= login_success ? 'Connexion réussie' : 'Connexion échouée' %>')</script><% } %>
 </body>
 </html>

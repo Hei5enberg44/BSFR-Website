@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
+    <link rel="stylesheet" href="/static/assets/css/alert.css">
     <link rel="stylesheet" href="/static/assets/css/background.css">
+    <link rel="stylesheet" href="/static/assets/libs/animate/animate.min.css">
     <title>Beat Saber FR - Soumission run YouTube</title>
 </head>
 <body class="" style="background: none;">
@@ -93,18 +95,18 @@
                                     <small class="form-hint">Artiste - Nom de la map, Difficulté, Précision, FC/Miss</small>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label required">Profil Scoresaber</label>
+                                    <label class="form-label required">Profil ScoreSaber</label>
                                     <input type="text" class="form-control" id="scoresaber_profil" placeholder="https://scoresaber.com/u/76561198796531407" required>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label required">Leaderboard de la map</label>
                                     <input type="text" class="form-control" id="scoresaber_leaderboard" placeholder="https://scoresaber.com/leaderboard/6286" autocomplete="off" required>
-                                    <small class="form-hint">Ajoutez le lien scoresaber de la map que vous avez joué dans votre vidéo</small>
+                                    <small class="form-hint">Ajoutez le lien ScoreSaber de la map que vous avez joué dans votre vidéo</small>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label required">Lien Beatsaver</label>
+                                    <label class="form-label required">Lien BeatSaver</label>
                                     <input type="text" class="form-control" id="beatsaver" placeholder="https://beatsaver.com/maps/3b5" autocomplete="off" required>
-                                    <small class="form-hint">Ajoutez le lien Beatsaver de la map que vous avez joué dans votre vidéo</small>
+                                    <small class="form-hint">Ajoutez le lien BeatSaver de la map que vous avez joué dans votre vidéo</small>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label required">Votre casque VR</label>
@@ -130,7 +132,7 @@
                                     <input type="text" class="form-control" id="twitch_url" placeholder="https://twitch.tv/beatsaberfr">
                                 </div>
                                 <div>
-                                    <label class="form-label">Commentaire du joueur (apparaitra en description de la vidéo)</label>
+                                    <label class="form-label">Commentaire du joueur (apparaîtra en description de la vidéo)</label>
                                     <textarea class="form-control" id="comments" maxlength="250" style="min-height:98px"></textarea>
                                     <small class="form-hint">250 caractères max. (<span id="remaining">250</span> restants)</small>
                                 </div>
@@ -151,7 +153,7 @@
                         <div class="alert alert-danger" role="alert">
                             <div class="text-muted">
                                 Vous devez être membre du serveur Discord BSFR afin de pouvoir nous soumettre une run.<br>
-                                Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="<%= process.env.DISCORD_INVITATION_URL %>" target="_blank"><%= process.env.DISCORD_INVITATION_URL %></a><br>
+                                Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="<%= inviteUrl %>" target="_blank"><%= inviteUrl %></a><br>
                                 <i>Actualisez la page après avoir rejoint le serveur Discord pour voir le formulaire.</i>
                             </div>
                         </div>
@@ -187,5 +189,6 @@
         autosize(document.querySelector('#comments'))
     </script>
     <% } %>
+    <% if(login_success !== null) { %><script>showAlert(<%= login_success %>, '<%= login_success ? 'Connexion réussie' : 'Connexion échouée' %>')</script><% } %>
 </body>
 </html>
