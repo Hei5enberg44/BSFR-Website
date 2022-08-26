@@ -2,13 +2,12 @@ const cookieSession = require('cookie-session')
 const express = require('express')
 const discord = require('./controllers/discord')
 const city = require('./controllers/city')
-const webdav = require('./controllers/webdav')
 const mpov = require('./controllers/mpov')
 const fetch = require('node-fetch')
 const crypto = require('crypto')
 const multer = require('multer')
-const Logger = require('./utils/logger')
 const fs = require('node:fs')
+const Logger = require('./utils/logger')
 const config = require('./config.json')
 
 const app = express()
@@ -194,8 +193,21 @@ app.post('/forms/run/youtube', async (req, res) => {
     if(error) res.json({ error: 'Invalid request' })
 })
 
+const mpovStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const user = req.session.discord.user
+        const username = `${user.username}#${user.discriminator}`
+        const path = `./uploads/${username}`
+        if(!fs.existsSync(path)) fs.mkdirSync(path)
+        cb(null, path)
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+})
+
 const mpovUpload = multer({
-    dest: './uploads/',
+    storage: mpovStorage,
     fileFilter: async (req, file, cb) => {
         let error = true
         const fileSize = req.headers['content-length']
@@ -213,50 +225,16 @@ const mpovUpload = multer({
 
 app.post('/forms/run/mpov', mpovUpload.single('file'), (req, res) => {
     const error = req.fileValidationError
+    const user = req.session.discord.user
     if(error) {
+        Logger.log('MultiPOV', 'INFO', `L'upload de la run de ${user.username} dans le drive a échoué`)
         res.json({ success: false, message: error })
     } else if(!req.file) {
         res.json({ error: 'Invalid request' })
     } else {
-        const token = crypto.randomBytes(10).toString('hex').slice(0, 20)
-        req.session.uploadToken = token
-        res.json({ success: true, message: 'Le fichier a bien été envoyé', file: req.file, token: token })
+        Logger.log('MultiPOV', 'SUCCESS', `La run de ${user.username} a bien été uploadée`)
+        res.json({ success: true, message: 'Le fichier a bien été envoyé' })
     }
-})
-
-app.post('/forms/run/mpov/upload', async (req, res) => {
-    let error = true
-
-    if(req.session.uploadToken && req.body.file && req.body.token) {
-        if(req.body.token === req.session.uploadToken) {
-            error = false
-
-            const file = req.body.file
-            const user = req.session.discord.user
-            const username = `${user.username}#${user.discriminator}`
-
-            delete req.session.uploadToken
-
-            try {
-                Logger.log('MultiPOV', 'INFO', `Upload de la run de ${username} dans le drive (${file.filename})`)
-
-                const destPath = `${config.nextcloud.mpov_location}/${username}`
-                await webdav.createFolder(destPath)
-                await webdav.uploadFile(fs.createReadStream(file.destination + file.filename), `${destPath}/${file.originalname}`)
-                fs.unlinkSync(file.destination + file.filename)
-                
-                Logger.log('MultiPOV', 'SUCCESS', `La run de ${username} a bien été uploadée dans le drive`)
-
-                res.json({ success: true, message: 'La run a bien été envoyée' })
-            } catch(error) {
-                Logger.log('MultiPOV', 'ERROR', `L'upload de la run de ${username} dans le drive a échoué (${file.filename})`)
-
-                res.json({ success: false, message: 'Erreur lors de l\'upload de la run sur le drive' })
-            }
-        }
-    }
-
-    if(error) res.json({ error: 'Invalid request' })
 })
 
 app.listen(port)

@@ -61,6 +61,7 @@ $runForm.addEventListener('submit', async function(e) {
         $video.classList.add('is-invalid')
         $runModalUploadStatus.textContent = message
         $runModalCloseBtn.removeAttribute('disabled')
+        $runModalUploadPercent.textContent = ''
         $runModalUploadProgress.classList.add('bg-danger')
         $runModalUploadProgress.style.width = '100%'
         $runModalUploadProgress.setAttribute('aria-valuenow', 100)
@@ -78,31 +79,12 @@ $runForm.addEventListener('submit', async function(e) {
             $runModalUploadStatus.textContent = xhr.response.message
             $runModalUploadPercent.textContent = ''
             $runModalCloseBtn.removeAttribute('disabled')
-
-            if(!xhr.response.success) {
-                $runModalUploadProgress.classList.add('bg-danger')
-            } else {
-                $runModalUploadProgress.classList.add('bg-success')
-
-                $runForm.reset()
-
-                const token = xhr.response.token
-                const file = xhr.response.file
-
-                await fetch('/forms/run/mpov/upload', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        token: token,
-                        file: file
-                    })
-                })
-            }
+            $runModalUploadProgress.classList.add(`bg-${xhr.response.success ? 'success' : 'danger'}`)
+            if(xhr.response.success) $runForm.reset()
         }
 
         xhr.upload.onerror = () => {
+            $runModalUploadPercent.textContent = ''
             $runModalUploadProgress.classList.add('bg-danger')
             $runModalUploadStatus.textContent = 'Une erreur est survenue lors de l\'envoi du fichier vers le serveur'
         }
