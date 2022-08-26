@@ -233,23 +233,23 @@ app.post('/forms/run/mpov/upload', async (req, res) => {
 
             const file = req.body.file
             const user = req.session.discord.user
+            const username = `${user.username}#${user.discriminator}`
 
             delete req.session.uploadToken
 
             try {
-                Logger.log('MultiPOV', 'INFO', `Upload de la run de ${user.username} dans le drive`)
+                Logger.log('MultiPOV', 'INFO', `Upload de la run de ${username} dans le drive`)
 
-                await webdav.createFolder(config.nextcloud.mpov_location + '/' + user.username)
-                await webdav.uploadFile(fs.createReadStream(file.destination + file.filename), config.nextcloud.mpov_location + '/' + user.username + '/' + file.originalname)
-                fs.unlinkSync(file.destination + '/' + file.filename)
+                const destPath = `${config.nextcloud.mpov_location}/${username}`
+                await webdav.createFolder(destPath)
+                await webdav.uploadFile(fs.createReadStream(file.destination + file.filename), `${destPath}/${file.originalname}`)
+                fs.unlinkSync(file.destination + file.filename)
                 
-                Logger.log('MultiPOV', 'SUCCESS', `La run de ${user.username} a bien été uploadée dans le drive`)
+                Logger.log('MultiPOV', 'SUCCESS', `La run de ${username} a bien été uploadée dans le drive`)
 
                 res.json({ success: true, message: 'La run a bien été envoyée' })
             } catch(error) {
-                fs.unlinkSync(file.destination + '/' + file.filename)
-
-                Logger.log('MultiPOV', 'ERROR', `L'upload de la run de ${user.username} dans le drive a échouée`)
+                Logger.log('MultiPOV', 'ERROR', `L'upload de la run de ${username} dans le drive a échoué`)
 
                 res.json({ success: false, message: 'Erreur lors de l\'upload de la run sur le drive' })
             }
