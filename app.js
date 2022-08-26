@@ -1,12 +1,11 @@
 const cookieSession = require('cookie-session')
 const express = require('express')
+const fileUpload = require('express-fileupload')
 const discord = require('./controllers/discord')
 const city = require('./controllers/city')
 const mpov = require('./controllers/mpov')
 const fetch = require('node-fetch')
 const crypto = require('crypto')
-const multer = require('multer')
-const fs = require('node:fs')
 const Logger = require('./utils/logger')
 const config = require('./config.json')
 
@@ -23,6 +22,15 @@ app.use(cookieSession({
     name: 'session',
     keys: [ '0iiCr1etoh6sMsoi' ],
     maxAge: 24 * 60 * 60 * 1000
+}))
+
+app.use(fileUpload({
+    limits: { fileSize: 3 * 1024 * 1024 * 1024 },
+    createParentPath: true,
+    preserveExtension: true,
+    uploadTimeout: 18000,
+    useTempFiles: true,
+    tempFileDir: './uploads'
 }))
 
 const requireLogin = function(req, res, next) {
@@ -178,62 +186,52 @@ app.get('/discord/logout', async (req, res) => {
 })
 
 app.post('/forms/run/youtube', async (req, res) => {
-    let error = true
-
     const body = req.body
     if(body.url !== null && body.description !== null && body.scoresaber_profil !== null && body.scoresaber_leaderboard !== null
         && body.beatsaver !== null && body.headset !== null && body.grip !== null && body.twitch_url !== null && body.comments !== null) {
-        error = false
 
         const result = await discord.submitRun(req.session.discord, body)
 
         res.json(result)
+    } else {
+        res.json({ error: 'Invalid request' })
     }
-
-    if(error) res.json({ error: 'Invalid request' })
 })
 
-const mpovStorage = multer.diskStorage({
-    destination: function (req, file, cb) {
+app.post('/forms/run/mpov', async (req, res) => {
+    if(req?.files?.file) {
+        const file = req.files.file
         const user = req.session.discord.user
         const username = `${user.username}#${user.discriminator}`
-        const path = `./uploads/${username}`
-        if(!fs.existsSync(path)) fs.mkdirSync(path)
-        cb(null, path)
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname)
-    }
-})
 
-const mpovUpload = multer({
-    storage: mpovStorage,
-    fileFilter: async (req, file, cb) => {
-        let error = true
-        const fileSize = req.headers['content-length']
-        const mpovInfos = await mpov.getMPOVInfos()
-        if(Date.now() < mpovInfos.dateStart || Date.now() >= mpovInfos.dateEnd) {
-            req.fileValidationError = 'La soumission de vidéo Multi POV BSFR est fermée'
-        } else if(file.mimetype !== 'video/mp4') {
-            req.fileValidationError = 'Le format du fichier sélectionné n\'est pas autorisé'
-        } else if(fileSize > 3 * 1024 * 1024 * 1024) {
-            req.fileValidationError = 'La taille du fichier ne doit pas exéder 3 Go'
-        } else { error = false }
-        cb(null, !error)
-    }
-})
+        try {
+            const mpovInfos = await mpov.getMPOVInfos()
 
-app.post('/forms/run/mpov', mpovUpload.single('file'), (req, res) => {
-    const error = req.fileValidationError
-    const user = req.session.discord.user
-    if(error) {
-        Logger.log('MultiPOV', 'INFO', `L'upload de la run de ${user.username} dans le drive a échoué`)
-        res.json({ success: false, message: error })
-    } else if(!req.file) {
-        res.json({ error: 'Invalid request' })
+            if(Date.now() < mpovInfos.dateStart || Date.now() >= mpovInfos.dateEnd) {
+                throw new Error('La soumission de vidéo Multi POV BSFR est fermée')
+            } else if(file.mimetype !== 'video/mp4') {
+                throw new Error('Le format du fichier sélectionné n\'est pas autorisé')
+            } else if(file.size > 3 * 1024 * 1024 * 1024) {
+                throw new Error('La taille du fichier ne doit pas exéder 3 Go')
+            }
+
+            await new Promise((resolve, reject) => {
+                file.mv(`./uploads/${username}/${file.name}`, (err) => {
+                    if(err) {
+                        reject(err.message)
+                    } else {
+                        resolve()
+                    }
+                })
+            })
+
+            Logger.log('MultiPOV', 'SUCCESS', `La run de ${username} a bien été uploadée`)
+            res.send({ success: true, message: 'Le fichier a bien été envoyé' })
+        } catch(error) {
+            res.send({ success: false, message: error.message })
+        }
     } else {
-        Logger.log('MultiPOV', 'SUCCESS', `La run de ${user.username} a bien été uploadée`)
-        res.json({ success: true, message: 'Le fichier a bien été envoyé' })
+        res.json({ error: 'Invalid request' })
     }
 })
 
