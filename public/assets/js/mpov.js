@@ -2,6 +2,7 @@ const $video = document.querySelector('#video')
 const $runForm = document.querySelector('.form')
 const $runModal = document.querySelector('#modalRun')
 const $runModalUploadStatus = document.querySelector('#upload-status')
+const $runModalUploadPercent = document.querySelector('#upload-percent')
 const $runModalUploadProgress = document.querySelector('#upload-progress')
 const $runModalCloseBtn = document.querySelector('#close-modal-run')
 
@@ -19,6 +20,7 @@ $runModal.addEventListener('show.bs.modal', function() {
 // Action à la fermeture du popup d'upload de run
 $runModal.addEventListener('hidden.bs.modal', function() {
     $runModalUploadStatus.textContent = ''
+    $runModalUploadPercent.textContent = ''
     $runModalUploadProgress.classList.remove('bg-success')
     $runModalUploadProgress.classList.remove('bg-danger')
     $runModalUploadProgress.style.width = '0%'
@@ -74,6 +76,7 @@ $runForm.addEventListener('submit', async function(e) {
 
         xhr.onload = async () => {
             $runModalUploadStatus.textContent = xhr.response.message
+            $runModalUploadPercent.textContent = ''
             $runModalCloseBtn.removeAttribute('disabled')
 
             if(!xhr.response.success) {
@@ -106,6 +109,7 @@ $runForm.addEventListener('submit', async function(e) {
 
         xhr.upload.onprogress = (event) => {
             const progress = event.loaded * 100 / event.total
+            $runModalUploadPercent.textContent = `(${Math.round(progress)}%)`
             $runModalUploadProgress.style.width = progress + '%'
             $runModalUploadProgress.setAttribute('aria-valuenow', progress)
         }
