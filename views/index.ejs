@@ -7,7 +7,9 @@
     <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
     <link rel="stylesheet" href="/static/assets/css/style.css">
+    <link rel="stylesheet" href="/static/assets/css/alert.css">
     <link rel="stylesheet" href="/static/assets/css/background.css">
+    <link rel="stylesheet" href="/static/assets/libs/animate/animate.min.css">
     <link rel="stylesheet" href="/static/assets/css/discord.min.css">
     <title>Beat Saber FR</title>
 </head>
@@ -34,7 +36,7 @@
                             --><div id="message-content-983352546015998014" class="markup-eYLPri messageContent-2t3eCI"><!---
                                 --><span class="emojiContainer-2XKwXX" role="button" tabindex="0"><img aria-label=":Discord:" src="/static/assets/images/discord.png" alt=":Discord:" draggable="false" class="emoji" data-type="emoji"></span><!--
                                 -->  <strong>Discord :</strong><br><!---
-                                --><a class="anchor-1MIwyf anchorUnderlineOnHover-2qPutX" title="<%= process.env.DISCORD_INVITATION_URL %>" href="<%= process.env.DISCORD_INVITATION_URL %>" rel="noreferrer noopener" target="_blank" role="button" tabindex="0"><%= process.env.DISCORD_INVITATION_URL %></a><br><!---
+                                --><a class="anchor-1MIwyf anchorUnderlineOnHover-2qPutX" title="<%= inviteUrl %>" href="<%= inviteUrl %>" rel="noreferrer noopener" target="_blank" role="button" tabindex="0"><%= inviteUrl %></a><br><!---
                                 --><div id="message-accessories-983352546015998014" class="container-2sjPya"><!---
                                     --><div class="wrapper-1HIH0j userSelectNone-3AtPzf cursorDefault-2KkZ5q"><!---
                                         --><div class="inviteSplash-2nkLRX"><!---
@@ -72,7 +74,7 @@
                                                     --></div><!---
                                                 --></strong><!---
                                             --></div><!---
-                                            --><button type="button" onclick="window.open('<%= process.env.DISCORD_INVITATION_URL %>', '_blank')" class="button-2b4VEQ height20-WSMpPs button-f2h6uQ lookFilled-yCfaCM colorGreen-3y-Z79 buttonSize-3QlBTl grow-2sR_-F"><!---
+                                            --><button type="button" onclick="window.open('<%= inviteUrl %>', '_blank')" class="button-2b4VEQ height20-WSMpPs button-f2h6uQ lookFilled-yCfaCM colorGreen-3y-Z79 buttonSize-3QlBTl grow-2sR_-F"><!---
                                                 --><div class="contents-3ca1mk">Rejoindre</div><!---
                                             --></button><!---
                                         --></div><!---
@@ -147,5 +149,8 @@
             </div>
         </div>
     </div>
+
+    <script src="/static/assets/js/app.js"></script>
+    <% if(login_success !== null) { %><script>showAlert(<%= login_success %>, '<%= login_success ? 'Connexion réussie' : 'Connexion échouée' %>')</script><% } %>
 </body>
 </html>

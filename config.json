@@ -1,0 +1,24 @@
+{
+    "discord": {
+        "guild_id": "",
+        "client_id": "",
+        "client_secret": "",
+        "redirect_uri": "",
+        "webhook_voterun": "",
+        "bot_token": "",
+        "invitation_url": ""
+    },
+    "nextcloud": {
+        "username": "",
+        "password": "",
+        "url": "",
+        "mpov_location": ""
+    },
+    "database": {
+        "host": "localhost",
+        "port": 3306,
+        "username": "",
+        "password": "",
+        "name": "bsfr_agent"
+    }
+}

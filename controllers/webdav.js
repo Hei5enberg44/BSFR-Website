@@ -1,6 +1,6 @@
 const WebDAV = require('webdav')
 const fs = require('node:fs')
-require('dotenv').config()
+const config = require('../config.json')
 
 module.exports = {
     /**
@@ -8,9 +8,9 @@ module.exports = {
      * @returns {WebDAV.WebDAVClient} client WebDAV
      */
     getClient: function() {
-        const client = WebDAV.createClient(process.env.NEXTCLOUD_URL, {
-            username: process.env.NEXTCLOUD_USERNAME,
-            password: process.env.NEXTCLOUD_PASSWORD,
+        const client = WebDAV.createClient(config.nextcloud.url, {
+            username: config.nextcloud.username,
+            password: config.nextcloud.password,
             maxBodyLength: 3 * 1024 * 1024 * 1024
         })
 

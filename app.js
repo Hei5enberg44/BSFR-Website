@@ -1,6 +1,5 @@
 const cookieSession = require('cookie-session')
 const express = require('express')
-require('dotenv').config()
 const discord = require('./controllers/discord')
 const city = require('./controllers/city')
 const webdav = require('./controllers/webdav')
@@ -10,6 +9,8 @@ const crypto = require('crypto')
 const multer = require('multer')
 const Logger = require('./utils/logger')
 const fs = require('node:fs')
+const config = require('./config.json')
+
 const app = express()
 const port = 3020
 
@@ -33,39 +34,52 @@ const requireLogin = function(req, res, next) {
         if(!req.session.discord.user) {
             res.redirect('/discord/logout')
         } else {
+            if(req.session.discord.login_success !== null) {
+                req.login_sucess = req.session.discord.login_success
+                req.session.discord.login_success = null
+            }
             next()
         }
     }
 }
 
 app.get('/', async (req, res) => {
+    if(req.session.discord) {
+        req.login_sucess = req.session.discord.login_success ?? null
+        if(req.login_sucess === false) delete req.session.discord
+    }
+
     const guild = await discord.getGuildPreview()
     res.render('index.ejs', {
-        login_success: req.session?.discord?.login_success ?? undefined,
-        guild: guild
+        login_success: req.login_sucess ?? null,
+        guild: guild,
+        inviteUrl: config.discord.invitation_url
     })
 })
 
 app.get('/forms/run/youtube', requireLogin, async (req, res) => {
     res.render('run/index.ejs', {
-        login_success: req.session?.discord?.login_success ?? undefined,
-        user: req.session.discord.user
+        login_success: req.login_sucess ?? null,
+        user: req.session.discord.user,
+        inviteUrl: config.discord.invitation_url
     })
 })
 
 app.get('/forms/run/mpov', requireLogin, async (req, res) => {
     const mpovInfos = await mpov.getMPOVInfos()
     res.render('mpov/index.ejs', {
-        login_success: req.session?.discord?.login_success ?? undefined,
+        login_success: req.login_sucess ?? null,
         user: req.session.discord.user,
+        inviteUrl: config.discord.invitation_url,
         mpovInfos: mpovInfos
     })
 })
 
 app.get('/interactive-map', requireLogin, async (req, res) => {
     res.render('map/index.ejs', {
-        login_success: req.session?.discord?.login_success ?? undefined,
-        user: req.session.discord.user
+        login_success: req.login_sucess ?? null,
+        user: req.session.discord.user,
+        inviteUrl: config.discord.invitation_url
     })
 })
 
@@ -96,11 +110,11 @@ app.get('/discord/authorize', (req, res) => {
     const state = crypto.randomBytes(10).toString('hex').slice(0, 20)
     const options = new URLSearchParams({
         response_type: 'code',
-        client_id: process.env.DISCORD_CLIENT_ID,
+        client_id: config.discord.client_id,
         scope: 'identify guilds.members.read',
         state: state,
-        redirect_uri: process.env.DISCORD_REDIRECT_URI,
-        prompt: 'consent'
+        redirect_uri: config.discord.redirect_uri,
+        prompt: 'none'
     }).toString()
 
     req.session.state = state
@@ -120,11 +134,11 @@ app.get('/discord/login', async (req, res) => {
 
     if(code && state === req.session.state) {
         const options = new URLSearchParams({
-            'client_id': process.env.DISCORD_CLIENT_ID,
-            'client_secret': process.env.DISCORD_CLIENT_SECRET,
+            'client_id': config.discord.client_id,
+            'client_secret': config.discord.client_secret,
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': process.env.DISCORD_REDIRECT_URI
+            'redirect_uri': config.discord.redirect_uri
         })
 
         const exchangeCodeRequest = await fetch('https://discord.com/api/oauth2/token', {
@@ -225,8 +239,8 @@ app.post('/forms/run/mpov/upload', async (req, res) => {
             try {
                 Logger.log('MultiPOV', 'INFO', `Upload de la run de ${user.username} dans le drive`)
 
-                await webdav.createFolder(process.env.MPOV_LOCATION + '/' + user.username)
-                await webdav.uploadFile(fs.createReadStream(file.destination + file.filename), process.env.MPOV_LOCATION + '/' + user.username + '/' + file.originalname)
+                await webdav.createFolder(config.nextcloud.mpov_location + '/' + user.username)
+                await webdav.uploadFile(fs.createReadStream(file.destination + file.filename), config.nextcloud.mpov_location + '/' + user.username + '/' + file.originalname)
 
                 Logger.log('MultiPOV', 'SUCCESS', `La run de ${user.username} a bien été uploadée dans le drive`)
 
