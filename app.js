@@ -241,22 +241,22 @@ app.post('/forms/run/mpov/upload', async (req, res) => {
 
                 await webdav.createFolder(config.nextcloud.mpov_location + '/' + user.username)
                 await webdav.uploadFile(fs.createReadStream(file.destination + file.filename), config.nextcloud.mpov_location + '/' + user.username + '/' + file.originalname)
-
+                fs.unlinkSync(file.destination + '/' + file.filename)
+                
                 Logger.log('MultiPOV', 'SUCCESS', `La run de ${user.username} a bien été uploadée dans le drive`)
 
                 res.json({ success: true, message: 'La run a bien été envoyée' })
             } catch(error) {
-                console.log(error)
-                Logger.log('MultiPOV', 'ERROR', `L'upload de la run de ${user.username} dans le drive a échouée`)
                 fs.unlinkSync(file.destination + '/' + file.filename)
+
+                Logger.log('MultiPOV', 'ERROR', `L'upload de la run de ${user.username} dans le drive a échouée`)
+
                 res.json({ success: false, message: 'Erreur lors de l\'upload de la run sur le drive' })
             }
         }
     }
 
-    if(error) {
-        res.json({ error: 'Invalid request' })
-    }
+    if(error) res.json({ error: 'Invalid request' })
 })
 
 app.listen(port)
