@@ -8,12 +8,6 @@
         "bot_token": "",
         "invitation_url": ""
     },
-    "nextcloud": {
-        "username": "",
-        "password": "",
-        "url": "",
-        "mpov_location": ""
-    },
     "database": {
         "host": "localhost",
         "port": 3306,
