@@ -238,7 +238,7 @@ app.post('/forms/run/mpov/upload', async (req, res) => {
             delete req.session.uploadToken
 
             try {
-                Logger.log('MultiPOV', 'INFO', `Upload de la run de ${username} dans le drive`)
+                Logger.log('MultiPOV', 'INFO', `Upload de la run de ${username} dans le drive (${file.filename})`)
 
                 const destPath = `${config.nextcloud.mpov_location}/${username}`
                 await webdav.createFolder(destPath)
@@ -249,7 +249,7 @@ app.post('/forms/run/mpov/upload', async (req, res) => {
 
                 res.json({ success: true, message: 'La run a bien été envoyée' })
             } catch(error) {
-                Logger.log('MultiPOV', 'ERROR', `L'upload de la run de ${username} dans le drive a échoué`)
+                Logger.log('MultiPOV', 'ERROR', `L'upload de la run de ${username} dans le drive a échoué (${file.filename})`)
 
                 res.json({ success: false, message: 'Erreur lors de l\'upload de la run sur le drive' })
             }
