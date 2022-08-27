@@ -2,7 +2,7 @@ const $video = document.querySelector('#video')
 const $runForm = document.querySelector('.form')
 const $runModal = document.querySelector('#modalRun')
 const $runModalUploadStatus = document.querySelector('#upload-status')
-const $runModalUploadPercent = document.querySelector('#upload-percent')
+const $runModalUploadInfos = document.querySelector('#upload-infos')
 const $runModalUploadProgress = document.querySelector('#upload-progress')
 const $runModalCloseBtn = document.querySelector('#close-modal-run')
 
@@ -20,7 +20,7 @@ $runModal.addEventListener('show.bs.modal', function() {
 // Action à la fermeture du popup d'upload de run
 $runModal.addEventListener('hidden.bs.modal', function() {
     $runModalUploadStatus.textContent = ''
-    $runModalUploadPercent.textContent = ''
+    $runModalUploadInfos.textContent = ''
     $runModalUploadProgress.classList.remove('bg-success')
     $runModalUploadProgress.classList.remove('bg-danger')
     $runModalUploadProgress.style.width = '0%'
@@ -61,7 +61,7 @@ $runForm.addEventListener('submit', async function(e) {
         $video.classList.add('is-invalid')
         $runModalUploadStatus.textContent = message
         $runModalCloseBtn.removeAttribute('disabled')
-        $runModalUploadPercent.textContent = ''
+        $runModalUploadInfos.textContent = ''
         $runModalUploadProgress.classList.add('bg-danger')
         $runModalUploadProgress.style.width = '100%'
         $runModalUploadProgress.setAttribute('aria-valuenow', 100)
@@ -77,21 +77,34 @@ $runForm.addEventListener('submit', async function(e) {
 
         xhr.onload = async () => {
             $runModalUploadStatus.textContent = xhr.response.message
-            $runModalUploadPercent.textContent = ''
+            $runModalUploadInfos.textContent = ''
             $runModalCloseBtn.removeAttribute('disabled')
             $runModalUploadProgress.classList.add(`bg-${xhr.response.success ? 'success' : 'danger'}`)
             if(xhr.response.success) $runForm.reset()
         }
 
         xhr.upload.onerror = () => {
-            $runModalUploadPercent.textContent = ''
+            $runModalUploadInfos.textContent = ''
             $runModalUploadProgress.classList.add('bg-danger')
             $runModalUploadStatus.textContent = 'Une erreur est survenue lors de l\'envoi du fichier vers le serveur'
         }
 
+        let lastNow = new Date().getTime()
+        let lastMBytes = 0
         xhr.upload.onprogress = (event) => {
+            const now = new Date().getTime()
+            const bytes = event.loaded
+            const total = event.total
+            const kbytes = bytes / 1024
+            const mbytes = kbytes / 1024
+            const uploadedMBytes = mbytes - lastMBytes
+            const elapsed = (now - lastNow) / 1000
+            const mbps =  elapsed ? uploadedMBytes / elapsed : 0 
+            lastNow = now
+            lastMBytes = mbytes
+
             const progress = event.loaded * 100 / event.total
-            $runModalUploadPercent.textContent = `(${Math.round(progress)}%)`
+            $runModalUploadInfos.textContent = `${mbytes.toFixed(2)}Mo/${(total / 1024 / 1024).toFixed(2)}Mo (${mbps.toFixed(2)}Mo/s)`
             $runModalUploadProgress.style.width = progress + '%'
             $runModalUploadProgress.setAttribute('aria-valuenow', progress)
         }
