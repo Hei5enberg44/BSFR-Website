@@ -187,7 +187,7 @@ app.get('/discord/logout', async (req, res) => {
 
 app.post('/forms/run/youtube', async (req, res) => {
     const body = req.body
-    if(body.url !== null && body.description !== null && body.scoresaber_profil !== null && body.scoresaber_leaderboard !== null
+    if(body.url !== null && body.description !== null && body.leaderboard_profil !== null && body.map_leaderboard !== null
         && body.beatsaver !== null && body.headset !== null && body.grip !== null && body.twitch_url !== null && body.comments !== null) {
 
         const result = await discord.submitRun(req.session.discord, body)

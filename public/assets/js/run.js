@@ -29,8 +29,8 @@ $runForm.addEventListener('submit', async function(e) {
 
     const $url = this.querySelector('#url')
     const $description = this.querySelector('#description')
-    const $scoresaber_profil = this.querySelector('#scoresaber_profil')
-    const $scoresaber_leaderboard = this.querySelector('#scoresaber_leaderboard')
+    const $leaderboard_profil = this.querySelector('#leaderboard_profil')
+    const $map_leaderboard = this.querySelector('#map_leaderboard')
     const $beatsaver = this.querySelector('#beatsaver')
     const $headset = this.querySelector('#headset')
     const $grip = this.querySelector('#grip')
@@ -39,8 +39,8 @@ $runForm.addEventListener('submit', async function(e) {
 
     $url.classList.remove('is-invalid')
     $description.classList.remove('is-invalid')
-    $scoresaber_profil.classList.remove('is-invalid')
-    $scoresaber_leaderboard.classList.remove('is-invalid')
+    $leaderboard_profil.classList.remove('is-invalid')
+    $map_leaderboard.classList.remove('is-invalid')
     $beatsaver.classList.remove('is-invalid')
     $headset.classList.remove('is-invalid')
     $grip.classList.remove('is-invalid')
@@ -51,8 +51,8 @@ $runForm.addEventListener('submit', async function(e) {
 
     if($url.value === '') { error = true; $url.classList.add('is-invalid') }
     if($description.value === '') { error = true; $description.classList.add('is-invalid') }
-    if($scoresaber_profil.value === '') { error = true; $scoresaber_profil.classList.add('is-invalid') }
-    if($scoresaber_leaderboard.value === '') { error = true; $scoresaber_leaderboard.classList.add('is-invalid') }
+    if($leaderboard_profil.value === '') { error = true; $leaderboard_profil.classList.add('is-invalid') }
+    if($map_leaderboard.value === '') { error = true; $map_leaderboard.classList.add('is-invalid') }
     if($beatsaver.value === '') { error = true; $beatsaver.classList.add('is-invalid') }
     if($headset.value === '') { error = true; $headset.classList.add('is-invalid') }
     if($grip.value === '') { error = true; $grip.classList.add('is-invalid') }
@@ -63,8 +63,8 @@ $runForm.addEventListener('submit', async function(e) {
         const datas = {
             url: $url.value,
             description: $description.value,
-            scoresaber_profil: $scoresaber_profil.value,
-            scoresaber_leaderboard: $scoresaber_leaderboard.value,
+            leaderboard_profil: $leaderboard_profil.value,
+            map_leaderboard: $map_leaderboard.value,
             beatsaver: $beatsaver.value,
             headset: $headset.value,
             grip: $grip.value,
