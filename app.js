@@ -235,4 +235,8 @@ app.post('/forms/run/mpov', async (req, res) => {
     }
 })
 
+app.use(function(req, res) {
+    res.status(404).render('error')
+})
+
 app.listen(port)
