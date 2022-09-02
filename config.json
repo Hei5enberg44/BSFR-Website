@@ -1,4 +1,8 @@
 {
+    "cookie": {
+        "secure": true,
+        "secret": ""
+    },
     "discord": {
         "guild_id": "",
         "client_id": "",
@@ -6,7 +10,11 @@
         "redirect_uri": "",
         "webhook_voterun": "",
         "bot_token": "",
-        "invitation_url": ""
+        "invitation_url": "",
+        "roles": {
+            "Admin": "",
+            "Modérateur": ""
+        }
     },
     "database": {
         "host": "localhost",
