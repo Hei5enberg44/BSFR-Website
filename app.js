@@ -136,7 +136,7 @@ app.get('/cities', async (req, res) => {
 app.get('/guildMembers', async (req, res) => {
     if(req.xhr) {
         if(req.session.discord) {
-            const memberList = await members.get(req.session)
+            const memberList = await members.getGuildMembers(req.session)
             res.json(memberList)
             return
         }
@@ -149,7 +149,7 @@ app.get('/admin/', requireAdmin, async (req, res) => {
 })
 
 app.get('/admin/birthdays', requireAdmin, async (req, res) => {
-    const memberList = await members.get(req.session)
+    const memberList = await members.getGuildMembers(req.session)
     const birthdays = await agent.getBirthdays()
     const membersBirthday = birthdays.map(b => {
         const member = memberList.find(ml => ml.user.id === b.memberId)
@@ -169,11 +169,11 @@ app.get('/admin/birthdays', requireAdmin, async (req, res) => {
 })
 
 app.get('/admin/mutes', requireAdmin, async (req, res) => {
-    const memberList = await members.get(req.session)
+    const memberList = await members.getGuildMembers(req.session)
     const mutes = await agent.getMutes()
-    const mutedMembers = mutes.map(m => {
-        const member = memberList.find(ml => ml.user.id === m.memberId)
-        const author = memberList.find(ml => ml.user.id === m.mutedBy)
+    const mutedMembers = await Promise.all(mutes.map(async (m) => {
+        const member = memberList.find(ml => ml.user.id === m.memberId) ?? await members.getUser(req.session, m.memberId)
+        const author = memberList.find(ml => ml.user.id === m.mutedBy) ?? await members.getUser(req.session, m.mutedBy)
         const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(m.unmuteDate * 1000))
         return {
             avatar: member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : '',
@@ -185,7 +185,7 @@ app.get('/admin/mutes', requireAdmin, async (req, res) => {
             reason: m.reason,
             date: date
         }
-    })
+    }))
     res.render('admin/mutes', {
         page: 'mutes',
         login_success: req.login_sucess ?? null,
@@ -195,11 +195,11 @@ app.get('/admin/mutes', requireAdmin, async (req, res) => {
 })
 
 app.get('/admin/bans', requireAdmin, async (req, res) => {
-    const memberList = await members.get(req.session)
+    const memberList = await members.getGuildMembers(req.session)
     const bans = await agent.getBans()
-    const bannedMembers = bans.map(b => {
-        const member = memberList.find(ml => ml.user.id === b.memberId)
-        const author = memberList.find(ml => ml.user.id === b.bannedBy)
+    const bannedMembers = await Promise.all(bans.map(async (b) => {
+        const member = memberList.find(ml => ml.user.id === b.memberId) ?? await members.getUser(req.session, b.memberId)
+        const author = memberList.find(ml => ml.user.id === b.bannedBy) ?? await members.getUser(req.session, b.bannedBy)
         const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(b.unbanDate * 1000))
         return {
             avatar: member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : '',
@@ -211,7 +211,7 @@ app.get('/admin/bans', requireAdmin, async (req, res) => {
             reason: b.reason,
             date: date
         }
-    })
+    }))
     res.render('admin/bans', {
         page: 'bans',
         login_success: req.login_sucess ?? null,
