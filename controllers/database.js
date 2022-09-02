@@ -30,6 +30,7 @@ const Mutes = sequelize.define('mutes', {
     memberId: DataTypes.STRING(255),
     mutedBy: DataTypes.STRING(255),
     reason: DataTypes.TEXT,
+    muteDate: DataTypes.BIGINT,
     unmuteDate: DataTypes.BIGINT
 }, {
     timestamps: false,
@@ -46,6 +47,7 @@ const Bans = sequelize.define('bans', {
     bannedBy: DataTypes.STRING(255),
     approvedBy: DataTypes.STRING(255),
     reason: DataTypes.TEXT,
+    banDate: DataTypes.BIGINT,
     unbanDate: DataTypes.BIGINT
 }, {
     timestamps: false,
