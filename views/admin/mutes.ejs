@@ -44,6 +44,7 @@
                                             <th>Membre</th>
                                             <th>Muté par</th>
                                             <th>Raison</th>
+                                            <th>Date de mute</th>
                                             <th>Date de démute</th>
                                         </tr>
                                     </thead>
@@ -67,7 +68,8 @@
                                                 </div>
                                             </td>
                                             <td><%= mute.reason %></td>
-                                            <td><%= mute.date %></td>
+                                            <td><%= mute.muteDate %></td>
+                                            <td><%= mute.unmuteDate %></td>
                                         </tr>
                                         <% } %>
                                     </tbody>

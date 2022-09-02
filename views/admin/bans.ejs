@@ -44,6 +44,7 @@
                                             <th>Membre</th>
                                             <th>Banni par</th>
                                             <th>Raison</th>
+                                            <th>Date de ban</th>
                                             <th>Date de déban</th>
                                         </tr>
                                     </thead>
@@ -67,7 +68,8 @@
                                                 </div>
                                             </td>
                                             <td><%= ban.reason %></td>
-                                            <td><%= ban.date %></td>
+                                            <td><%= ban.banDate %></td>
+                                            <td><%= ban.unbanDate %></td>
                                         </tr>
                                         <% } %>
                                     </tbody>
