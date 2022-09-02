@@ -142,6 +142,11 @@ module.exports = {
         return datas
     },
 
+    getUserById: async function(discord, memberId) {
+        const datas = await module.exports.send(discord, 'GET', `https://discord.com/api/users/${memberId}`, null, true)
+        return datas
+    },
+
     getGuildPreview: async function(discord) {
         const datas = await module.exports.send(discord, 'GET', `https://discord.com/api/guilds/${config.discord.guild_id}/preview`, null, true)
         return datas
