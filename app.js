@@ -174,7 +174,8 @@ app.get('/admin/mutes', requireAdmin, async (req, res) => {
     const mutedMembers = await Promise.all(mutes.map(async (m) => {
         const member = memberList.find(ml => ml.user.id === m.memberId) ?? await members.getUser(req.session, m.memberId)
         const author = memberList.find(ml => ml.user.id === m.mutedBy) ?? await members.getUser(req.session, m.mutedBy)
-        const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(m.unmuteDate * 1000))
+        const muteDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(m.muteDate * 1000))
+        const unmuteDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(m.unmuteDate * 1000))
         return {
             avatar: member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : '',
             name: member ? `${member.user.username}#${member.user.discriminator}` : '',
@@ -183,7 +184,8 @@ app.get('/admin/mutes', requireAdmin, async (req, res) => {
                 name: author ? `${author.user.username}#${author.user.discriminator}` : ''
             },
             reason: m.reason,
-            date: date
+            muteDate: muteDate,
+            unmuteDate: unmuteDate
         }
     }))
     res.render('admin/mutes', {
@@ -200,7 +202,8 @@ app.get('/admin/bans', requireAdmin, async (req, res) => {
     const bannedMembers = await Promise.all(bans.map(async (b) => {
         const member = memberList.find(ml => ml.user.id === b.memberId) ?? await members.getUser(req.session, b.memberId)
         const author = memberList.find(ml => ml.user.id === b.bannedBy) ?? await members.getUser(req.session, b.bannedBy)
-        const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(b.unbanDate * 1000))
+        const banDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(b.banDate * 1000))
+        const unbanDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(b.unbanDate * 1000))
         return {
             avatar: member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : '',
             name: member ? `${member.user.username}#${member.user.discriminator}` : '',
@@ -209,7 +212,8 @@ app.get('/admin/bans', requireAdmin, async (req, res) => {
                 name: author ? `${author.user.username}#${author.user.discriminator}` : ''
             },
             reason: b.reason,
-            date: date
+            banDate: banDate,
+            unbanDate: unbanDate
         }
     }))
     res.render('admin/bans', {
