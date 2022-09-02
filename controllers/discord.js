@@ -69,9 +69,18 @@ module.exports = {
     },
 
     getCurrentUser: async function(discord) {
-        const datas = await module.exports.send(discord, 'GET', 'https://discord.com/api/users/@me')
-        datas.isBSFR = await module.exports.send(discord, 'GET', `https://discord.com/api/users/@me/guilds/${config.discord.guild_id}/member`) ? true : false
-        return datas
+        const user = await module.exports.send(discord, 'GET', 'https://discord.com/api/users/@me')
+        user.isBSFR = false
+        user.isAdmin = false
+        const member = await module.exports.send(discord, 'GET', `https://discord.com/api/guilds/${config.discord.guild_id}/members/${user.id}`, null, true)
+        if(!member) return user
+        if(member) {
+            user.isBSFR = true
+            if(member.roles.find(r => r === config.discord.roles['Admin'] || r === config.discord.roles['Modérateur'])) {
+                user.isAdmin = true
+            }
+        }
+        return user
     },
 
     submitRun: async function(discord, datas) {

@@ -1,7 +1,9 @@
-const cookieSession = require('cookie-session')
 const express = require('express')
+const session = require('express-session')
 const fileUpload = require('express-fileupload')
 const discord = require('./controllers/discord')
+const agent = require('./controllers/agent')
+const members = require('./controllers/members')
 const city = require('./controllers/city')
 const mpov = require('./controllers/mpov')
 const fetch = require('node-fetch')
@@ -18,10 +20,29 @@ app.use(express.json({
     type: ['application/json', 'text/plain']
 }))
 
-app.use(cookieSession({
-    name: 'session',
-    keys: [ '0iiCr1etoh6sMsoi' ],
-    maxAge: 24 * 60 * 60 * 1000
+const mysqlStore = require('express-mysql-session')(session)
+const sessionStore = new mysqlStore({
+    connectionLimit: 20,
+    host: config.database.host,
+    port: config.database.port,
+    user: config.database.username,
+    password: config.database.password,
+    database: 'bsfr_website',
+    createDatabaseTable: true
+})
+
+app.use(session({
+    resave: false,
+    saveUninitialized: false,
+    store: sessionStore,
+    secret: config.cookie.secret,
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000,
+        sameSite: false,
+        path: '/',
+        secure: config.cookie.secure,
+        httpOnly: false
+    }
 }))
 
 app.use(fileUpload({
@@ -50,6 +71,17 @@ const requireLogin = function(req, res, next) {
     }
 }
 
+const requireAdmin = function(req, res, next) {
+    requireLogin(req, res, function() {
+        const user = req.session.discord.user
+        if(user.isAdmin) {
+            next()
+        } else {
+            res.status(403).render('errors/403')
+        }
+    })
+}
+
 app.get('/', async (req, res) => {
     if(req.session.discord) {
         req.login_sucess = req.session.discord.login_success ?? null
@@ -65,7 +97,7 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/forms/run/youtube', requireLogin, async (req, res) => {
-    res.render('run/index.ejs', {
+    res.render('forms/run/youtube.ejs', {
         login_success: req.login_sucess ?? null,
         user: req.session.discord.user,
         inviteUrl: config.discord.invitation_url
@@ -74,7 +106,7 @@ app.get('/forms/run/youtube', requireLogin, async (req, res) => {
 
 app.get('/forms/run/mpov', requireLogin, async (req, res) => {
     const mpovInfos = await mpov.getMPOVInfos()
-    res.render('mpov/index.ejs', {
+    res.render('forms/run/mpov.ejs', {
         login_success: req.login_sucess ?? null,
         user: req.session.discord.user,
         inviteUrl: config.discord.invitation_url,
@@ -83,7 +115,7 @@ app.get('/forms/run/mpov', requireLogin, async (req, res) => {
 })
 
 app.get('/interactive-map', requireLogin, async (req, res) => {
-    res.render('map/index.ejs', {
+    res.render('map.ejs', {
         login_success: req.login_sucess ?? null,
         user: req.session.discord.user,
         inviteUrl: config.discord.invitation_url
@@ -104,12 +136,88 @@ app.get('/cities', async (req, res) => {
 app.get('/guildMembers', async (req, res) => {
     if(req.xhr) {
         if(req.session.discord) {
-            const members = await discord.getGuildMembers(req.session.discord)
-            res.json(members)
+            const memberList = await members.get(req.session)
+            res.json(memberList)
             return
         }
     }
     res.status(403).send('Unauthorized')
+})
+
+app.get('/admin/', requireAdmin, async (req, res) => {
+    res.redirect('/admin/birthdays')
+})
+
+app.get('/admin/birthdays', requireAdmin, async (req, res) => {
+    const memberList = await members.get(req.session)
+    const birthdays = await agent.getBirthdays()
+    const membersBirthday = birthdays.map(b => {
+        const member = memberList.find(ml => ml.user.id === b.memberId)
+        const date = new Intl.DateTimeFormat('fr-FR').format(new Date(b.date))
+        return {
+            avatar: member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : '',
+            name: member ? `${member.user.username}#${member.user.discriminator}` : '',
+            date: date
+        }
+    })
+    res.render('admin/birthdays', {
+        page: 'birthdays',
+        login_success: req.login_sucess ?? null,
+        user: req.session.discord.user,
+        birthdays: membersBirthday
+    })
+})
+
+app.get('/admin/mutes', requireAdmin, async (req, res) => {
+    const memberList = await members.get(req.session)
+    const mutes = await agent.getMutes()
+    const mutedMembers = mutes.map(m => {
+        const member = memberList.find(ml => ml.user.id === m.memberId)
+        const author = memberList.find(ml => ml.user.id === m.mutedBy)
+        const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(m.unmuteDate * 1000))
+        return {
+            avatar: member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : '',
+            name: member ? `${member.user.username}#${member.user.discriminator}` : '',
+            author: {
+                avatar: author ? `https://cdn.discordapp.com/avatars/${author.user.id}/${author.user.avatar}.webp?size=80` : '',
+                name: author ? `${author.user.username}#${author.user.discriminator}` : ''
+            },
+            reason: m.reason,
+            date: date
+        }
+    })
+    res.render('admin/mutes', {
+        page: 'mutes',
+        login_success: req.login_sucess ?? null,
+        user: req.session.discord.user,
+        mutes: mutedMembers
+    })
+})
+
+app.get('/admin/bans', requireAdmin, async (req, res) => {
+    const memberList = await members.get(req.session)
+    const bans = await agent.getBans()
+    const bannedMembers = bans.map(b => {
+        const member = memberList.find(ml => ml.user.id === b.memberId)
+        const author = memberList.find(ml => ml.user.id === b.bannedBy)
+        const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(b.unbanDate * 1000))
+        return {
+            avatar: member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : '',
+            name: member ? `${member.user.username}#${member.user.discriminator}` : '',
+            author: {
+                avatar: author ? `https://cdn.discordapp.com/avatars/${author.user.id}/${author.user.avatar}.webp?size=80` : '',
+                name: author ? `${author.user.username}#${author.user.discriminator}` : ''
+            },
+            reason: b.reason,
+            date: date
+        }
+    })
+    res.render('admin/bans', {
+        page: 'bans',
+        login_success: req.login_sucess ?? null,
+        user: req.session.discord.user,
+        bans: bannedMembers
+    })
 })
 
 app.get('/discord/authorize', (req, res) => {
@@ -236,7 +344,7 @@ app.post('/forms/run/mpov', async (req, res) => {
 })
 
 app.use(function(req, res) {
-    res.status(404).render('error')
+    res.status(404).render('errors/404')
 })
 
 app.listen(port)
