@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
+    <link rel="stylesheet" href="/static/assets/css/alert.css">
+    <link rel="stylesheet" href="/static/assets/css/background.css">
+    <link rel="stylesheet" href="/static/assets/libs/animate/animate.min.css">
+    <title>Beat Saber FR - Messages d'anniversaire</title>
+</head>
+<body class="" style="background: none;">
+    <div class="background"><div class="blur"></div></div>
+
+    <div class="page">
+        <%- include('header') %>
+        
+        <div class="page-wrapper">
+            <div class="container-xl">
+                <!-- Page title -->
+                <div class="page-header d-print-none">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <h2 class="page-title text-white">
+                                Messages d'anniversaire
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-body">
+                <div class="container-xl">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="card-title">Liste des messages d'anniversaire</div>
+                                </div>
+                                <table class="table table-vcenter table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th>Message</th>
+                                            <th>Ajouté par</th>
+                                            <th>Date d'ajout</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% for(const message of birthdayMessages) { %>
+                                        <tr>
+                                            <td><%= message.message %></td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <span class="avatar avatar-sm me-2" style="background-image: url(<%= message.author.avatar %>)"></span>
+                                                    <div class="flex-fill">
+                                                        <%= message.author.name %>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><%= message.date %></td>
+                                        </tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/assets/libs/tabler/script.min.js"></script>
+    <script src="/static/assets/js/app.js"></script>
+    <% if(login_success !== null) { %><script>showAlert(<%= login_success %>, '<%= login_success ? 'Connexion réussie' : 'Connexion échouée' %>')</script><% } %>
+</body>
+</html>

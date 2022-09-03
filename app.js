@@ -224,6 +224,74 @@ app.get('/admin/bans', requireAdmin, async (req, res) => {
     })
 })
 
+app.get('/admin/bannedWords', requireAdmin, async (req, res) => {
+    const memberList = await members.getGuildMembers(req.session)
+    const wordList = await agent.getBannedWords()
+    const bannedWords = await Promise.all(wordList.map(async (w) => {
+        const author = memberList.find(ml => ml.user.id === w.memberId) ?? await members.getUser(req.session, w.memberId)
+        const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(w.date))
+        return {
+            word: w.word,
+            author: {
+                avatar: author ? `https://cdn.discordapp.com/avatars/${author.user.id}/${author.user.avatar}.webp?size=80` : '',
+                name: author ? `${author.user.username}#${author.user.discriminator}` : ''
+            },
+            date: date
+        }
+    }))
+    res.render('admin/bannedWords', {
+        page: 'bannedWords',
+        login_success: req.login_sucess ?? null,
+        user: req.session.discord.user,
+        bannedWords: bannedWords
+    })
+})
+
+app.get('/admin/birthdayMessages', requireAdmin, async (req, res) => {
+    const memberList = await members.getGuildMembers(req.session)
+    const messageList = await agent.getBirthdayMessages()
+    const birthdayMessages = await Promise.all(messageList.map(async (m) => {
+        const author = memberList.find(ml => ml.user.id === m.memberId) ?? await members.getUser(req.session, m.memberId)
+        const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(m.date))
+        return {
+            message: m.message,
+            author: {
+                avatar: author ? `https://cdn.discordapp.com/avatars/${author.user.id}/${author.user.avatar}.webp?size=80` : '',
+                name: author ? `${author.user.username}#${author.user.discriminator}` : ''
+            },
+            date: date
+        }
+    }))
+    res.render('admin/birthdayMessages', {
+        page: 'birthdayMessages',
+        login_success: req.login_sucess ?? null,
+        user: req.session.discord.user,
+        birthdayMessages: birthdayMessages
+    })
+})
+
+app.get('/admin/twitchChannels', requireAdmin, async (req, res) => {
+    const memberList = await members.getGuildMembers(req.session)
+    const channelList = await agent.getTwitchChannels()
+    const twitchChannels = await Promise.all(channelList.map(async (c) => {
+        const member = memberList.find(ml => ml.user.id === c.memberId)
+        return {
+            user: {
+                avatar: member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : '',
+                name: member ? `${member.user.username}#${member.user.discriminator}` : ''
+            },
+            name: c.channelName,
+            isLive: c.live
+        }
+    }))
+    res.render('admin/twitchChannels', {
+        page: 'twitchChannels',
+        login_success: req.login_sucess ?? null,
+        user: req.session.discord.user,
+        twitchChannels: twitchChannels
+    })
+})
+
 app.get('/discord/authorize', (req, res) => {
     const authUrl = 'https://discord.com/api/oauth2/authorize?'
     const state = crypto.randomBytes(10).toString('hex').slice(0, 20)
