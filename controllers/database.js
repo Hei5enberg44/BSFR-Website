@@ -96,6 +96,21 @@ const MaliciousURL = sequelize.define('malicious_url', {
     freezeTableName: true
 })
 
+const Twitch = sequelize.define('twitch', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    memberId: DataTypes.STRING(255),
+    channelName: DataTypes.STRING(255),
+    live: DataTypes.BOOLEAN,
+    messageId: DataTypes.STRING(255)
+}, {
+    timestamps: false,
+    freezeTableName: true
+})
+
 const Cities = sequelize.define('cities', {
     id: {
         type: DataTypes.INTEGER,
@@ -127,5 +142,5 @@ const MPOV = sequelize.define('multi_pov', {
 })
 
 module.exports = {
-    Birthdays, Mutes, Bans, BannedWords, BirthdayMessages, MaliciousURL, Cities, MPOV
+    Birthdays, Mutes, Bans, BannedWords, BirthdayMessages, MaliciousURL, Twitch, Cities, MPOV
 }
