@@ -4,6 +4,8 @@
     background-position: 50% 50%;
     background-repeat: no-repeat;
     background-size: cover;
+    top: 0;
+    left: 0;
     height: 100vh;
     width: 100%;
 }
@@ -12,4 +14,14 @@
     backdrop-filter: blur(10px);
     height: 100vh;
     width: 100%;
+}
+
+@media (max-width: 768px) {
+    .background {
+        display: none;
+    }
+
+    .page-header .page-title {
+        color: inherit!important;
+    }
 }
