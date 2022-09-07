@@ -4,7 +4,7 @@ const { Op } = require('sequelize')
 module.exports = {
     /**
      * Récupère les anniversaires des membres du serveur Discord
-     * @returns {Promise<Array<{id: number, memberId: string, date: string}>>} liste des anniversaires
+     * @returns {Promise<Array<{id: number, memberId: string, date: Date}>>} liste des anniversaires
      */
     getBirthdays: async function() {
         const birthdays = await Birthdays.findAll({
@@ -15,7 +15,7 @@ module.exports = {
 
     /**
      * Récupère la liste des membres mutés du serveur Discord
-     * @returns {Promise<Array<{id: number, memberId: string, mutedBy: string, reason: string, muteDate: number, unmuteDate: number}>>} liste des membres mutés
+     * @returns {Promise<Array<{id: number, memberId: string, mutedBy: string, reason: string, muteDate: Date, unmuteDate: Date}>>} liste des membres mutés
      */
     getMutes: async function() {
         const mutes = await Mutes.findAll({
@@ -26,7 +26,7 @@ module.exports = {
 
     /**
      * Récupère la liste des membres mutés du serveur Discord
-     * @returns {Promise<Array<{id: number, memberId: string, bannedBy: string, reason: string, banDate: number, unbanDate: number}>>} liste des membres mutés
+     * @returns {Promise<Array<{id: number, memberId: string, bannedBy: string, reason: string, banDate: Date, unbanDate: Date}>>} liste des membres mutés
      */
     getBans: async function() {
         const bans = await Bans.findAll({
@@ -42,7 +42,7 @@ module.exports = {
 
     /**
      * Récupère la liste des mots bannis
-     * @returns {Promise<Array<{id: number, word: string, memberId: string, date: string}>>} liste des mots bannis
+     * @returns {Promise<Array<{id: number, word: string, memberId: string, date: Date}>>} liste des mots bannis
      */
     getBannedWords: async function() {
         const words = await BannedWords.findAll({
@@ -53,7 +53,7 @@ module.exports = {
 
     /**
      * Récupère la liste des messages d'anniversaire
-     * @returns {Promise<Array<{id: number, message: string, memberId: string, date: string}>>} liste des messages d'anniversaire
+     * @returns {Promise<Array<{id: number, message: string, memberId: string, date: Date}>>} liste des messages d'anniversaire
      */
     getBirthdayMessages: async function() {
         const messages = await BirthdayMessages.findAll({
@@ -64,7 +64,7 @@ module.exports = {
 
     /**
      * Récupère la liste des messages d'anniversaire
-     * @returns {Promise<Array<{id: number, url: string, memberId: string, date: string}>>} liste des messages d'anniversaire
+     * @returns {Promise<Array<{id: number, url: string, memberId: string, date: Date}>>} liste des messages d'anniversaire
      */
     getMaliciousURLs: async function() {
         const urls = await MaliciousURL.findAll({
