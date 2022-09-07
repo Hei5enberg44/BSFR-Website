@@ -174,8 +174,8 @@ app.get('/admin/mutes', requireAdmin, async (req, res) => {
     const mutedMembers = await Promise.all(mutes.map(async (m) => {
         const member = memberList.find(ml => ml.user.id === m.memberId) ?? await members.getUser(req.session, m.memberId)
         const author = memberList.find(ml => ml.user.id === m.mutedBy) ?? await members.getUser(req.session, m.mutedBy)
-        const muteDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(m.muteDate * 1000))
-        const unmuteDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(m.unmuteDate * 1000))
+        const muteDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(m.muteDate)
+        const unmuteDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(m.unmuteDate)
         return {
             avatar: member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : '',
             name: member ? `${member.user.username}#${member.user.discriminator}` : '',
@@ -202,8 +202,8 @@ app.get('/admin/bans', requireAdmin, async (req, res) => {
     const bannedMembers = await Promise.all(bans.map(async (b) => {
         const member = memberList.find(ml => ml.user.id === b.memberId) ?? await members.getUser(req.session, b.memberId)
         const author = memberList.find(ml => ml.user.id === b.bannedBy) ?? await members.getUser(req.session, b.bannedBy)
-        const banDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(b.banDate * 1000))
-        const unbanDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(b.unbanDate * 1000))
+        const banDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(b.banDate)
+        const unbanDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(b.unbanDate)
         return {
             avatar: member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : '',
             name: member ? `${member.user.username}#${member.user.discriminator}` : '',
@@ -229,7 +229,7 @@ app.get('/admin/bannedWords', requireAdmin, async (req, res) => {
     const wordList = await agent.getBannedWords()
     const bannedWords = await Promise.all(wordList.map(async (w) => {
         const author = memberList.find(ml => ml.user.id === w.memberId) ?? await members.getUser(req.session, w.memberId)
-        const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(w.date))
+        const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(w.date)
         return {
             word: w.word,
             author: {
@@ -252,7 +252,7 @@ app.get('/admin/birthdayMessages', requireAdmin, async (req, res) => {
     const messageList = await agent.getBirthdayMessages()
     const birthdayMessages = await Promise.all(messageList.map(async (m) => {
         const author = memberList.find(ml => ml.user.id === m.memberId) ?? await members.getUser(req.session, m.memberId)
-        const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(m.date))
+        const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(m.date)
         return {
             message: m.message,
             author: {

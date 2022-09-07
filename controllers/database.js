@@ -30,8 +30,8 @@ const Mutes = sequelize.define('mutes', {
     memberId: DataTypes.STRING(255),
     mutedBy: DataTypes.STRING(255),
     reason: DataTypes.TEXT,
-    muteDate: DataTypes.BIGINT,
-    unmuteDate: DataTypes.BIGINT
+    muteDate: DataTypes.DATE,
+    unmuteDate: DataTypes.DATE
 }, {
     timestamps: false,
     freezeTableName: true
@@ -47,8 +47,8 @@ const Bans = sequelize.define('bans', {
     bannedBy: DataTypes.STRING(255),
     approvedBy: DataTypes.STRING(255),
     reason: DataTypes.TEXT,
-    banDate: DataTypes.BIGINT,
-    unbanDate: DataTypes.BIGINT
+    banDate: DataTypes.DATE,
+    unbanDate: DataTypes.DATE
 }, {
     timestamps: false,
     freezeTableName: true
@@ -134,8 +134,8 @@ const MPOV = sequelize.define('multi_pov', {
     },
     map_id: DataTypes.STRING(255),
     difficulty: DataTypes.STRING(255),
-    date_start: { type: 'TIMESTAMP' },
-    date_end: { type: 'TIMESTAMP' }
+    date_start: DataTypes.DATE,
+    date_end: DataTypes.DATE
 }, {
     timestamps: false,
     freezeTableName: true
