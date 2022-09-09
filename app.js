@@ -231,6 +231,7 @@ app.get('/admin/bannedWords', requireAdmin, async (req, res) => {
         const author = memberList.find(ml => ml.user.id === w.memberId) ?? await members.getUser(req.session, w.memberId)
         const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(w.date)
         return {
+            id: w.id,
             word: w.word,
             author: {
                 avatar: author ? `https://cdn.discordapp.com/avatars/${author.user.id}/${author.user.avatar}.webp?size=80` : '',
@@ -254,6 +255,7 @@ app.get('/admin/birthdayMessages', requireAdmin, async (req, res) => {
         const author = memberList.find(ml => ml.user.id === m.memberId) ?? await members.getUser(req.session, m.memberId)
         const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(m.date)
         return {
+            id: m.id,
             message: m.message,
             author: {
                 avatar: author ? `https://cdn.discordapp.com/avatars/${author.user.id}/${author.user.avatar}.webp?size=80` : '',

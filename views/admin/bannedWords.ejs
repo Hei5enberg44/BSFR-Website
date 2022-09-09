@@ -41,6 +41,7 @@
                                 <table class="table table-vcenter table-responsive">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Mot banni</th>
                                             <th>Ajouté par</th>
                                             <th>Date d'ajout</th>
@@ -49,6 +50,7 @@
                                     <tbody>
                                         <% for(const word of bannedWords) { %>
                                         <tr>
+                                            <td><%= word.id %></td>
                                             <td><%= word.word %></td>
                                             <td>
                                                 <div class="d-flex align-items-center">

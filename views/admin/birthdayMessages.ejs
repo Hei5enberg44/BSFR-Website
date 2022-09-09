@@ -41,6 +41,7 @@
                                 <table class="table table-vcenter table-responsive">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Message</th>
                                             <th>Ajouté par</th>
                                             <th>Date d'ajout</th>
@@ -49,6 +50,7 @@
                                     <tbody>
                                         <% for(const message of birthdayMessages) { %>
                                         <tr>
+                                            <td><%= message.id %></td>
                                             <td><%= message.message %></td>
                                             <td>
                                                 <div class="d-flex align-items-center">
