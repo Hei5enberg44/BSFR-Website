@@ -67,7 +67,7 @@
                                             <% } %>
                                             <% for(const ban of bans) { %>
                                             <tr>
-                                                <td class="sort-name">
+                                                <td class="sort-name" data-name="<%= ban.name %>">
                                                     <div class="d-flex align-items-center">
                                                         <span class="avatar avatar-sm me-2" style="background-image: url(<%= ban.avatar %>)"></span>
                                                         <div class="flex-fill">
@@ -75,7 +75,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="sort-banned-by">
+                                                <td class="sort-banned-by" data-banned-by="<%= ban.author.name %>">
                                                     <div class="d-flex align-items-center">
                                                         <span class="avatar avatar-sm me-2" style="background-image: url(<%= ban.author.avatar %>)"></span>
                                                         <div class="flex-fill">

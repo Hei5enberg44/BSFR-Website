@@ -67,7 +67,7 @@
                                             <% } %>
                                             <% for(const mute of mutes) { %>
                                             <tr>
-                                                <td class="sort-name">
+                                                <td class="sort-name" data-name="<%= mute.name %>">
                                                     <div class="d-flex align-items-center">
                                                         <span class="avatar avatar-sm me-2" style="background-image: url(<%= mute.avatar %>)"></span>
                                                         <div class="flex-fill">
@@ -75,7 +75,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="sort-muted-by">
+                                                <td class="sort-muted-by" data-muted-by="<%= mute.author.name %>">
                                                     <div class="d-flex align-items-center">
                                                         <span class="avatar avatar-sm me-2" style="background-image: url(<%= mute.author.avatar %>)"></span>
                                                         <div class="flex-fill">
