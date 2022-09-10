@@ -157,7 +157,10 @@ app.get('/admin/birthdays', requireAdmin, async (req, res) => {
         return {
             avatar: member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : '',
             name: member ? `${member.user.username}#${member.user.discriminator}` : '',
-            date: date
+            date: {
+                timestamp: new Date(b.date).getTime(),
+                formated: date
+            }
         }
     })
     res.render('admin/birthdays', {
@@ -184,8 +187,14 @@ app.get('/admin/mutes', requireAdmin, async (req, res) => {
                 name: author ? `${author.user.username}#${author.user.discriminator}` : ''
             },
             reason: m.reason,
-            muteDate: muteDate,
-            unmuteDate: unmuteDate
+            muteDate: {
+                timestamp: m.muteDate.getTime(),
+                formated: muteDate
+            },
+            unmuteDate: {
+                timestamp: m.unmuteDate.getTime(),
+                formated: unmuteDate
+            }
         }
     }))
     res.render('admin/mutes', {
@@ -212,8 +221,14 @@ app.get('/admin/bans', requireAdmin, async (req, res) => {
                 name: author ? `${author.user.username}#${author.user.discriminator}` : ''
             },
             reason: b.reason,
-            banDate: banDate,
-            unbanDate: unbanDate
+            banDate: {
+                timestamp: b.banDate.getTime(),
+                formated: banDate
+            },
+            unbanDate: {
+                timestamp: b.unbanDate.getTime(),
+                formated: unbanDate
+            }
         }
     }))
     res.render('admin/bans', {
@@ -237,7 +252,10 @@ app.get('/admin/bannedWords', requireAdmin, async (req, res) => {
                 avatar: author ? `https://cdn.discordapp.com/avatars/${author.user.id}/${author.user.avatar}.webp?size=80` : '',
                 name: author ? `${author.user.username}#${author.user.discriminator}` : ''
             },
-            date: date
+            date: {
+                timestamp: w.date.getTime(),
+                formated: date
+            }
         }
     }))
     res.render('admin/bannedWords', {
@@ -261,7 +279,10 @@ app.get('/admin/birthdayMessages', requireAdmin, async (req, res) => {
                 avatar: author ? `https://cdn.discordapp.com/avatars/${author.user.id}/${author.user.avatar}.webp?size=80` : '',
                 name: author ? `${author.user.username}#${author.user.discriminator}` : ''
             },
-            date: date
+            date: {
+                timestamp: m.date.getTime(),
+                formated: date
+            }
         }
     }))
     res.render('admin/birthdayMessages', {

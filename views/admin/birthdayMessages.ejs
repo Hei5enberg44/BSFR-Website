@@ -34,25 +34,40 @@
                 <div class="container-xl">
                     <div class="row">
                         <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
+                            <div id="table-birthday-messages" class="card">
+                                <div class="card-header">
                                     <div class="card-title">Liste des messages d'anniversaire</div>
                                 </div>
-                                <table class="table table-vcenter table-responsive">
+                                <div class="card-body border-bottom py-3">
+                                    <div class="d-flex">
+                                        <div class="ms-auto text-muted">
+                                            Rechercher:
+                                            <div class="ms-2 d-inline-block">
+                                                <input type="search" class="form-control form-control-sm search">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <table class="table table-vcenter table-responsive m-0">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>Message</th>
-                                            <th>Ajouté par</th>
-                                            <th>Date d'ajout</th>
+                                            <th><button class="table-sort" data-sort="sort-id">#</button></th>
+                                            <th><button class="table-sort" data-sort="sort-message">Message</button></th>
+                                            <th><button class="table-sort" data-sort="sort-added-by">Ajouté par</button></th>
+                                            <th><button class="table-sort desc" data-sort="sort-date">Date d'ajout</button></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody class="table-tbody">
+                                        <% if(birthdayMessages.length === 0) { %>
+                                        <tr>
+                                            <td class="text-center" colspan="5">Aucun message d'anniversaire</td>
+                                        </tr>
+                                        <% } %>
                                         <% for(const message of birthdayMessages) { %>
                                         <tr>
-                                            <td><%= message.id %></td>
-                                            <td><%= message.message %></td>
-                                            <td>
+                                            <td class="sort-id"><%= message.id %></td>
+                                            <td class="sort-message"><%= message.message %></td>
+                                            <td class="sort-added-by" data-added-by="<%= message.author.name %>">
                                                 <div class="d-flex align-items-center">
                                                     <span class="avatar avatar-sm me-2" style="background-image: url(<%= message.author.avatar %>)"></span>
                                                     <div class="flex-fill">
@@ -60,11 +75,16 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td><%= message.date %></td>
+                                            <td class="sort-date" data-date="<%= message.date.timestamp %>"><%= message.date.formated %></td>
                                         </tr>
                                         <% } %>
                                     </tbody>
                                 </table>
+                                <% if(birthdayMessages.length > 0) { %>
+                                <div class="card-footer d-flex align-items-center border-0">
+                                    <ul class="pagination m-0 ms-auto"></ul>
+                                </div>
+                                <% } %>
                             </div>
                         </div>
                     </div>
@@ -74,7 +94,25 @@
     </div>
 
     <script src="/static/assets/libs/tabler/script.min.js"></script>
+    <script src="/static/assets/libs/list.js/list.min.js"></script>
     <script src="/static/assets/js/app.js"></script>
+    <% if(birthdayMessages.length > 0) { %>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const list = new List('table-birthday-messages', {
+                sortClass: 'table-sort',
+                listClass: 'table-tbody',
+                valueNames: [ 'sort-id', 'sort-message', { attr: 'data-added-by', name: 'sort-added-by' }, { attr: 'data-date', name: 'sort-date' } ],
+                pagination: {
+                    paginationClass: 'pagination',
+                    innerWindow: 2,
+                    item: '<li class="page-item"><a class="page-link" href="#"></a></li>'
+                },
+                page: 10
+            })
+        })
+    </script>
+    <% } %>
     <% if(login_success !== null) { %><script>showAlert(<%= login_success %>, '<%= login_success ? 'Connexion réussie' : 'Connexion échouée' %>')</script><% } %>
 </body>
 </html>

@@ -8,6 +8,9 @@ module.exports = {
      */
     getBirthdays: async function() {
         const birthdays = await Birthdays.findAll({
+            order: [
+                [ 'date', 'ASC' ]
+            ],
             raw: true
         })
         return birthdays
@@ -19,6 +22,9 @@ module.exports = {
      */
     getMutes: async function() {
         const mutes = await Mutes.findAll({
+            order: [
+                [ 'muteDate', 'DESC' ]
+            ],
             raw: true
         })
         return mutes
@@ -35,6 +41,9 @@ module.exports = {
                     [Op.not]: null
                 }
             },
+            order: [
+                [ 'banDate', 'DESC' ]
+            ],
             raw: true
         })
         return bans
@@ -46,6 +55,9 @@ module.exports = {
      */
     getBannedWords: async function() {
         const words = await BannedWords.findAll({
+            order: [
+                [ 'date', 'DESC' ]
+            ],
             raw: true
         })
         return words
@@ -57,6 +69,9 @@ module.exports = {
      */
     getBirthdayMessages: async function() {
         const messages = await BirthdayMessages.findAll({
+            order: [
+                [ 'date', 'DESC' ]
+            ],
             raw: true
         })
         return messages
