@@ -35,32 +35,54 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
-                                <div class="card-body">
-                                    <div class="card-title">Liste des anniversaires</div>
-                                </div>
-                                <table class="table table-vcenter table-responsive">
-                                    <thead>
-                                        <tr>
-                                            <th>Membre</th>
-                                            <th>Date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% for(const birthday of birthdays) { %>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <span class="avatar avatar-sm me-2" style="background-image: url(<%= birthday.avatar %>)"></span>
-                                                    <div class="flex-fill">
-                                                        <%= birthday.name %>
-                                                    </div>
+                                <div id="table-birthdays" class="card">
+                                    <div class="card-header">
+                                        <div class="card-title">Liste des anniversaires</div>
+                                    </div>
+                                    <div class="card-body border-bottom py-3">
+                                        <div class="d-flex">
+                                            <div class="ms-auto text-muted">
+                                                Rechercher:
+                                                <div class="ms-2 d-inline-block">
+                                                    <input type="search" class="form-control form-control-sm search">
                                                 </div>
-                                            </td>
-                                            <td><%= birthday.date %></td>
-                                        </tr>
-                                        <% } %>
-                                    </tbody>
-                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table class="table table-vcenter table-responsive m-0">
+                                        <thead>
+                                            <tr>
+                                                <th><button class="table-sort" data-sort="sort-name">Membre</button></th>
+                                                <th><button class="table-sort asc" data-sort="sort-date">Date</button></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-tbody">
+                                            <% if(birthdays.length === 0) { %>
+                                            <tr>
+                                                <td class="text-center" colspan="5">Aucun anniversaire</td>
+                                            </tr>
+                                            <% } %>
+                                            <% for(const birthday of birthdays) { %>
+                                            <tr>
+                                                <td class="sort-name">
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="avatar avatar-sm me-2" style="background-image: url(<%= birthday.avatar %>)"></span>
+                                                        <div class="flex-fill">
+                                                            <%= birthday.name %>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="sort-date" data-ban-date="<%= birthday.date.timestamp %>"><%= birthday.date.formated %></td>
+                                            </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                    <% if(birthdays.length > 0) { %>
+                                    <div class="card-footer d-flex align-items-center border-0">
+                                        <ul class="pagination m-0 ms-auto"></ul>
+                                    </div>
+                                    <% } %>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -70,7 +92,25 @@
     </div>
 
     <script src="/static/assets/libs/tabler/script.min.js"></script>
+    <script src="/static/assets/libs/list.js/list.min.js"></script>
     <script src="/static/assets/js/app.js"></script>
+    <% if(birthdays.length > 0) { %>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const list = new List('table-birthdays', {
+                sortClass: 'table-sort',
+                listClass: 'table-tbody',
+                valueNames: [ { attr: 'data-name', name: 'sort-name' }, { attr: 'data-date', name: 'sort-date' } ],
+                pagination: {
+                    paginationClass: 'pagination',
+                    innerWindow: 2,
+                    item: '<li class="page-item"><a class="page-link" href="#"></a></li>'
+                },
+                page: 10
+            })
+        })
+    </script>
+    <% } %>
     <% if(login_success !== null) { %><script>showAlert(<%= login_success %>, '<%= login_success ? 'Connexion réussie' : 'Connexion échouée' %>')</script><% } %>
 </body>
 </html>

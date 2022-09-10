@@ -35,36 +35,58 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
-                                <div class="card-body">
-                                    <div class="card-title">Liste des mots bannis</div>
-                                </div>
-                                <table class="table table-vcenter table-responsive">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Mot banni</th>
-                                            <th>Ajouté par</th>
-                                            <th>Date d'ajout</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% for(const word of bannedWords) { %>
-                                        <tr>
-                                            <td><%= word.id %></td>
-                                            <td><%= word.word %></td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <span class="avatar avatar-sm me-2" style="background-image: url(<%= word.author.avatar %>)"></span>
-                                                    <div class="flex-fill">
-                                                        <%= word.author.name %>
-                                                    </div>
+                                <div id="table-banned-words" class="card">
+                                    <div class="card-header">
+                                        <div class="card-title">Liste des mots bannis</div>
+                                    </div>
+                                    <div class="card-body border-bottom py-3">
+                                        <div class="d-flex">
+                                            <div class="ms-auto text-muted">
+                                                Rechercher:
+                                                <div class="ms-2 d-inline-block">
+                                                    <input type="search" class="form-control form-control-sm search">
                                                 </div>
-                                            </td>
-                                            <td><%= word.date %></td>
-                                        </tr>
-                                        <% } %>
-                                    </tbody>
-                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table class="table table-vcenter table-responsive m-0">
+                                        <thead>
+                                            <tr>
+                                                <th><button class="table-sort" data-sort="sort-id">#</button></th>
+                                                <th><button class="table-sort" data-sort="sort-word">Mot banni</button></th>
+                                                <th><button class="table-sort" data-sort="sort-added-by">Ajouté par</button></th>
+                                                <th><button class="table-sort desc" data-sort="sort-date">Date d'ajout</button></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-tbody">
+                                            <% if(bannedWords.length === 0) { %>
+                                            <tr>
+                                                <td class="text-center" colspan="5">Aucun mot banni</td>
+                                            </tr>
+                                            <% } %>
+                                            <% for(const word of bannedWords) { %>
+                                            <tr>
+                                                <td class="sort-id"><%= word.id %></td>
+                                                <td class="sort-word"><%= word.word %></td>
+                                                <td class="sort-added-by" data-added-by="<%= word.author.name %>">
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="avatar avatar-sm me-2" style="background-image: url(<%= word.author.avatar %>)"></span>
+                                                        <div class="flex-fill">
+                                                            <%= word.author.name %>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="sort-date" data-date="<%= word.date.timestamp %>"><%= word.date.formated %></td>
+                                            </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                    <% if(bannedWords.length > 0) { %>
+                                    <div class="card-footer d-flex align-items-center border-0">
+                                        <ul class="pagination m-0 ms-auto"></ul>
+                                    </div>
+                                    <% } %>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -74,7 +96,25 @@
     </div>
 
     <script src="/static/assets/libs/tabler/script.min.js"></script>
+    <script src="/static/assets/libs/list.js/list.min.js"></script>
     <script src="/static/assets/js/app.js"></script>
+    <% if(bannedWords.length > 0) { %>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const list = new List('table-banned-words', {
+                sortClass: 'table-sort',
+                listClass: 'table-tbody',
+                valueNames: [ 'sort-id', 'sort-word', { attr: 'data-added-by', name: 'sort-added-by' }, { attr: 'data-date', name: 'sort-date' } ],
+                pagination: {
+                    paginationClass: 'pagination',
+                    innerWindow: 2,
+                    item: '<li class="page-item"><a class="page-link" href="#"></a></li>'
+                },
+                page: 10
+            })
+        })
+    </script>
+    <% } %>
     <% if(login_success !== null) { %><script>showAlert(<%= login_success %>, '<%= login_success ? 'Connexion réussie' : 'Connexion échouée' %>')</script><% } %>
 </body>
 </html>
