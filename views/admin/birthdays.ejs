@@ -64,7 +64,7 @@
                                             <% } %>
                                             <% for(const birthday of birthdays) { %>
                                             <tr>
-                                                <td class="sort-name">
+                                                <td class="sort-name" data-name="<%= birthday.name %>">
                                                     <div class="d-flex align-items-center">
                                                         <span class="avatar avatar-sm me-2" style="background-image: url(<%= birthday.avatar %>)"></span>
                                                         <div class="flex-fill">
@@ -72,7 +72,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="sort-date" data-ban-date="<%= birthday.date.timestamp %>"><%= birthday.date.formated %></td>
+                                                <td class="sort-date" data-date="<%= birthday.date.timestamp %>"><%= birthday.date.formated %></td>
                                             </tr>
                                             <% } %>
                                         </tbody>
