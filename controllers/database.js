@@ -54,20 +54,6 @@ const Bans = sequelize.define('bans', {
     freezeTableName: true
 })
 
-const BannedWords = sequelize.define('banned_words', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    word: DataTypes.TEXT,
-    memberId: DataTypes.STRING(255),
-    date: DataTypes.DATE
-}, {
-    timestamps: false,
-    freezeTableName: true
-})
-
 const BirthdayMessages = sequelize.define('birthday_messages', {
     id: {
         type: DataTypes.INTEGER,
@@ -142,5 +128,5 @@ const MPOV = sequelize.define('multi_pov', {
 })
 
 module.exports = {
-    Birthdays, Mutes, Bans, BannedWords, BirthdayMessages, MaliciousURL, Twitch, Cities, MPOV
+    Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, Cities, MPOV
 }
