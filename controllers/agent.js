@@ -1,4 +1,4 @@
-const { Birthdays, Mutes, Bans, BannedWords, BirthdayMessages, MaliciousURL, Twitch } = require('./database')
+const { Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch } = require('./database')
 const { Op } = require('sequelize')
 
 module.exports = {
@@ -47,20 +47,6 @@ module.exports = {
             raw: true
         })
         return bans
-    },
-
-    /**
-     * Récupère la liste des mots bannis
-     * @returns {Promise<Array<{id: number, word: string, memberId: string, date: Date}>>} liste des mots bannis
-     */
-    getBannedWords: async function() {
-        const words = await BannedWords.findAll({
-            order: [
-                [ 'date', 'DESC' ]
-            ],
-            raw: true
-        })
-        return words
     },
 
     /**
