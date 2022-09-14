@@ -293,6 +293,48 @@ app.get('/admin/birthdayMessages', requireAdmin, async (req, res) => {
     })
 })
 
+app.get('/admin/birthdayMessage/:id([0-9]+)', requireAdmin, async (req, res) => {
+    try {
+        const messageId = parseInt(req.params.id)
+        const birthdayMessage = await agent.getBirthdayMessageById(messageId)
+        res.json(birthdayMessage)
+    } catch(error) {
+        res.status(500).json({ error: 'An error occurred' })
+    }
+})
+
+app.patch('/admin/birthdayMessage/:id([0-9]+)', requireAdmin, async (req, res) => {
+    try {
+        const messageId = parseInt(req.params.id)
+        const message = req.body.message
+        await agent.updateBirthdayMessage(messageId, message)
+        res.json({ success: true })
+    } catch(error) {
+        res.status(500).json({ error: 'An error occurred' })
+    }
+})
+
+app.post('/admin/birthdayMessage', requireAdmin, async (req, res) => {
+    try {
+        const message = req.body.message
+        const user = req.session.discord.user
+        await agent.addBirthdayMessage(message, user)
+        res.json({ success: true })
+    } catch(error) {
+        res.status(500).json({ error: 'An error occurred' })
+    }
+})
+
+app.delete('/admin/birthdayMessage/:id([0-9]+)', requireAdmin, async (req, res) => {
+    try {
+        const messageId = parseInt(req.params.id)
+        await agent.deleteBirthdayMessage(messageId)
+        res.json({ success: true })
+    } catch(error) {
+        res.status(500).json({ error: 'An error occurred' })
+    }
+})
+
 app.get('/admin/twitchChannels', requireAdmin, async (req, res) => {
     const memberList = await members.getGuildMembers(req.session)
     const channelList = await agent.getTwitchChannels()

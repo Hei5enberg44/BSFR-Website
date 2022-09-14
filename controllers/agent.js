@@ -78,6 +78,61 @@ module.exports = {
     },
 
     /**
+     * Récupère un message d'anniversaire
+     * @param {number} id identifiant du message d'anniversaire à récupérer
+     * @returns {Promise<{id: number, message: string, memberId: string, date: Date}>} message d'anniversaire
+     */
+    getBirthdayMessageById: async function(id) {
+        const message = await BirthdayMessages.findOne({
+            where: {
+                id: id
+            },
+            raw: true
+        })
+        return message
+    },
+
+    /**
+     * Ajoute un message d'anniversaire dans la base de données
+     * @param {string} message message d'anniversaire à ajouté en base de données
+     * @param {Object} user utilisateur Discord réalisant l'ajout du message d'anniversaire
+     */
+    addBirthdayMessage: async function(message, user) {
+        await BirthdayMessages.create({
+            message: message,
+            memberId: user.id,
+            date: new Date()
+        })
+    },
+
+    /**
+     * Met à jour un message d'anniversaire dans la base de données
+     * @param {number} id identifiant du message d'anniversaire à modifier
+     * @param {string} message message d'anniversaire
+     */
+    updateBirthdayMessage: async function(id, message) {
+        await BirthdayMessages.update({
+            message: message
+        }, {
+            where: {
+                id: id
+            }
+        })
+    },
+
+    /**
+     * Supprime un message d'anniversaire de la base de données
+     * @param {number} id identifiant du message d'anniversaire à supprimer
+     */
+    deleteBirthdayMessage: async function(id) {
+        await BirthdayMessages.destroy({
+            where: {
+                id: id
+            }
+        })
+    },
+
+    /**
      * Récupère la liste des messages d'anniversaire
      * @returns {Promise<Array<{id: number, url: string, memberId: string, date: Date}>>} liste des messages d'anniversaire
      */

@@ -36,7 +36,14 @@
                         <div class="col-12">
                             <div id="table-birthday-messages" class="card">
                                 <div class="card-header">
-                                    <div class="card-title">Liste des messages d'anniversaire</div>
+                                    <div class="row w-100">
+                                        <div class="col">
+                                            <div class="card-title">Liste des messages d'anniversaire</div>
+                                        </div>
+                                        <div class="col-auto ms-auto">
+                                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalAddOrEditBirthdayMessage">Ajouter</button>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="card-body border-bottom py-3">
                                     <div class="d-flex">
@@ -55,6 +62,7 @@
                                             <th><button class="table-sort" data-sort="sort-message">Message</button></th>
                                             <th><button class="table-sort" data-sort="sort-added-by">Ajouté par</button></th>
                                             <th><button class="table-sort desc" data-sort="sort-date">Date d'ajout</button></th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-tbody">
@@ -66,7 +74,7 @@
                                         <% for(const message of birthdayMessages) { %>
                                         <tr>
                                             <td class="sort-id"><%= message.id %></td>
-                                            <td class="sort-message"><%= message.message %></td>
+                                            <td class="sort-message"><%- message.message.replace(/\n/g, '<br>') %></td>
                                             <td class="sort-added-by" data-added-by="<%= message.author.name %>">
                                                 <div class="d-flex align-items-center">
                                                     <span class="avatar avatar-sm me-2" style="background-image: url(<%= message.author.avatar %>)"></span>
@@ -76,6 +84,14 @@
                                                 </div>
                                             </td>
                                             <td class="sort-date" data-date="<%= message.date.timestamp %>"><%= message.date.formated %></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary btn-icon edit-birthday-message" data-id="<%= message.id %>">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path><path d="M16 5l3 3"></path></svg>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger btn-icon delete-birthday-message" data-id="<%= message.id %>">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="4" y1="7" x2="20" y2="7"></line><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path></svg>
+                                                </button>
+                                            </td>
                                         </tr>
                                         <% } %>
                                     </tbody>
@@ -93,13 +109,67 @@
         </div>
     </div>
 
+    <div class="modal" tabindex="-1" id="modalAddOrEditBirthdayMessage">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger d-none" role="alert">
+                        <div class="text-muted"></div>
+                    </div>
+                    <div class="mb-3">
+                        <input type="hidden" id="editBirthdayMessageId" value="">
+                        <label class="form-label required">Message</label>
+                        <textarea class="form-control" id="birthdayMessage" style="min-height:96px;max-height:96px"></textarea>
+                        <small class="form-hint">Utilisez <code>!p</code> pour insérer le pseudo de l'utilisateur</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn me-auto" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-primary" id="addOrEditBirthayMessage"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" id="modalDeleteBirthdayMessage">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                <div class="modal-status bg-danger"></div>
+                <div class="modal-body py-4">
+                    <div class="mb-3 text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-lg mb-2 text-danger" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 9v2m0 4v.01"></path><path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path></svg>
+                        <h3>Confirmez-vous la suppression de ce message d'anniversaire ?</h3>
+                    </div>
+                    <input type="hidden" id="deleteBirthdayMessageId" value="">
+                    <div class="card">
+                        <div class="card-status-start bg-danger"></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Message :</h3>
+                            <p class="text-muted" id="deleteBirthdayMessage"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn me-auto" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-danger" id="deleteBirthayMessage">Supprimer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="/static/assets/libs/tabler/script.min.js"></script>
+    <script src="/static/assets/libs/autosize/autosize.min.js"></script>
     <script src="/static/assets/libs/list.js/list.min.js"></script>
-    <script src="/static/assets/js/app.js"></script>
     <% if(birthdayMessages.length > 0) { %>
     <script>
+        let list
         document.addEventListener('DOMContentLoaded', function() {
-            const list = new List('table-birthday-messages', {
+            list = new List('table-birthday-messages', {
                 sortClass: 'table-sort',
                 listClass: 'table-tbody',
                 valueNames: [ 'sort-id', 'sort-message', { attr: 'data-added-by', name: 'sort-added-by' }, { attr: 'data-date', name: 'sort-date' } ],
@@ -113,6 +183,7 @@
         })
     </script>
     <% } %>
+    <script src="/static/assets/js/admin/birthdayMessages.js"></script>
     <% if(login_success !== null) { %><script>showAlert(<%= login_success %>, '<%= login_success ? 'Connexion réussie' : 'Connexion échouée' %>')</script><% } %>
 </body>
 </html>
