@@ -1,7 +1,7 @@
-const discord = require('./discord')
+import discord from './discord.js'
 
-module.exports = {
-    getGuildMembers: async function(session) {
+export default {
+    async getGuildMembers(session) {
         const date = Math.floor(Date.now() / 1000)
         if(session.discord.guildMembers) {
             if(date > session.discord.guildMembers.expires) {
@@ -19,7 +19,7 @@ module.exports = {
         return members
     },
 
-    getUser: async function(session, userId) {
+    async getUser(session, userId) {
         const date = Math.floor(Date.now() / 1000)
         if(session.discord.members) {
             if(date > session.discord.members.expires) {

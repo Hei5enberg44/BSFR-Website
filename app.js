@@ -1,15 +1,17 @@
-const express = require('express')
-const session = require('express-session')
-const fileUpload = require('express-fileupload')
-const discord = require('./controllers/discord')
-const agent = require('./controllers/agent')
-const members = require('./controllers/members')
-const city = require('./controllers/city')
-const mpov = require('./controllers/mpov')
-const fetch = require('node-fetch')
-const crypto = require('crypto')
-const Logger = require('./utils/logger')
-const config = require('./config.json')
+import express from 'express'
+import session from 'express-session'
+import fileUpload from 'express-fileupload'
+import MySQLStore from 'express-mysql-session'
+import discord from './controllers/discord.js'
+import agent from './controllers/agent.js'
+import members from './controllers/members.js'
+import city from './controllers/city.js'
+import mpov from './controllers/mpov.js'
+import youtube from './controllers/youtube.js'
+import fetch from 'node-fetch'
+import crypto from 'crypto'
+import Logger from './utils/logger.js'
+import config from './config.json' assert { type: 'json' }
 
 const app = express()
 const port = 3020
@@ -20,7 +22,7 @@ app.use(express.json({
     type: ['application/json', 'text/plain']
 }))
 
-const mysqlStore = require('express-mysql-session')(session)
+const mysqlStore = MySQLStore(session)
 const sessionStore = new mysqlStore({
     connectionLimit: 20,
     host: config.database.host,
@@ -54,7 +56,7 @@ app.use(fileUpload({
     tempFileDir: './uploads'
 }))
 
-const requireLogin = function(req, res, next) {
+const requireLogin = (req, res, next) => {
     req.session.redirect = req.url
     if(!req.session.discord) {
         res.redirect('/discord/authorize')
@@ -71,8 +73,8 @@ const requireLogin = function(req, res, next) {
     }
 }
 
-const requireAdmin = function(req, res, next) {
-    requireLogin(req, res, function() {
+const requireAdmin = (req, res, next) => {
+    requireLogin(req, res, () => {
         const user = req.session.discord.user
         if(user.isAdmin) {
             next()
@@ -97,10 +99,12 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/forms/run/youtube', requireLogin, async (req, res) => {
+    const lastVideo = await youtube.getLastVideo()
     res.render('forms/run/youtube.ejs', {
         login_success: req.login_sucess ?? null,
         user: req.session.discord.user,
-        inviteUrl: config.discord.invitation_url
+        inviteUrl: config.discord.invitation_url,
+        lastVideo
     })
 })
 

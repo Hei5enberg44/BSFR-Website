@@ -1,12 +1,12 @@
-const { Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch } = require('./database')
-const { Op } = require('sequelize')
+import { Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch } from './database.js'
+import { Op } from 'sequelize'
 
-module.exports = {
+export default {
     /**
      * Récupère les anniversaires des membres du serveur Discord
      * @returns {Promise<Array<{id: number, memberId: string, date: Date}>>} liste des anniversaires
      */
-    getBirthdays: async function() {
+    async getBirthdays() {
         const birthdays = await Birthdays.findAll({
             order: [
                 [ 'date', 'ASC' ]
@@ -20,7 +20,7 @@ module.exports = {
      * Récupère la liste des membres mutés du serveur Discord
      * @returns {Promise<Array<{id: number, memberId: string, mutedBy: string, reason: string, muteDate: Date, unmuteDate: Date}>>} liste des membres mutés
      */
-    getMutes: async function() {
+    async getMutes() {
         const mutes = await Mutes.findAll({
             order: [
                 [ 'muteDate', 'DESC' ]
@@ -34,7 +34,7 @@ module.exports = {
      * Récupère la liste des membres mutés du serveur Discord
      * @returns {Promise<Array<{id: number, memberId: string, bannedBy: string, reason: string, banDate: Date, unbanDate: Date}>>} liste des membres mutés
      */
-    getBans: async function() {
+    async getBans() {
         const bans = await Bans.findAll({
             where: {
                 approvedBy: {
@@ -53,7 +53,7 @@ module.exports = {
      * Récupère la liste des messages d'anniversaire
      * @returns {Promise<Array<{id: number, message: string, memberId: string, date: Date}>>} liste des messages d'anniversaire
      */
-    getBirthdayMessages: async function() {
+    async getBirthdayMessages() {
         const messages = await BirthdayMessages.findAll({
             order: [
                 [ 'date', 'DESC' ]
@@ -68,7 +68,7 @@ module.exports = {
      * @param {number} id identifiant du message d'anniversaire à récupérer
      * @returns {Promise<{id: number, message: string, memberId: string, date: Date}>} message d'anniversaire
      */
-    getBirthdayMessageById: async function(id) {
+    async getBirthdayMessageById(id) {
         const message = await BirthdayMessages.findOne({
             where: {
                 id: id
@@ -83,7 +83,7 @@ module.exports = {
      * @param {string} message message d'anniversaire à ajouté en base de données
      * @param {Object} user utilisateur Discord réalisant l'ajout du message d'anniversaire
      */
-    addBirthdayMessage: async function(message, user) {
+    async addBirthdayMessage(message, user) {
         await BirthdayMessages.create({
             message: message,
             memberId: user.id,
@@ -96,7 +96,7 @@ module.exports = {
      * @param {number} id identifiant du message d'anniversaire à modifier
      * @param {string} message message d'anniversaire
      */
-    updateBirthdayMessage: async function(id, message) {
+    async updateBirthdayMessage(id, message) {
         await BirthdayMessages.update({
             message: message
         }, {
@@ -110,7 +110,7 @@ module.exports = {
      * Supprime un message d'anniversaire de la base de données
      * @param {number} id identifiant du message d'anniversaire à supprimer
      */
-    deleteBirthdayMessage: async function(id) {
+    async deleteBirthdayMessage(id) {
         await BirthdayMessages.destroy({
             where: {
                 id: id
@@ -122,7 +122,7 @@ module.exports = {
      * Récupère la liste des messages d'anniversaire
      * @returns {Promise<Array<{id: number, url: string, memberId: string, date: Date}>>} liste des messages d'anniversaire
      */
-    getMaliciousURLs: async function() {
+    async getMaliciousURLs() {
         const urls = await MaliciousURL.findAll({
             raw: true
         })
@@ -133,7 +133,7 @@ module.exports = {
      * Récupère la liste des chaînes Twitch liées à Discord
      * @returns {Promise<Array<{id: number, memberId: string, channelName: string, live: boolean, messageId: string}>>} liste des chaînes Twitch
      */
-    getTwitchChannels: async function() {
+    async getTwitchChannels() {
         const channels = await Twitch.findAll({
             raw: true
         })

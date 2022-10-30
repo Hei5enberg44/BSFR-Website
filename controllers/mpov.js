@@ -1,8 +1,8 @@
-const beatsaver = require('./beatsaver')
-const { MPOV } = require('./database')
+import beatsaver from './beatsaver.js'
+import { MPOV } from './database.js'
 
-module.exports = {
-    getMPOVInfos: async function() {
+export default {
+    async getMPOVInfos() {
         try {
             const mpov = await MPOV.findAll({
                 limit: 1,
@@ -14,7 +14,7 @@ module.exports = {
             if(!mpov) throw Error('Aucun Multi POV présent en base de données')
 
             try {
-                const map = await beatsaver.geMapById(mpov[0].map_id)
+                const map = await beatsaver.getMapById(mpov[0].map_id)
                 const mpovInfos = {
                     id: mpov[0].id,
                     dateStart: mpov[0].date_start,

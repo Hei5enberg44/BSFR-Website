@@ -1,11 +1,11 @@
-const fs = require('fs')
-const chalk = require('chalk')
+import * as fs from 'node:fs'
+import chalk from 'chalk'
 
-module.exports = {
+export default {
     /**
      * Retourne la date actuelle
      */
-    date: function() {
+    date() {
         const d = new Date()
         const year = d.getFullYear()
         const month = d.getMonth() < 9 ? `0${d.getMonth() + 1}` : d.getMonth() + 1
@@ -28,8 +28,8 @@ module.exports = {
      * @param {string} content log à formatter
      * @returns {string} logs formattées
      */
-    log: function(scope, level, content) {
-        const date = module.exports.date()
+    log(scope, level, content) {
+        const date = this.date()
 
         let logLevel
         switch(level) {

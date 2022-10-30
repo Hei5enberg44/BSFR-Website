@@ -1,10 +1,10 @@
-const fetch = require('node-fetch')
-const config = require('../config.json')
+import fetch from 'node-fetch'
+import config from '../config.json' assert { type: 'json' }
 
-module.exports = {
-    send: async function(discord, method, endpoint, options = null, bot = false) {
+export default {
+    async send(discord, method, endpoint, options = null, bot = false) {
         if(!bot && Math.floor(new Date().getTime() / 1000) > discord.tokens.expiration_date + 3600) {
-            discord.tokens = await module.exports.refreshToken(discord.tokens.refresh_token)
+            discord.tokens = await this.refreshToken(discord.tokens.refresh_token)
         }
 
         const request = await fetch(endpoint + (options || ''), {
@@ -23,7 +23,7 @@ module.exports = {
         }
     },
 
-    refreshToken: async function(refreshToken) {
+    async refreshToken(refreshToken) {
         const options = new URLSearchParams({
             'client_id': config.discord.client_id,
             'client_secret': config.discord.client_secret,
@@ -48,7 +48,7 @@ module.exports = {
         }
     },
 
-    revokeToken: async function(discord) {
+    async revokeToken(discord) {
         const options = new URLSearchParams({
             'client_id': config.discord.client_id,
             'client_secret': config.discord.client_secret,
@@ -68,11 +68,11 @@ module.exports = {
         }
     },
 
-    getCurrentUser: async function(discord) {
-        const user = await module.exports.send(discord, 'GET', 'https://discord.com/api/users/@me')
+    async getCurrentUser(discord) {
+        const user = await this.send(discord, 'GET', 'https://discord.com/api/users/@me')
         user.isBSFR = false
         user.isAdmin = false
-        const member = await module.exports.send(discord, 'GET', `https://discord.com/api/guilds/${config.discord.guild_id}/members/${user.id}`, null, true)
+        const member = await this.send(discord, 'GET', `https://discord.com/api/guilds/${config.discord.guild_id}/members/${user.id}`, null, true)
         if(!member) return user
         if(member) {
             user.isBSFR = true
@@ -83,13 +83,13 @@ module.exports = {
         return user
     },
 
-    submitRun: async function(discord, datas) {
+    async submitRun(discord, datas) {
         try {
             if(Math.floor(new Date().getTime() / 1000) > discord.tokens.expiration_date + 3600) {
-                discord.tokens = await module.exports.refreshToken(discord.tokens.refresh_token)
+                discord.tokens = await this.refreshToken(discord.tokens.refresh_token)
             }
 
-            const user = await module.exports.getCurrentUser(discord)
+            const user = await this.getCurrentUser(discord)
 
             const embed = {
                 title: `🎬 Nouvelle run`,
@@ -137,18 +137,18 @@ module.exports = {
         }
     },
 
-    getGuildMembers: async function(discord) {
-        const datas = await module.exports.send(discord, 'GET', `https://discord.com/api/guilds/${config.discord.guild_id}/members?limit=1000`, null, true)
+    async getGuildMembers(discord) {
+        const datas = await this.send(discord, 'GET', `https://discord.com/api/guilds/${config.discord.guild_id}/members?limit=1000`, null, true)
         return datas
     },
 
-    getUserById: async function(discord, memberId) {
-        const datas = await module.exports.send(discord, 'GET', `https://discord.com/api/users/${memberId}`, null, true)
+    async getUserById(discord, memberId) {
+        const datas = await this.send(discord, 'GET', `https://discord.com/api/users/${memberId}`, null, true)
         return datas
     },
 
-    getGuildPreview: async function(discord) {
-        const datas = await module.exports.send(discord, 'GET', `https://discord.com/api/guilds/${config.discord.guild_id}/preview`, null, true)
+    async getGuildPreview(discord) {
+        const datas = await this.send(discord, 'GET', `https://discord.com/api/guilds/${config.discord.guild_id}/preview`, null, true)
         return datas
     }
 }
