@@ -1,4 +1,4 @@
-const fetch = require('node-fetch')
+import fetch from 'node-fetch'
 
 const beatSaverApiUrl = 'https://api.beatsaver.com/'
 const mapsHashUrl = beatSaverApiUrl + '/maps/hash/'
@@ -6,13 +6,13 @@ const mapsIdUrl = beatSaverApiUrl + '/maps/id/'
 
 const wait = (s) => new Promise((res) => setTimeout(res, s * 1000))
 
-module.exports = {
+export default {
     /**
      * Envoi d'une requête à l'API de BeatSaver
      * @param {string} url url de la requête
      * @returns {Promise<Object>} résultat de la requête
      */
-    send: async function(url) {
+    async send(url) {
         let data
         let error = true
 
@@ -59,9 +59,9 @@ module.exports = {
      * @param {string} hash hash de la map
      * @returns {Promise<BeatSaverMap>} détail de la map
      */
-    geMapByHash: async function(hash) {
+    async getMapByHash(hash) {
         try {
-            const map = await module.exports.send(mapsHashUrl + hash)
+            const map = await this.send(mapsHashUrl + hash)
 
             return map
         } catch(error) {
@@ -74,9 +74,9 @@ module.exports = {
      * @param {string} id identifiant de la map
      * @returns {Promise<BeatSaverMap>} détail de la map
      */
-    geMapById: async function(id) {
+    async getMapById(id) {
         try {
-            const map = await module.exports.send(mapsIdUrl + id)
+            const map = await this.send(mapsIdUrl + id)
 
             return map
         } catch(error) {

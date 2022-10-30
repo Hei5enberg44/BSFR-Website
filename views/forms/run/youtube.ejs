@@ -63,19 +63,27 @@
                         <div class="card-body">
                             <h3 class="card-title">Vidéo YouTube BSFR</h3>
 
-                            <p>
-                                Critères à respecter :
-                                <ul>
-                                    <li>Les enregistrements doivent être minimum en 720p30</li>
-                                    <li>Utilisez le plugin <a href="https://github.com/Snow1226/CameraPlus" target="_blank">Camera+</a> / <a href="https://github.com/kinsi55/CS_BeatSaber_Camera2" target="_blank">Camera2</a> en 1ère personne</li>
-                                    <li>Les overlays ne sont pas acceptés (sauf exceptions: swing cam et camera ortho de taille raisonnable)</li>
-                                    <li>Évitez de nous envoyer des runs que vous avez déjà posté sur votre chaîne</li>
-                                    <li>Merci de donner uniquement des liens Google Drive, Dropbox ou OneDrive</li>
-                                    <li>La vidéo soumise ne doit pas avoir été éditée</li>
-                                    <li>Fichier de 3 Go maximum accepté</li>
-                                </ul>
-                                <i>Paramètres d'enregistrement recommandés : <a href="https://imgur.com/a/fswBbJe" target="_blank">Lien Imgur</a></i>
-                            </p>
+                            <div class="row d-flex align-items-center">
+                                <div class="col">
+                                    <h3>Critères à respecter :</h3>
+                                    <p>
+                                        <ul>
+                                            <li>Les enregistrements doivent être minimum en 720p30</li>
+                                            <li>Utilisez le plugin <a href="https://github.com/Snow1226/CameraPlus" target="_blank">Camera+</a> / <a href="https://github.com/kinsi55/CS_BeatSaber_Camera2" target="_blank">Camera2</a> en 1ère personne</li>
+                                            <li>Les overlays ne sont pas acceptés (sauf exceptions: swing cam et camera ortho de taille raisonnable)</li>
+                                            <li>Évitez de nous envoyer des runs que vous avez déjà posté sur votre chaîne</li>
+                                            <li>Merci de donner uniquement des liens Google Drive, Dropbox ou OneDrive</li>
+                                            <li>La vidéo soumise ne doit pas avoir été éditée</li>
+                                            <li>Fichier de 3 Go maximum accepté</li>
+                                        </ul>
+                                        <i>Paramètres d'enregistrement recommandés : <a href="https://imgur.com/a/fswBbJe" target="_blank">Lien Imgur</a></i>
+                                    </p>
+                                </div>
+                                <div class="col-auto">
+                                    <h3>Dernière vidéo publiée :</h3>
+                                    <iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/<%= lastVideo.videoId %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -112,15 +120,24 @@
                                 <div class="mb-3">
                                     <label class="form-label required">Votre casque VR</label>
                                     <select class="form-select" id="headset" required>
-                                        <option value="HTC Vive">HTC Vive</option>
-                                        <option value="HTC Vive Pro">HTC Vive Pro</option>
-                                        <option value="HTC Vive Pro 2">HTC Vive Pro 2</option>
-                                        <option value="Oculus Quest">Oculus Quest</option>
-                                        <option value="Oculus Quest 2">Oculus Quest 2</option>
-                                        <option value="Oculus Rift">Oculus Rift</option>
-                                        <option value="Oculus Rift S">Oculus Rift S</option>
-                                        <option value="Valve Index">Valve Index</option>
-                                        <option value="WMR - Windows Mixed Reality">WMR - Windows Mixed Reality</option>
+                                        <option value="">Veuillez sélectionner un casque VR</option>
+                                        <optgroup label="HTC">
+                                            <option value="HTC Vive">HTC Vive</option>
+                                            <option value="HTC Vive Pro">HTC Vive Pro</option>
+                                            <option value="HTC Vive Pro 2">HTC Vive Pro 2</option>
+                                        </optgroup>
+                                        <optgroup label="Oculus/Meta">
+                                            <option value="Oculus Quest">Oculus Quest</option>
+                                            <option value="Oculus Quest 2">Meta Quest 2</option>
+                                            <option value="Oculus Rift">Oculus Rift</option>
+                                            <option value="Oculus Rift S">Oculus Rift S</option>
+                                        </optgroup>
+                                        <optgroup label="Steam">
+                                            <option value="Valve Index">Valve Index</option>
+                                        </optgroup>
+                                        <optgroup label="Microsoft">
+                                            <option value="WMR - Windows Mixed Reality">WMR - Windows Mixed Reality</option>
+                                        </optgroup>
                                         <option value="Autre">Autre (indiquez-le en commentaire)</option>
                                     </select>
                                 </div>
@@ -155,7 +172,7 @@
                             <div class="text-muted">
                                 Vous devez être membre du serveur Discord BSFR afin de pouvoir nous soumettre une run.<br>
                                 Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="<%= inviteUrl %>" target="_blank"><%= inviteUrl %></a><br>
-                                <i>Actualisez la page après avoir rejoint le serveur Discord pour voir le formulaire.</i>
+                                <i>Déconnectez-vous puis reconnectez-vous au site après avoir rejoint le serveur Discord pour voir le formulaire.</i>
                             </div>
                         </div>
                     <% } %>
