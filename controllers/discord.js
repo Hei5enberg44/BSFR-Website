@@ -91,6 +91,9 @@ export default {
 
             const user = await this.getCurrentUser(discord)
 
+            let leaderboardName = 'ScoreSaber'
+            if(datas.leaderboard_profil.includes('beatleader')) leaderboardName = 'BeatLeader'
+
             const embed = {
                 title: `🎬 Nouvelle run`,
                 color: 3447003,
@@ -99,7 +102,7 @@ export default {
                     { name: 'Auteur·ice', value: `<@${user.id}>`, inline: true },
                     { name: 'Casque', value: datas.headset, inline: true },
                     { name: 'Grip', value: datas.grip, inline: true },
-                    { name: 'Profil Leaderboard', value: `[Lien](${datas.leaderboard_profil})`, inline: true },
+                    { name: `Profil ${leaderboardName}`, value: `[Lien](${datas.leaderboard_profil})`, inline: true },
                     { name: 'Profil Twitch', value: datas.twitch_url !== '' ? `[Lien](${datas.twitch_url})` : 'Non renseigné', inline: true },
                     { name: '\u200b', value: '\u200b', inline: true },
                     { name: 'Leaderboard de la map', value: `[Lien](${datas.map_leaderboard})`, inline: true },
