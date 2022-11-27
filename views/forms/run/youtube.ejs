@@ -59,114 +59,252 @@
             <div class="page-body">
                 <div class="container-xl">
                     <% if(user.isBSFR) { %>
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h3 class="card-title">Vidéo YouTube BSFR</h3>
-
-                            <div class="row d-flex align-items-center">
-                                <div class="col">
-                                    <h3>Critères à respecter :</h3>
-                                    <p>
-                                        <ul>
-                                            <li>Les enregistrements doivent être minimum en 720p30</li>
-                                            <li>Utilisez le plugin <a href="https://github.com/Snow1226/CameraPlus" target="_blank">Camera+</a> / <a href="https://github.com/kinsi55/CS_BeatSaber_Camera2" target="_blank">Camera2</a> en 1ère personne</li>
-                                            <li>Les overlays ne sont pas acceptés (sauf exceptions: swing cam et camera ortho de taille raisonnable)</li>
-                                            <li>Évitez de nous envoyer des runs que vous avez déjà posté sur votre chaîne</li>
-                                            <li>Merci de donner uniquement des liens Google Drive, Dropbox ou OneDrive</li>
-                                            <li>La vidéo soumise ne doit pas avoir été éditée</li>
-                                            <li>Fichier de 3 Go maximum accepté</li>
-                                        </ul>
-                                        <i>Paramètres d'enregistrement recommandés : <a href="https://imgur.com/a/fswBbJe" target="_blank">Lien Imgur</a></i>
-                                    </p>
+                    <div id="run-choice" class="form-run d-none">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <label class="form-label">Quelle est la version de Beat Saber utilisée ?</label>
+                                <div class="form-selectgroup">
+                                    <label class="form-selectgroup-item">
+                                        <input type="radio" name="bsversion" value="pc" class="form-selectgroup-input" checked="">
+                                        <span class="form-selectgroup-label">PC</span>
+                                    </label>
+                                    <label class="form-selectgroup-item">
+                                        <input type="radio" name="bsversion" value="quest" class="form-selectgroup-input">
+                                        <span class="form-selectgroup-label">Quest</span>
+                                    </label>
                                 </div>
-                                <div class="col-auto">
-                                    <h3>Dernière vidéo publiée :</h3>
-                                    <iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/<%= lastVideo.videoId %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                <div class="row">
+                                    <div class="col-auto ms-auto">
+                                        <button type="button" class="btn btn-primary" id="btnConfirmBsVersion">Confirmer</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <form class="form">
-                        <div class="card">
+                    <div id="run-pc" class="form-run d-none">
+                        <div class="card mb-3">
                             <div class="card-body">
-                                <div class="mb-3">
-                                    <label class="form-label"><span style="font-weight: bold; color: #FF0000;">*</span> : champ requis</label>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label required">Lien vers la vidéo</label>
-                                    <input type="text" class="form-control" id="url" placeholder="https://drive.weezle.xyz/index.php/s/R9m2wL7JrtrG3H3" autocomplete="off" required>
-                                    <small class="form-hint">Liens acceptés : OneDrive, Google Drive, Dropbox | .mp4 conseillé, .mkv refusé</small>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label required">Description de la vidéo</label>
-                                    <input type="text" class="form-control" id="description" placeholder="" autocomplete="off" required>
-                                    <small class="form-hint">Artiste - Nom de la map, Difficulté, Précision, FC/Miss</small>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label required">Profil ScoreSaber ou BeatLeader</label>
-                                    <input type="text" class="form-control" id="leaderboard_profil" placeholder="https://scoresaber.com/u/76561198796531407" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label required">Leaderboard de la map</label>
-                                    <input type="text" class="form-control" id="map_leaderboard" placeholder="https://scoresaber.com/leaderboard/6286" autocomplete="off" required>
-                                    <small class="form-hint">Ajoutez le lien ScoreSaber ou BeatLeader de la map que vous avez joué dans votre vidéo</small>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label required">Lien BeatSaver</label>
-                                    <input type="text" class="form-control" id="beatsaver" placeholder="https://beatsaver.com/maps/3b5" autocomplete="off" required>
-                                    <small class="form-hint">Ajoutez le lien BeatSaver de la map que vous avez joué dans votre vidéo</small>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label required">Votre casque VR</label>
-                                    <select class="form-select" id="headset" required>
-                                        <option value="">Veuillez sélectionner un casque VR</option>
-                                        <optgroup label="HTC">
-                                            <option value="HTC Vive">HTC Vive</option>
-                                            <option value="HTC Vive Pro">HTC Vive Pro</option>
-                                            <option value="HTC Vive Pro 2">HTC Vive Pro 2</option>
-                                        </optgroup>
-                                        <optgroup label="Oculus/Meta">
-                                            <option value="Oculus Quest">Oculus Quest</option>
-                                            <option value="Oculus Quest 2">Meta Quest 2</option>
-                                            <option value="Oculus Rift">Oculus Rift</option>
-                                            <option value="Oculus Rift S">Oculus Rift S</option>
-                                        </optgroup>
-                                        <optgroup label="Steam">
-                                            <option value="Valve Index">Valve Index</option>
-                                        </optgroup>
-                                        <optgroup label="Microsoft">
-                                            <option value="WMR - Windows Mixed Reality">WMR - Windows Mixed Reality</option>
-                                        </optgroup>
-                                        <option value="Autre">Autre (indiquez-le en commentaire)</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label required">Votre grip</label>
-                                    <input type="text" class="form-control" id="grip" placeholder="Default grip" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Votre chaîne Twitch</label>
-                                    <input type="text" class="form-control" id="twitch_url" placeholder="https://twitch.tv/beatsaberfr">
-                                </div>
-                                <div>
-                                    <label class="form-label">Commentaire du joueur (apparaîtra en description de la vidéo)</label>
-                                    <textarea class="form-control" id="comments" maxlength="250" style="min-height:98px"></textarea>
-                                    <small class="form-hint">250 caractères max. (<span id="remaining">250</span> restants)</small>
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <div class="row">
-                                    <div class="col me-auto">
-                                        <button type="button" class="btn btn-danger btn-clear">Effacer le formulaire</button>
+                                <div class="row d-flex align-items-top">
+                                    <div class="col">
+                                        <h3 class="card-title">Vidéo YouTube BSFR</h3>
                                     </div>
                                     <div class="col-auto">
-                                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                                        <button type="button" class="btn btn-sm btn-white" onclick="showChoice()">Changer de formulaire</button>
+                                    </div>
+                                </div>
+    
+                                <div class="row d-flex align-items-center">
+                                    <div class="col">
+                                        <h3>Critères à respecter :</h3>
+                                        <p>
+                                            <ul>
+                                                <li>Les enregistrements doivent être minimum en 720p30</li>
+                                                <li>Utilisez le plugin <a href="https://github.com/Snow1226/CameraPlus" target="_blank">Camera+</a> / <a href="https://github.com/kinsi55/CS_BeatSaber_Camera2" target="_blank">Camera2</a> en 1ère personne</li>
+                                                <li>Les overlays ne sont pas acceptés (sauf exceptions: swing cam et camera ortho de taille raisonnable)</li>
+                                                <li>Évitez de nous envoyer des runs que vous avez déjà posté sur votre chaîne</li>
+                                                <li>Merci de donner uniquement des liens Google Drive, Dropbox ou OneDrive</li>
+                                                <li>La vidéo soumise ne doit pas avoir été éditée</li>
+                                                <li>Fichier de 3 Go maximum accepté</li>
+                                            </ul>
+                                            <i>Paramètres d'enregistrement recommandés : <a href="https://imgur.com/a/fswBbJe" target="_blank">Lien Imgur</a></i>
+                                        </p>
+                                    </div>
+                                    <div class="col-auto">
+                                        <h3>Dernière vidéo publiée :</h3>
+                                        <iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/<%= lastVideo.videoId %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </form>
+    
+                        <form>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label"><span style="font-weight: bold; color: #FF0000;">*</span> : champ requis</label>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label required">Lien vers la vidéo</label>
+                                        <input type="text" class="form-control" id="url" placeholder="https://drive.weezle.xyz/index.php/s/R9m2wL7JrtrG3H3" autocomplete="off" required>
+                                        <small class="form-hint">Liens acceptés : OneDrive, Google Drive, Dropbox | .mp4 conseillé, .mkv refusé</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label required">Description de la vidéo</label>
+                                        <input type="text" class="form-control" id="description" placeholder="" autocomplete="off" required>
+                                        <small class="form-hint">Artiste - Nom de la map, Difficulté, Précision, FC/Miss</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label required">Profil ScoreSaber ou BeatLeader</label>
+                                        <input type="text" class="form-control" id="leaderboard_profil" placeholder="https://scoresaber.com/u/76561198796531407" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label required">Leaderboard de la map</label>
+                                        <input type="text" class="form-control" id="map_leaderboard" placeholder="https://scoresaber.com/leaderboard/6286" autocomplete="off" required>
+                                        <small class="form-hint">Ajoutez le lien ScoreSaber ou BeatLeader de la map que vous avez joué dans votre vidéo</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label required">Lien BeatSaver</label>
+                                        <input type="text" class="form-control" id="beatsaver" placeholder="https://beatsaver.com/maps/3b5" autocomplete="off" required>
+                                        <small class="form-hint">Ajoutez le lien BeatSaver de la map que vous avez joué dans votre vidéo</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label required">Votre casque VR</label>
+                                        <select class="form-select" id="headset" required>
+                                            <option value="">Veuillez sélectionner un casque VR</option>
+                                            <optgroup label="HTC">
+                                                <option value="HTC Vive">HTC Vive</option>
+                                                <option value="HTC Vive Pro">HTC Vive Pro</option>
+                                                <option value="HTC Vive Pro 2">HTC Vive Pro 2</option>
+                                            </optgroup>
+                                            <optgroup label="Oculus/Meta">
+                                                <option value="Oculus Quest">Oculus Quest</option>
+                                                <option value="Oculus Quest 2">Meta Quest 2</option>
+                                                <option value="Oculus Rift">Oculus Rift</option>
+                                                <option value="Oculus Rift S">Oculus Rift S</option>
+                                            </optgroup>
+                                            <optgroup label="Steam">
+                                                <option value="Valve Index">Valve Index</option>
+                                            </optgroup>
+                                            <optgroup label="Microsoft">
+                                                <option value="WMR - Windows Mixed Reality">WMR - Windows Mixed Reality</option>
+                                            </optgroup>
+                                            <option value="Autre">Autre (indiquez-le en commentaire)</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label required">Votre grip</label>
+                                        <input type="text" class="form-control" id="grip" placeholder="Default grip" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Votre chaîne Twitch</label>
+                                        <input type="text" class="form-control" id="twitch_url" placeholder="https://twitch.tv/beatsaberfr">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Commentaire du joueur (apparaîtra en description de la vidéo)</label>
+                                        <textarea class="form-control" id="comments" maxlength="250" style="min-height:98px"></textarea>
+                                        <small class="form-hint">250 caractères max. (<span id="remaining">250</span> restants)</small>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="row">
+                                        <div class="col me-auto">
+                                            <button type="button" class="btn btn-danger btn-clear-pc">Effacer le formulaire</button>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button type="submit" class="btn btn-primary">Envoyer</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div id="run-quest" class="form-run d-none">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row d-flex align-items-top">
+                                    <div class="col">
+                                        <h3 class="card-title">Vidéo YouTube BSFR</h3>
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="button" class="btn btn-sm btn-white" onclick="showChoice()">Changer de formulaire</button>
+                                    </div>
+                                </div>
+    
+                                <div class="row d-flex align-items-center">
+                                    <div class="col">
+                                        <h3>Critères à respecter :</h3>
+                                        <p>
+                                            <ul>
+                                                <li>Les overlays ne sont pas acceptés (sauf exceptions: swing cam et camera ortho de taille raisonnable)</li>
+                                                <li>Évitez de nous envoyer des runs que vous avez déjà posté sur votre chaîne</li>
+                                                <li>La vidéo soumise ne doit pas avoir été éditée</li>
+                                            </ul>
+                                            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modalHelpQuest">Comment enregistrer un replay sur Quest ?</button>
+                                        </p>
+                                    </div>
+                                    <div class="col-auto">
+                                        <h3>Dernière vidéo publiée :</h3>
+                                        <iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/<%= lastVideo.videoId %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <form>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label"><span style="font-weight: bold; color: #FF0000;">*</span> : champ requis</label>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <label class="form-label required">Fichier vidéo</label>
+                                            <input type="file" class="form-control" id="video-file" required>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label required">Fichier audio</label>
+                                            <input type="file" class="form-control" id="audio-file" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label required">Description de la vidéo</label>
+                                        <input type="text" class="form-control" id="description_q" placeholder="" autocomplete="off" required>
+                                        <small class="form-hint">Artiste - Nom de la map, Difficulté, Précision, FC/Miss</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label required">Profil ScoreSaber ou BeatLeader</label>
+                                        <input type="text" class="form-control" id="leaderboard_profil_q" placeholder="https://scoresaber.com/u/76561198796531407" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label required">Leaderboard de la map</label>
+                                        <input type="text" class="form-control" id="map_leaderboard_q" placeholder="https://scoresaber.com/leaderboard/6286" autocomplete="off" required>
+                                        <small class="form-hint">Ajoutez le lien ScoreSaber ou BeatLeader de la map que vous avez joué dans votre vidéo</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label required">Lien BeatSaver</label>
+                                        <input type="text" class="form-control" id="beatsaver_q" placeholder="https://beatsaver.com/maps/3b5" autocomplete="off" required>
+                                        <small class="form-hint">Ajoutez le lien BeatSaver de la map que vous avez joué dans votre vidéo</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label required">Votre casque VR</label>
+                                        <select class="form-select" id="headset_q" required>
+                                            <option value="">Veuillez sélectionner un casque VR</option>
+                                            <optgroup label="Oculus/Meta">
+                                                <option value="Oculus Quest">Oculus Quest</option>
+                                                <option value="Oculus Quest 2">Meta Quest 2</option>
+                                            </optgroup>
+                                            <option value="Autre">Autre (indiquez-le en commentaire)</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label required">Votre grip</label>
+                                        <input type="text" class="form-control" id="grip_q" placeholder="Default grip" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Votre chaîne Twitch</label>
+                                        <input type="text" class="form-control" id="twitch_url_q" placeholder="https://twitch.tv/beatsaberfr">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Commentaire du joueur (apparaîtra en description de la vidéo)</label>
+                                        <textarea class="form-control" id="comments_q" maxlength="250" style="min-height:98px"></textarea>
+                                        <small class="form-hint">250 caractères max. (<span id="remaining_q">250</span> restants)</small>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="row">
+                                        <div class="col me-auto">
+                                            <button type="button" class="btn btn-danger btn-clear-quest">Effacer le formulaire</button>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button type="submit" class="btn btn-primary">Envoyer</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                     <% } else { %>
                         <div class="alert alert-danger" role="alert">
                             <div class="text-muted">
@@ -190,6 +328,61 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon d-none mb-2 text-green icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="12" cy="12" r="9"></circle><path d="M9 12l2 2l4 -4"></path></svg>
                     <h3>Envoi d'une run</h3>
                     <div id="upload-status" class="text-muted"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white w-100" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" id="modalHelpQuest">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Comment enregistrer un replay sur Quest ?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <h4>Prérequis :</h4>
+                    <ul>
+                        <li>Meta Quest 1 ou 2 avec mode développeur activé (<a href="https://gamergen.com/actualites/oculus-quest-1-2-retrouver-mode-developpeur-et-sources-inconnues-324358-1" target="_blank">tutoriel</a>)</li>
+                        <li>Sidequest</li>
+                        <li>Beat Saber 1.25.1</li>
+                        <li>
+                            <h4>Mods :</h4>
+                            <ul>
+                                <li>BeatLeader</li>
+                                <li>Replay</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p>
+                        (Avant de commencer, il est impératif de désactiver le mode veille du Quest pour ne pas interrompre le rendu, pour cela, entrez la commande <kbd>adb shell am broadcast -a com.oculus.vrpowermanager.prox_close</kbd> dans Sidequest)
+                    </p>
+                    <h4>Enregistrement du replay :</h4>
+                    <ol>
+                        <li>Avec BeatLeader, cliquez sur l'icone de replay sur la fenêtre de votre score (<i>image 1</i>).</li>
+                        <li>Choisissez l'option smooth camera (<i>image 2, case verte</i>) et cliquez sur Render (<i>image 2, case rouge</i>).</li>
+                        <li>Patientez pendant l'enregistrement, cela prendra quelques minutes. La vidéo et l'audio est hâché, c'est normal.</li>
+                        <li>Une fois terminé, il faudra faire un second rendu pour l'audio, en cochant "Audio mode" (<i>image 2, case bleue</i>).</li>
+                        <li>Vous obtiendrez, après ces manipulations, un fichier h264 et un fichier wav à la racine de votre Quest que vous joindrez dans le formulaire. Vous pouvez utiliser Sidequest pour les télécharger sur votre ordinateur.</li>
+                    </ol>
+
+                    <div class="d-flex justify-content-center">
+                        <figure class="figure text-center">
+                            <a href="https://cdn.discordapp.com/attachments/907724370917617754/1044360526764965918/02.jpg" target="_blank" style="cursor:zoom-in">
+                                <img src="https://cdn.discordapp.com/attachments/907724370917617754/1044360526764965918/02.jpg" alt="Capture d'écran montrant l'emplacement du bouton replay" class="rounded figure-img" width="50%">
+                            </a>
+                            <figcaption class="figure-caption">image 1</figcaption>
+                        </figure>
+                        <figure class="figure text-center">
+                            <a href="https://cdn.discordapp.com/attachments/907724370917617754/1044360526504931369/01.jpg" target="_blank" style="cursor:zoom-in">
+                                <img src="https://cdn.discordapp.com/attachments/907724370917617754/1044360526504931369/01.jpg" alt="Capture d'écran montrant les options d'enregistrement du replay" class="rounded figure-img" width="50%">
+                            </a>
+                            <figcaption class="figure-caption">image 2</figcaption>
+                        </figure>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white w-100" data-bs-dismiss="modal">Fermer</button>
