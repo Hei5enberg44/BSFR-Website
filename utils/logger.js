@@ -1,5 +1,9 @@
-import * as fs from 'node:fs'
+import { appendFileSync } from 'node:fs'
+import { dirname } from 'path'
+import { fileURLToPath } from 'url'
 import chalk from 'chalk'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default {
     /**
@@ -51,7 +55,7 @@ export default {
 
         const logContent = `[${scope}] [${logLevel}] ${content}`
 
-        fs.appendFileSync(`${__dirname}/../logs/${date.date}.log`, `[${date.time}] [${scope}] [${level}] ${content}\n`)
+        appendFileSync(`${__dirname}/../logs/${date.date}.log`, `[${date.time}] [${scope}] [${level}] ${content}\n`)
         console.log(logContent)
     }
 }

@@ -69,9 +69,6 @@ $runForm.addEventListener('submit', async function(e) {
         const formData = new FormData()
         formData.append('file', $video.files[0])
 
-        // Affichage du popup d'upload de run
-        runModal.show()
-
         const xhr = new XMLHttpRequest()
         xhr.responseType = 'json'
 

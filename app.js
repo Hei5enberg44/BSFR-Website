@@ -8,6 +8,7 @@ import members from './controllers/members.js'
 import city from './controllers/city.js'
 import mpov from './controllers/mpov.js'
 import youtube from './controllers/youtube.js'
+import {uploadFile} from './controllers/upload.js'
 import fetch from 'node-fetch'
 import crypto from 'crypto'
 import Logger from './utils/logger.js'
@@ -407,7 +408,7 @@ app.get('/discord/logout', async (req, res) => {
     res.redirect('/')
 })
 
-app.post('/forms/run/youtube', async (req, res) => {
+app.post('/forms/run/pc', async (req, res) => {
     const body = req.body
     if(body.url !== null && body.description !== null && body.leaderboard_profil !== null && body.map_leaderboard !== null
         && body.beatsaver !== null && body.headset !== null && body.grip !== null && body.twitch_url !== null && body.comments !== null) {
@@ -415,6 +416,63 @@ app.post('/forms/run/youtube', async (req, res) => {
         const result = await discord.submitRun(req.session.discord, body)
 
         res.json(result)
+    } else {
+        res.json({ error: 'Invalid request' })
+    }
+})
+
+app.post('/forms/run/quest', async (req, res) => {
+    const body = req.body    
+    if(req?.files?.video && req?.files?.audio && body.description !== null && body.leaderboard_profil !== null && body.map_leaderboard !== null
+        && body.beatsaver !== null && body.headset !== null && body.grip !== null && body.twitch_url !== null && body.comments !== null) {
+
+        const videoFile = req.files.video
+        const audioFile = req.files.audio
+        const user = req.session.discord.user
+        const username = `${user.username}#${user.discriminator}`
+
+        try {
+            if(videoFile.mimetype !== 'video/h264') {
+                throw new Error('Le format du fichier vidéo sélectionné n\'est pas autorisé')
+            } else if(videoFile.size > 3 * 1024 * 1024 * 1024) {
+                throw new Error('La taille du fichier vidéo ne doit pas exéder 3 Go')
+            }
+
+            if(audioFile.mimetype !== 'audio/wav') {
+                throw new Error('Le format du fichier audio sélectionné n\'est pas autorisé')
+            } else if(audioFile.size > 3 * 1024 * 1024 * 1024) {
+                throw new Error('La taille du fichier audio ne doit pas exéder 3 Go')
+            }
+
+            const videoFilePath = `./uploads/youtube/${username}/${videoFile.name}`
+            await new Promise((resolve, reject) => {
+                videoFile.mv(videoFilePath, (err) => {
+                    if(err) {
+                        reject(err.message)
+                    } else {
+                        resolve()
+                    }
+                })
+            })
+            
+            const audioFilePath = `./uploads/youtube/${username}/${audioFile.name}`
+            await new Promise((resolve, reject) => {
+                audioFile.mv(audioFilePath, (err) => {
+                    if(err) {
+                        reject(err.message)
+                    } else {
+                        resolve()
+                    }
+                })
+            })
+
+            await uploadFile(videoFilePath, 'BSFR/Runs YouTube')
+
+            Logger.log('YouTubeRun', 'SUCCESS', `La run de ${username} a bien été uploadée`)
+            res.send({ success: true, message: 'Le fichier a bien été envoyé' })
+        } catch(error) {
+            res.send({ success: false, message: error.message })
+        }
     } else {
         res.json({ error: 'Invalid request' })
     }
@@ -438,7 +496,7 @@ app.post('/forms/run/mpov', async (req, res) => {
             }
 
             await new Promise((resolve, reject) => {
-                file.mv(`./uploads/${username}/${file.name}`, (err) => {
+                file.mv(`./uploads/mpov/${username}/${file.name}`, (err) => {
                     if(err) {
                         reject(err.message)
                     } else {

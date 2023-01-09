@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
+    <link rel="stylesheet" href="/static/assets/libs/file-upload/file-upload.css">
     <link rel="stylesheet" href="/static/assets/css/alert.css">
     <link rel="stylesheet" href="/static/assets/css/background.css">
     <link rel="stylesheet" href="/static/assets/libs/animate/animate.min.css">
@@ -241,11 +242,11 @@
                                     <div class="row mb-3">
                                         <div class="col-6">
                                             <label class="form-label required">Fichier vidéo</label>
-                                            <input type="file" class="form-control" id="video-file" required>
+                                            <file-upload id="video-file" file-types="video/h264" max-size="3221225472">Déposez votre fichier .h264 ici</file-upload>
                                         </div>
                                         <div class="col-6">
                                             <label class="form-label required">Fichier audio</label>
-                                            <input type="file" class="form-control" id="audio-file" required>
+                                            <file-upload id="audio-file" file-types="audio/wav" max-size="3221225472">Déposez votre fichier .wav ici</file-upload>
                                         </div>
                                     </div>
                                     <div class="mb-3">
@@ -319,7 +320,7 @@
         </div>
     </div>
 
-    <div class="modal" tabindex="-1" id="modalRun">
+    <div class="modal" tabindex="-1" id="modalRunPc">
         <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-status"></div>
@@ -327,10 +328,30 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon d-none mb-2 text-red icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="12" cy="12" r="9"></circle><path d="M10 10l4 4m0 -4l-4 4"></path></svg>
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon d-none mb-2 text-green icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="12" cy="12" r="9"></circle><path d="M9 12l2 2l4 -4"></path></svg>
                     <h3>Envoi d'une run</h3>
-                    <div id="upload-status" class="text-muted"></div>
+                    <div id="upload-status-pc" class="text-muted"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white w-100" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" id="modalRunQuest">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-status bg-blue"></div>
+                <div class="modal-body text-center py-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-blue icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path><polyline points="7 9 12 4 17 9"></polyline><line x1="12" y1="4" x2="12" y2="16"></line></svg>
+                    <h3>Envoi d'une run</h3>
+                    <div class="text-muted mb-2" id="upload-status-quest"></div>
+                    <div class="text-muted" id="upload-infos-quest"></div>
+                    <div class="progress mt-2">
+                        <div class="progress-bar" id="upload-progress-quest" style="width: 0%" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white w-100" id="close-modal-run-quest">Fermer</button>
                 </div>
             </div>
         </div>
@@ -393,6 +414,7 @@
 
     <script src="/static/assets/libs/tabler/script.min.js"></script>
     <script src="/static/assets/libs/autosize/autosize.min.js"></script>
+    <script src="/static/assets/libs/file-upload/file-upload.js"></script>
     <script src="/static/assets/js/app.js"></script>
     <% if(user.isBSFR) { %>
     <script src="/static/assets/js/run.js"></script>
