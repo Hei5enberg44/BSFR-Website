@@ -1,4 +1,3 @@
-
 class FileUpload extends HTMLElement {
     /** @type {HTMLInputElement} */
     #input
