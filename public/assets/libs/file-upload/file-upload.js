@@ -5,6 +5,10 @@ class FileUpload extends HTMLElement {
     #placeholder
     /** @type {File} */
     file = null
+    /** @type {array} */
+    #autorizedFileTypes = []
+    /** @type {number} */
+    #maxFileSize = 0
 
     constructor() {
         super()
@@ -14,8 +18,12 @@ class FileUpload extends HTMLElement {
     init() {
         this.setAttribute('draggable', '')
 
+        if(this.getAttribute('file-types')) this.#autorizedFileTypes = this.getAttribute('file-types').split(' ')
+        if(this.getAttribute('max-size')) this.#maxFileSize = parseInt(this.getAttribute('max-size'))
+
         const input = document.createElement('input')
         input.type = 'file'
+        input.accept = this.getAttribute('accept')
         this.#input = input
         this.append(input)
         input.addEventListener('change', (e) => this.uploadFile())
@@ -89,18 +97,16 @@ class FileUpload extends HTMLElement {
 
         this.removeAttribute('class')
 
-        const autorizedTypes = this.getAttribute('file-types') ? this.getAttribute('file-types').split(' ') : null
-        if(autorizedTypes) {
-            if(autorizedTypes.indexOf(fileType) === -1) {
+        if(this.#autorizedFileTypes.length > 0) {
+            if(this.#autorizedFileTypes.indexOf(fileType) === -1) {
                 valid = false
                 this.classList.add('is-invalid')
                 this.textContent = 'Format de fichier non autorisé'
             }
         }
 
-        const maxSize = this.getAttribute('max-size') ? parseInt(this.getAttribute('max-size')) : null
-        if(maxSize) {
-            if(fileSize > maxSize) {
+        if(this.#maxFileSize > 0) {
+            if(fileSize > this.#maxFileSize) {
                 valid = false
                 this.classList.add('is-invalid')
                 this.textContent = 'Le fichier est trop volumineux'
