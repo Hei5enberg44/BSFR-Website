@@ -5,7 +5,8 @@ const exec = promisify(cp.exec)
 
 export default {
     async merge(videoFilePath, audioFilePath, mergedFilePath) {
-        await exec(`ffmpeg -i "${videoFilePath}" -i "${audioFilePath}" -af apad -shortest "${mergedFilePath}"`)
+        await exec(`ffmpeg -i "${videoFilePath}" -i "${audioFilePath}" -vcodec libx264 -crf 18 -acodec aac -b:a 500k "${mergedFilePath}"`)
+        await exec(`rm -f "${videoFilePath}" "${audioFilePath}"`)
     },
 
     async uploadFile(filePath, uploadPath) {
