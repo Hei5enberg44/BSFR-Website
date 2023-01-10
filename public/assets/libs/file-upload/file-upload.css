@@ -1,0 +1,35 @@
+file-upload {
+    position: relative;
+    display: block;
+    width: 100%;
+    background: #ffffff;
+    border: 2px dashed #e6e7e9;
+    border-radius: 4px;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #1d273b;
+    cursor: pointer;
+    user-select: none;
+}
+
+file-upload input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+file-upload.drag-over {
+    border-color: #206bc4;
+}
+
+file-upload.is-valid {
+    border-color: #2fb344;
+}
+
+file-upload.is-invalid {
+    border-color: #d63939;
+}

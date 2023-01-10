@@ -1,7 +1,7 @@
 {
   "name": "bsfr-website",
   "displayName": "BSFR Website",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "description": "BSFR Website",
   "main": "app.js",
   "type": "module",
@@ -21,6 +21,7 @@
     "express-fileupload": "^1.4.0",
     "express-mysql-session": "^2.1.8",
     "express-session": "^1.17.3",
+    "jsdom": "^21.0.0",
     "mariadb": "^3.0.2",
     "node-fetch": "^3.3.0",
     "sequelize": "^6.25.7"
