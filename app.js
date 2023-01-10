@@ -87,6 +87,7 @@ const requireAdmin = (req, res, next) => {
 }
 
 app.get('/', async (req, res) => {
+    req.session.redirect = '/'
     if(req.session.discord) {
         req.login_sucess = req.session.discord.login_success ?? null
         if(req.login_sucess === false) delete req.session.discord
@@ -94,7 +95,9 @@ app.get('/', async (req, res) => {
 
     const guild = await discord.getGuildPreview()
     res.render('index.ejs', {
+        page: 'accueil',
         login_success: req.login_sucess ?? null,
+        user: req.session?.discord?.user ?? null,
         guild: guild,
         inviteUrl: config.discord.invitation_url
     })
@@ -103,6 +106,7 @@ app.get('/', async (req, res) => {
 app.get('/forms/run/youtube', requireLogin, async (req, res) => {
     const lastVideo = await youtube.getLastVideo()
     res.render('forms/run/youtube.ejs', {
+        page: 'youtube',
         login_success: req.login_sucess ?? null,
         user: req.session.discord.user,
         inviteUrl: config.discord.invitation_url,
@@ -113,6 +117,7 @@ app.get('/forms/run/youtube', requireLogin, async (req, res) => {
 app.get('/forms/run/mpov', requireLogin, async (req, res) => {
     const mpovInfos = await mpov.getMPOVInfos()
     res.render('forms/run/mpov.ejs', {
+        page: 'mpov',
         login_success: req.login_sucess ?? null,
         user: req.session.discord.user,
         inviteUrl: config.discord.invitation_url,
@@ -122,6 +127,7 @@ app.get('/forms/run/mpov', requireLogin, async (req, res) => {
 
 app.get('/interactive-map', requireLogin, async (req, res) => {
     res.render('map.ejs', {
+        page: 'map',
         login_success: req.login_sucess ?? null,
         user: req.session.discord.user,
         inviteUrl: config.discord.invitation_url
@@ -396,7 +402,9 @@ app.get('/discord/login', async (req, res) => {
         req.session.discord.login_success = false
         res.redirect('/')
     } else {
-        res.redirect(req.session.redirect)
+        const redirect = req.session.redirect ?? '/'
+        delete req.session.redirect
+        res.redirect(redirect)
     }
 })
 
