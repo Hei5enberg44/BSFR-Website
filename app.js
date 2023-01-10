@@ -8,7 +8,8 @@ import members from './controllers/members.js'
 import city from './controllers/city.js'
 import mpov from './controllers/mpov.js'
 import youtube from './controllers/youtube.js'
-import {uploadFile} from './controllers/upload.js'
+import video from './controllers/video.js'
+import nextcloud from './controllers/nextcloud.js'
 import fetch from 'node-fetch'
 import crypto from 'crypto'
 import Logger from './utils/logger.js'
@@ -431,6 +432,10 @@ app.post('/forms/run/quest', async (req, res) => {
         const user = req.session.discord.user
         const username = `${user.username}#${user.discriminator}`
 
+        const uploadFilePath = `${process.cwd()}/uploads/youtube`
+        const videoFilePath = `${uploadFilePath}/video/${videoFile.name}`
+        const audioFilePath = `${uploadFilePath}/audio/${audioFile.name}`
+
         try {
             if(videoFile.mimetype !== 'video/h264') {
                 throw new Error('Le format du fichier vidéo sélectionné n\'est pas autorisé')
@@ -444,7 +449,6 @@ app.post('/forms/run/quest', async (req, res) => {
                 throw new Error('La taille du fichier audio ne doit pas exéder 3 Go')
             }
 
-            const videoFilePath = `./uploads/youtube/${username}/${videoFile.name}`
             await new Promise((resolve, reject) => {
                 videoFile.mv(videoFilePath, (err) => {
                     if(err) {
@@ -455,7 +459,6 @@ app.post('/forms/run/quest', async (req, res) => {
                 })
             })
             
-            const audioFilePath = `./uploads/youtube/${username}/${audioFile.name}`
             await new Promise((resolve, reject) => {
                 audioFile.mv(audioFilePath, (err) => {
                     if(err) {
@@ -466,12 +469,21 @@ app.post('/forms/run/quest', async (req, res) => {
                 })
             })
 
-            await uploadFile(videoFilePath, 'BSFR/Runs YouTube')
-
             Logger.log('YouTubeRun', 'SUCCESS', `La run de ${username} a bien été uploadée`)
-            res.send({ success: true, message: 'Le fichier a bien été envoyé' })
+            res.send({ success: true, message: 'La run a bien été envoyée' })
         } catch(error) {
             res.send({ success: false, message: error.message })
+        }
+
+        const mergedVideoFile = `${username}-${Date.now()}.mp4`
+        const mergedVideoPath = `${uploadFilePath}/${mergedVideoFile}`
+        await video.merge(videoFilePath, audioFilePath, mergedVideoPath)
+        await video.uploadFile(mergedVideoPath, 'BSFR/Runs YouTube')
+        const shareUrl = await nextcloud.shareFile(`BSFR/Runs YouTube/${mergedVideoFile}`)
+
+        if(shareUrl) {
+            body.url = shareUrl
+            await discord.submitRun(req.session.discord, body)
         }
     } else {
         res.json({ error: 'Invalid request' })

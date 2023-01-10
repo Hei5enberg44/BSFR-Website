@@ -2,6 +2,8 @@
 class FileUpload extends HTMLElement {
     /** @type {HTMLInputElement} */
     #input
+    /** @type {string} */
+    #placeholder
     /** @type {File} */
     file = null
 
@@ -18,6 +20,8 @@ class FileUpload extends HTMLElement {
         this.#input = input
         this.append(input)
         input.addEventListener('change', (e) => this.uploadFile())
+
+        this.#placeholder = this.textContent
 
         this.addEventListener('click', (e) => this.click(e))
         this.addEventListener('dragover', (e) => e.preventDefault())
@@ -109,6 +113,16 @@ class FileUpload extends HTMLElement {
             this.textContent = fileName
             this.file = file
         }
+    }
+
+    /**
+     * Réinitialise le champ
+     */
+    reset() {
+        this.file = null
+        this.#input.value = ''
+        this.textContent = this.#placeholder
+        this.removeAttribute('class')
     }
 }
 

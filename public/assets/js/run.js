@@ -252,7 +252,11 @@ $runQuestForm.addEventListener('submit', async function(e) {
             $modalRunQuestUploadInfos.textContent = ''
             $modalRunQuestCloseBtn.removeAttribute('disabled')
             $modalRunQuestUploadProgress.classList.add(`bg-${xhr.response.success ? 'success' : 'danger'}`)
-            if(xhr.response.success) $runQuestForm.reset()
+            if(xhr.response.success) {
+                $runQuestForm.reset()
+                $videoFile.reset()
+                $audioFile.reset()
+            }
         }
 
         xhr.upload.onerror = () => {
