@@ -432,9 +432,10 @@ app.post('/forms/run/quest', async (req, res) => {
         const user = req.session.discord.user
         const username = `${user.username}#${user.discriminator}`
 
+        const date = Date.now()
         const uploadFilePath = `${process.cwd()}/uploads/youtube`
-        const videoFilePath = `${uploadFilePath}/video/${videoFile.name}`
-        const audioFilePath = `${uploadFilePath}/audio/${audioFile.name}`
+        const videoFilePath = `${uploadFilePath}/video/${date}-${videoFile.name}`
+        const audioFilePath = `${uploadFilePath}/audio/${date}-${audioFile.name}`
 
         try {
             if(videoFile.mimetype !== 'video/h264') {
@@ -475,7 +476,7 @@ app.post('/forms/run/quest', async (req, res) => {
             res.send({ success: false, message: error.message })
         }
 
-        const mergedVideoFile = `${username}-${Date.now()}.mp4`
+        const mergedVideoFile = `${date}-${username}.mp4`
         const mergedVideoPath = `${uploadFilePath}/${mergedVideoFile}`
         await video.merge(videoFilePath, audioFilePath, mergedVideoPath)
         await video.uploadFile(mergedVideoPath, 'BSFR/Runs YouTube')
