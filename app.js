@@ -66,10 +66,6 @@ const requireLogin = (req, res, next) => {
         if(!req.session.discord.user) {
             res.redirect('/discord/logout')
         } else {
-            if(req.session.discord.login_success !== null) {
-                req.login_sucess = req.session.discord.login_success
-                req.session.discord.login_success = null
-            }
             next()
         }
     }
@@ -88,17 +84,10 @@ const requireAdmin = (req, res, next) => {
 
 app.get('/', async (req, res) => {
     req.session.redirect = '/'
-    if(req.session.discord) {
-        req.login_sucess = req.session.discord.login_success ?? null
-        if(req.login_sucess === false) delete req.session.discord
-    }
 
-    const guild = await discord.getGuildPreview()
     res.render('index.ejs', {
         page: 'accueil',
-        login_success: req.login_sucess ?? null,
         user: req.session?.discord?.user ?? null,
-        guild: guild,
         inviteUrl: config.discord.invitation_url
     })
 })
@@ -107,7 +96,6 @@ app.get('/forms/run/youtube', requireLogin, async (req, res) => {
     const lastVideo = await youtube.getLastVideo()
     res.render('forms/run/youtube.ejs', {
         page: 'youtube',
-        login_success: req.login_sucess ?? null,
         user: req.session.discord.user,
         inviteUrl: config.discord.invitation_url,
         lastVideo
@@ -118,7 +106,6 @@ app.get('/forms/run/mpov', requireLogin, async (req, res) => {
     const mpovInfos = await mpov.getMPOVInfos()
     res.render('forms/run/mpov.ejs', {
         page: 'mpov',
-        login_success: req.login_sucess ?? null,
         user: req.session.discord.user,
         inviteUrl: config.discord.invitation_url,
         mpovInfos: mpovInfos
@@ -128,7 +115,6 @@ app.get('/forms/run/mpov', requireLogin, async (req, res) => {
 app.get('/interactive-map', requireLogin, async (req, res) => {
     res.render('map.ejs', {
         page: 'map',
-        login_success: req.login_sucess ?? null,
         user: req.session.discord.user,
         inviteUrl: config.discord.invitation_url
     })
@@ -177,7 +163,6 @@ app.get('/admin/birthdays', requireAdmin, async (req, res) => {
     })
     res.render('admin/birthdays', {
         page: 'birthdays',
-        login_success: req.login_sucess ?? null,
         user: req.session.discord.user,
         birthdays: membersBirthday
     })
@@ -211,7 +196,6 @@ app.get('/admin/mutes', requireAdmin, async (req, res) => {
     }))
     res.render('admin/mutes', {
         page: 'mutes',
-        login_success: req.login_sucess ?? null,
         user: req.session.discord.user,
         mutes: mutedMembers
     })
@@ -245,7 +229,6 @@ app.get('/admin/bans', requireAdmin, async (req, res) => {
     }))
     res.render('admin/bans', {
         page: 'bans',
-        login_success: req.login_sucess ?? null,
         user: req.session.discord.user,
         bans: bannedMembers
     })
@@ -272,7 +255,6 @@ app.get('/admin/birthdayMessages', requireAdmin, async (req, res) => {
     }))
     res.render('admin/birthdayMessages', {
         page: 'birthdayMessages',
-        login_success: req.login_sucess ?? null,
         user: req.session.discord.user,
         birthdayMessages: birthdayMessages
     })
@@ -336,7 +318,6 @@ app.get('/admin/twitchChannels', requireAdmin, async (req, res) => {
     }))
     res.render('admin/twitchChannels', {
         page: 'twitchChannels',
-        login_success: req.login_sucess ?? null,
         user: req.session.discord.user,
         twitchChannels: twitchChannels
     })
@@ -365,7 +346,6 @@ app.get('/discord/login', async (req, res) => {
     let error = false
 
     req.session.discord = {
-        login_success: true,
         tokens: null
     }
 
@@ -399,7 +379,6 @@ app.get('/discord/login', async (req, res) => {
     }
 
     if(error) {
-        req.session.discord.login_success = false
         res.redirect('/')
     } else {
         const redirect = req.session.redirect ?? '/'
@@ -413,7 +392,6 @@ app.get('/discord/logout', async (req, res) => {
         await discord.revokeToken(req.session.discord)
         delete req.session.discord
     }
-
     res.redirect('/')
 })
 

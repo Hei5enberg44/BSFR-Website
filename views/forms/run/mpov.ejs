@@ -201,6 +201,5 @@
     <% if(user.isBSFR && Date.now() >= mpovInfos.dateStart && Date.now() < mpovInfos.dateEnd) { %>
     <script src="/static/assets/js/mpov.js"></script>
     <% } %>
-    <% if(login_success !== null) { %><script>showAlert(<%= login_success %>, '<%= login_success ? 'Connexion réussie' : 'Connexion échouée' %>')</script><% } %>
 </body>
 </html>
