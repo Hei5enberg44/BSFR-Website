@@ -13,6 +13,6 @@ export default {
         const fileName = path.basename(filePath)
         await exec(`sudo -u daemon bash -c 'cp "${filePath}" "/media/nextcloud/data/admin/files/${uploadPath}/${fileName}"'`)
         await exec(`rm -f "${filePath}"`)
-        await exec(`sudo -u daemon bash -c '/usr/local/bin/php /var/www/nextcloud/occ files:scan --path "admin/files/${uploadPath}"'`)
+        await exec(`sudo -u daemon bash -c '/opt/php/php8.1.14/bin/php /var/www/nextcloud/occ files:scan --path "admin/files/${uploadPath}"'`)
     }
 }
