@@ -10,8 +10,10 @@ import mpov from './controllers/mpov.js'
 import youtube from './controllers/youtube.js'
 import video from './controllers/video.js'
 import nextcloud from './controllers/nextcloud.js'
+import { unlink } from 'node:fs/promises'
 import fetch from 'node-fetch'
 import crypto from 'crypto'
+import mmm, { Magic } from 'mmmagic'
 import Logger from './utils/logger.js'
 import config from './config.json' assert { type: 'json' }
 
@@ -424,53 +426,55 @@ app.post('/forms/run/quest', async (req, res) => {
         const audioFilePath = `${uploadFilePath}/audio/${date}-${audioFile.name}`
 
         try {
-            if(videoFile.mimetype !== 'video/h264') {
-                throw new Error('Le format du fichier vidéo sélectionné n\'est pas autorisé')
-            } else if(videoFile.size > 3 * 1024 * 1024 * 1024) {
+            if(videoFile.size > 3 * 1024 * 1024 * 1024)
                 throw new Error('La taille du fichier vidéo ne doit pas exéder 3 Go')
-            }
 
-            if(audioFile.mimetype !== 'audio/wav') {
-                throw new Error('Le format du fichier audio sélectionné n\'est pas autorisé')
-            } else if(audioFile.size > 3 * 1024 * 1024 * 1024) {
+            if(audioFile.size > 3 * 1024 * 1024 * 1024)
                 throw new Error('La taille du fichier audio ne doit pas exéder 3 Go')
-            }
 
-            await new Promise((resolve, reject) => {
-                videoFile.mv(videoFilePath, (err) => {
-                    if(err) {
-                        reject(err.message)
-                    } else {
-                        resolve()
-                    }
+            await videoFile.mv(videoFilePath)
+            await audioFile.mv(audioFilePath)
+
+            // Contrôle des types de fichiers
+            const magic = new Magic(mmm.MAGIC_MIME_TYPE)
+            const videoType = await new Promise((res, rej) => {
+                magic.detectFile(videoFilePath, function(err, result) {
+                    if(err) rej('Une erreur est survenue lors de l\'analyse du fichier vidéo')
+                    res(result)
                 })
             })
-            
-            await new Promise((resolve, reject) => {
-                audioFile.mv(audioFilePath, (err) => {
-                    if(err) {
-                        reject(err.message)
-                    } else {
-                        resolve()
-                    }
+
+            const audioType = await new Promise((res, rej) => {
+                magic.detectFile(audioFilePath, function(err, result) {
+                    if(err) rej('Une erreur est survenue lors de l\'analyse du fichier audio')
+                    res(result)
                 })
             })
+
+            if((videoType !== 'video/h264' && videoType !== 'application/octet-stream') || audioType !== 'audio/x-wav') {
+                await unlink(videoFilePath)
+                await unlink(audioFilePath)
+
+                if(videoType !== 'video/h264' && videoType !== 'application/octet-stream') throw new Error('Le format du fichier vidéo n\'est pas autorisé')
+                if(audioType !== 'audio/x-wav') throw new Error('Le format du fichier audio n\'est pas autorisé')
+            }
 
             Logger.log('YouTubeRun', 'SUCCESS', `La run de ${username} a bien été uploadée`)
             res.send({ success: true, message: 'La run a bien été envoyée' })
+
+            const mergedVideoFile = `${date}-${username}.mp4`
+            const mergedVideoPath = `${uploadFilePath}/${mergedVideoFile}`
+            await video.merge(videoFilePath, audioFilePath, mergedVideoPath)
+            await video.uploadFile(mergedVideoPath, 'BSFR/Runs YouTube')
+            const shareUrl = await nextcloud.shareFile(`BSFR/Runs YouTube/${mergedVideoFile}`)
+    
+            if(shareUrl) {
+                body.url = shareUrl
+                await discord.submitRun(req.session.discord, body)
+            }
         } catch(error) {
             res.send({ success: false, message: error.message })
-        }
-
-        const mergedVideoFile = `${date}-${username}.mp4`
-        const mergedVideoPath = `${uploadFilePath}/${mergedVideoFile}`
-        await video.merge(videoFilePath, audioFilePath, mergedVideoPath)
-        await video.uploadFile(mergedVideoPath, 'BSFR/Runs YouTube')
-        const shareUrl = await nextcloud.shareFile(`BSFR/Runs YouTube/${mergedVideoFile}`)
-
-        if(shareUrl) {
-            body.url = shareUrl
-            await discord.submitRun(req.session.discord, body)
+            return
         }
     } else {
         res.json({ error: 'Invalid request' })
