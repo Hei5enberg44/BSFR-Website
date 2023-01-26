@@ -7,6 +7,8 @@ class FileUpload extends HTMLElement {
     file = null
     /** @type {array} */
     #autorizedFileTypes = []
+    /** @type {array} */
+    #autorizedFileExtensions = []
     /** @type {number} */
     #maxFileSize = 0
 
@@ -18,7 +20,8 @@ class FileUpload extends HTMLElement {
     init() {
         this.setAttribute('draggable', '')
 
-        if(this.getAttribute('file-types')) this.#autorizedFileTypes = this.getAttribute('file-types').split(' ')
+        if(this.getAttribute('file-types')) this.#autorizedFileTypes = this.getAttribute('file-types').split(',')
+        if(this.getAttribute('accept')) this.#autorizedFileExtensions = this.getAttribute('accept').split(',')
         if(this.getAttribute('max-size')) this.#maxFileSize = parseInt(this.getAttribute('max-size'))
 
         const input = document.createElement('input')
@@ -93,6 +96,7 @@ class FileUpload extends HTMLElement {
         let valid = true
         const fileName = file.name
         const fileType = file.type
+        const fileExtension = fileName.split('.').pop()
         const fileSize = file.size
 
         this.removeAttribute('class')
@@ -101,7 +105,15 @@ class FileUpload extends HTMLElement {
             if(this.#autorizedFileTypes.indexOf(fileType) === -1) {
                 valid = false
                 this.classList.add('is-invalid')
-                this.textContent = 'Format de fichier non autorisé'
+                this.textContent = 'Type de fichier non autorisé'
+            }
+        }
+
+        if(this.#autorizedFileExtensions.length > 0) {
+            if(this.#autorizedFileExtensions.indexOf(`.${fileExtension}`) === -1) {
+                valid = false
+                this.classList.add('is-invalid')
+                this.textContent = 'Type de fichier non autorisé'
             }
         }
 

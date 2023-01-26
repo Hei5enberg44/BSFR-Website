@@ -23,6 +23,7 @@
     "express-session": "^1.17.3",
     "jsdom": "^21.0.0",
     "mariadb": "^3.0.2",
+    "mmmagic": "^0.5.3",
     "node-fetch": "^3.3.0",
     "sequelize": "^6.25.7"
   }
