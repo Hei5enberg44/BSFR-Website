@@ -102,12 +102,10 @@
                                                             <span class="avatar"><%= attacker.rank %></span>
                                                         </div>
                                                         <div class="col-auto">
-                                                            <a href="#">
-                                                                <span class="avatar" style="background-image: url(<%= attacker.avatar %>)"></span>
-                                                            </a>
+                                                            <span class="avatar" style="background-image: url(<%= attacker.avatar %>)"></span>
                                                         </div>
                                                         <div class="col text-truncate">
-                                                            <a href="#" class="text-reset d-block"><%= attacker.name %></a>
+                                                            <a href="#" class="text-reset d-block attacker-messages" data-member-id="<%= attacker.attackerId %>"><%= attacker.name %></a>
                                                         </div>
                                                         <div class="col-auto">
                                                             <%= attacker.count %>
@@ -132,12 +130,10 @@
                                                             <span class="avatar"><%= victim.rank %></span>
                                                         </div>
                                                         <div class="col-auto">
-                                                            <a href="#">
-                                                                <span class="avatar" style="background-image: url(<%= victim.avatar %>)"></span>
-                                                            </a>
+                                                            <span class="avatar" style="background-image: url(<%= victim.avatar %>)"></span>
                                                         </div>
                                                         <div class="col text-truncate">
-                                                            <a href="#" class="text-reset d-block"><%= victim.name %></a>
+                                                            <a href="#" class="text-reset d-block victim-messages" data-member-id="<%= victim.victimId %>"><%= victim.name %></a>
                                                         </div>
                                                         <div class="col-auto">
                                                             <%= victim.count %>
@@ -158,7 +154,27 @@
         </div>
     </div>
 
+    <div class="modal modal-lg fade" id="modalFeur" tabindex="-1" aria-labelledby="modalFeur" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalFeur">Liste des messages</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="/static/assets/libs/tabler/script.min.js"></script>
     <script src="/static/assets/js/app.js"></script>
+    <% if(user.isBSFR) { %>
+    <script src="/static/assets/js/feur.js"></script>
+    <% } %>
 </body>
 </html>

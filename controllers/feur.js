@@ -53,5 +53,53 @@ export default {
         })
 
         return victims
+    },
+
+    async getAttackerMessages(session, attackerId) {
+        const memberList = await members.getGuildMembers(session)
+
+        const messageList = await Feur.findAll({
+            where: {
+                attackerId: attackerId
+            },
+            order: [ [ 'responseDate', 'desc' ] ],
+            raw: true
+        })
+
+        const messages = messageList.map(mes => {
+            const memberAttacker = memberList.find(m => m.user.id === mes.attackerId)
+            const memberVictim = memberList.find(m => m.user.id === mes.victimId)
+            mes.attackerName = memberAttacker ? memberAttacker.user.username : ''
+            mes.attackerAvatar = memberAttacker ? `https://cdn.discordapp.com/avatars/${memberAttacker.user.id}/${memberAttacker.user.avatar}.webp?size=80` : ''
+            mes.victimName = memberVictim ? memberVictim.user.username : ''
+            mes.victimAvatar = memberVictim ? `https://cdn.discordapp.com/avatars/${memberVictim.user.id}/${memberVictim.user.avatar}.webp?size=80` : ''
+            return mes
+        })
+
+        return messages
+    },
+
+    async getVictimMessages(session, victimId) {
+        const memberList = await members.getGuildMembers(session)
+
+        const messageList = await Feur.findAll({
+            where: {
+                victimId: victimId
+            },
+            order: [ [ 'responseDate', 'desc' ] ],
+            raw: true
+        })
+
+        const messages = messageList.map(mes => {
+            const memberAttacker = memberList.find(m => m.user.id === mes.attackerId)
+            const memberVictim = memberList.find(m => m.user.id === mes.victimId)
+            mes.attackerName = memberAttacker ? memberAttacker.user.username : ''
+            mes.attackerAvatar = memberAttacker ? `https://cdn.discordapp.com/avatars/${memberAttacker.user.id}/${memberAttacker.user.avatar}.webp?size=80` : ''
+            mes.victimName = memberVictim ? memberVictim.user.username : ''
+            mes.victimAvatar = memberVictim ? `https://cdn.discordapp.com/avatars/${memberVictim.user.id}/${memberVictim.user.avatar}.webp?size=80` : ''
+            return mes
+        })
+
+        return messages
     }
 }
