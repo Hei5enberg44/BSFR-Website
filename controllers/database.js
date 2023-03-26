@@ -118,6 +118,22 @@ const YoutubeVideos = sequelize.define('youtube_videos', {
     title: DataTypes.STRING(255)
 })
 
+const Feur = sequelize.define('feur', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    attackerId: DataTypes.STRING(255),
+    victimId: DataTypes.STRING(255),
+    messageId: DataTypes.STRING(255),
+    message: DataTypes.TEXT,
+    messageDate: DataTypes.DATE,
+    responseId: DataTypes.STRING(255),
+    response: DataTypes.TEXT,
+    responseDate: DataTypes.DATE
+})
+
 export {
-    Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, Cities, MPOV, YoutubeVideos
+    Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, Cities, MPOV, YoutubeVideos, Feur
 }

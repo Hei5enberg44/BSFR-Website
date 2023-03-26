@@ -1,7 +1,7 @@
 {
   "name": "bsfr-website",
   "displayName": "BSFR Website",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "description": "BSFR Website",
   "main": "app.js",
   "type": "module",
@@ -15,16 +15,16 @@
   "author": "BSFR",
   "license": "ISC",
   "dependencies": {
-    "chalk": "^5.1.2",
-    "ejs": "^3.1.8",
+    "chalk": "^5.2.0",
+    "ejs": "^3.1.9",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.0",
-    "express-mysql-session": "^2.1.8",
+    "express-mysql-session": "^3.0.0",
     "express-session": "^1.17.3",
-    "jsdom": "^21.0.0",
-    "mariadb": "^3.0.2",
+    "jsdom": "^21.1.1",
+    "mariadb": "^3.1.1",
     "mmmagic": "^0.5.3",
-    "node-fetch": "^3.3.0",
-    "sequelize": "^6.25.7"
+    "node-fetch": "^3.3.1",
+    "sequelize": "^6.30.0"
   }
 }
