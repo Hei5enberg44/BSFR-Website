@@ -158,6 +158,28 @@ app.get('/feurboard', requireLogin, async (req, res) => {
     })
 })
 
+app.get('/feurboard/messages/attacker/:id', async (req, res) => {
+    if(req.xhr) {
+        if(req.session.discord) {
+            const messages = await feur.getAttackerMessages(req.session, req.params.id)
+            res.json(messages)
+            return
+        }
+    }
+    res.status(403).send('Unauthorized')
+})
+
+app.get('/feurboard/messages/victim/:id', async (req, res) => {
+    if(req.xhr) {
+        if(req.session.discord) {
+            const messages = await feur.getVictimMessages(req.session, req.params.id)
+            res.json(messages)
+            return
+        }
+    }
+    res.status(403).send('Unauthorized')
+})
+
 app.get('/admin/', requireAdmin, async (req, res) => {
     res.redirect('/admin/birthdays')
 })
