@@ -10,6 +10,7 @@ import mpov from './controllers/mpov.js'
 import youtube from './controllers/youtube.js'
 import video from './controllers/video.js'
 import nextcloud from './controllers/nextcloud.js'
+import feur from './controllers/feur.js'
 import { unlink } from 'node:fs/promises'
 import fetch from 'node-fetch'
 import crypto from 'crypto'
@@ -142,6 +143,19 @@ app.get('/guildMembers', async (req, res) => {
         }
     }
     res.status(403).send('Unauthorized')
+})
+
+app.get('/feurboard', requireLogin, async (req, res) => {
+    const attackers = await feur.getAttackers(req.session)
+    const victims = await feur.getVictims(req.session)
+
+    res.render('feurboard.ejs', {
+        page: 'feurboard',
+        user: req.session.discord.user,
+        inviteUrl: config.discord.invitation_url,
+        attackers,
+        victims
+    })
 })
 
 app.get('/admin/', requireAdmin, async (req, res) => {

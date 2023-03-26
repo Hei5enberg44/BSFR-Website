@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
+    <link rel="stylesheet" href="/static/assets/css/alert.css">
+    <link rel="stylesheet" href="/static/assets/css/background.css">
+    <link rel="stylesheet" href="/static/assets/libs/animate/animate.min.css">
+    <link rel="stylesheet" href="/static/assets/css/map.css">
+    <link rel="stylesheet" href="/static/assets/libs/leaflet/leaflet.css">
+    <script src="/static/assets/libs/leaflet/leaflet.js"></script>
+    <title>Beat Saber FR - Feurboard</title>
+    <style>
+        .list-group-item:nth-child(1) .rank .avatar {
+            background: #ffc71e;
+            color: white;
+        }
+        .list-group-item:nth-child(2) .rank .avatar {
+            background: #959595;
+            color: white;
+        }
+        .list-group-item:nth-child(3) .rank .avatar {
+            background: #b5532d;
+            color: white;
+        }
+    </style>
+</head>
+<body class="">
+    <div class="background"><div class="blur"></div></div>
+
+    <div class="page">
+        <header class="navbar navbar-expand-md navbar-dark sticky-top d-print-none">
+            <div class="container-xl">
+                <h1 class="navbar-brand d-none-navbar-horizontal pe-0 pe-md-3">
+                    <a href="/">
+                        <img src="/static/assets/images/logo.gif" width="32" height="32" alt="BSFR" class="navbar-brand-image me-2">
+                        Beat Saber FR
+                    </a>
+                </h1>
+                <div class="navbar-nav flex-row order-md-last">
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu" aria-expanded="false">
+                            <span class="avatar avatar-sm" style="background-image: url(https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.webp?size=80)"></span>
+                            <div class="d-none d-xl-block ps-2">
+                                <div><%= user.username %></div>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <% if(user.isAdmin) { %>
+                            <a href="/admin/" class="dropdown-item">Administration</a>
+                            <div class="dropdown-divider"></div>
+                            <% } %>
+                            <a href="/discord/logout" class="dropdown-item">Déconnexion</a>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </header>
+        <%- include('./includes/navbar.ejs') %>
+        
+        <div class="page-wrapper">
+            <div class="container-xl">
+                <!-- Page title -->
+                <div class="page-header d-print-none">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <h2 class="page-title text-white">
+                                Feurboard
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-body">
+                <div class="container-xl">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <form class="form">
+                                <% if(!user.isBSFR) { %>
+                                <div class="alert alert-danger" role="alert">
+                                    Vous devez être membre du serveur Discord BSFR afin de pouvoir visualiser le feurboard.<br>
+                                    Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="<%= inviteUrl %>" target="_blank"><%= inviteUrl %></a><br>
+                                    <i>Actualisez la page après avoir rejoint le serveur Discord pour voir le classement.</i>
+                                </div>
+                                <% } %>
+
+                                <% if(user.isBSFR) { %>
+                                <div class="row">
+                                    <div class="col-12 col-lg-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <div class="card-title">🔫 Attaquants</div>
+                                            </div>
+                                            <div class="list-group list-group-flush list-group-hoverable">
+                                                <% for(const attacker of attackers) { %>
+                                                <div class="list-group-item">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-auto rank">
+                                                            <span class="avatar"><%= attacker.rank %></span>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <a href="#">
+                                                                <span class="avatar" style="background-image: url(<%= attacker.avatar %>)"></span>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col text-truncate">
+                                                            <a href="#" class="text-reset d-block"><%= attacker.name %></a>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <%= attacker.count %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-lg-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <div class="card-title">😫 Victimes</div>
+                                            </div>
+                                            <div class="list-group list-group-flush list-group-hoverable">
+                                                <% for(const victim of victims) { %>
+                                                <div class="list-group-item">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-auto rank">
+                                                            <span class="avatar"><%= victim.rank %></span>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <a href="#">
+                                                                <span class="avatar" style="background-image: url(<%= victim.avatar %>)"></span>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col text-truncate">
+                                                            <a href="#" class="text-reset d-block"><%= victim.name %></a>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <%= victim.count %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% } %>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/assets/libs/tabler/script.min.js"></script>
+    <script src="/static/assets/js/app.js"></script>
+</body>
+</html>
