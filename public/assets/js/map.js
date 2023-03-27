@@ -16,14 +16,14 @@ window.onload = async function() {
     const members = await membersRequest.json()
 
     const map = L.map('map').setView([47, 2], 5.75)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {foo: 'bar', attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map)
 
     const popups = []
     for(const city of cities) {
         const memberId = city.memberId
         const member = members.find(m => m.user.id === memberId)
         const username = member.user.username
-        const avatarURL = `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80`
+        const avatarURL = member.user.avatar ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : `https://cdn.discordapp.com/embed/avatars/${parseInt(member.user.discriminator) % 5}.png`
 
         const coords = city.coordonnees_gps
         const postalCode = city.code_postal.toString().padStart(5, '0')

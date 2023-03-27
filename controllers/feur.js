@@ -19,7 +19,7 @@ export default {
         let rank = 1
         const attackers = attackerList.map(a => {
             const member = memberList.find(m => m.user.id === a.attackerId)
-            a.avatar = member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : ''
+            a.avatar = member ? `${members.getAvatar(member.user)}?size=80` : ''
             a.name = member ? member.user.username : ''
             a.rank = rank
             rank++
@@ -45,7 +45,7 @@ export default {
         let rank = 1
         const victims = victimList.map(a => {
             const member = memberList.find(m => m.user.id === a.victimId)
-            a.avatar = member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : ''
+            a.avatar = member ? `${members.getAvatar(member.user)}?size=80` : ''
             a.name = member ? member.user.username : ''
             a.rank = rank
             rank++
@@ -70,9 +70,9 @@ export default {
             const memberAttacker = memberList.find(m => m.user.id === mes.attackerId)
             const memberVictim = memberList.find(m => m.user.id === mes.victimId)
             mes.attackerName = memberAttacker ? memberAttacker.user.username : ''
-            mes.attackerAvatar = memberAttacker ? `https://cdn.discordapp.com/avatars/${memberAttacker.user.id}/${memberAttacker.user.avatar}.webp?size=80` : ''
+            mes.attackerAvatar = memberAttacker ? `${members.getAvatar(memberAttacker.user)}?size=80` : ''
             mes.victimName = memberVictim ? memberVictim.user.username : ''
-            mes.victimAvatar = memberVictim ? `https://cdn.discordapp.com/avatars/${memberVictim.user.id}/${memberVictim.user.avatar}.webp?size=80` : ''
+            mes.victimAvatar = memberVictim ? `${members.getAvatar(memberVictim.user)}?size=80` : ''
             return mes
         })
 
@@ -94,9 +94,9 @@ export default {
             const memberAttacker = memberList.find(m => m.user.id === mes.attackerId)
             const memberVictim = memberList.find(m => m.user.id === mes.victimId)
             mes.attackerName = memberAttacker ? memberAttacker.user.username : ''
-            mes.attackerAvatar = memberAttacker ? `https://cdn.discordapp.com/avatars/${memberAttacker.user.id}/${memberAttacker.user.avatar}.webp?size=80` : ''
+            mes.attackerAvatar = memberAttacker ? `${members.getAvatar(memberAttacker.user)}?size=80` : ''
             mes.victimName = memberVictim ? memberVictim.user.username : ''
-            mes.victimAvatar = memberVictim ? `https://cdn.discordapp.com/avatars/${memberVictim.user.id}/${memberVictim.user.avatar}.webp?size=80` : ''
+            mes.victimAvatar = memberVictim ? `${members.getAvatar(memberVictim.user)}?size=80` : ''
             return mes
         })
 
