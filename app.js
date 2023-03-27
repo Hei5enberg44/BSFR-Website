@@ -191,7 +191,7 @@ app.get('/admin/birthdays', requireAdmin, async (req, res) => {
         const member = memberList.find(ml => ml.user.id === b.memberId)
         const date = new Intl.DateTimeFormat('fr-FR').format(new Date(b.date))
         return {
-            avatar: member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : '',
+            avatar: member ? `${members.getAvatar(member.user)}?size=80` : '',
             name: member ? `${member.user.username}#${member.user.discriminator}` : '',
             date: {
                 timestamp: new Date(b.date).getTime(),
@@ -215,10 +215,10 @@ app.get('/admin/mutes', requireAdmin, async (req, res) => {
         const muteDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(m.muteDate)
         const unmuteDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(m.unmuteDate)
         return {
-            avatar: member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : '',
+            avatar: member ? `${members.getAvatar(member.user)}?size=80` : '',
             name: member ? `${member.user.username}#${member.user.discriminator}` : '',
             author: {
-                avatar: author ? `https://cdn.discordapp.com/avatars/${author.user.id}/${author.user.avatar}.webp?size=80` : '',
+                avatar: author ? `${members.getAvatar(author.user)}?size=80` : '',
                 name: author ? `${author.user.username}#${author.user.discriminator}` : ''
             },
             reason: m.reason,
@@ -248,10 +248,10 @@ app.get('/admin/bans', requireAdmin, async (req, res) => {
         const banDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(b.banDate)
         const unbanDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(b.unbanDate)
         return {
-            avatar: member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : '',
+            avatar: member ? `${members.getAvatar(member.user)}?size=80` : '',
             name: member ? `${member.user.username}#${member.user.discriminator}` : '',
             author: {
-                avatar: author ? `https://cdn.discordapp.com/avatars/${author.user.id}/${author.user.avatar}.webp?size=80` : '',
+                avatar: author ? `${members.getAvatar(author.user)}?size=80` : '',
                 name: author ? `${author.user.username}#${author.user.discriminator}` : ''
             },
             reason: b.reason,
@@ -282,7 +282,7 @@ app.get('/admin/birthdayMessages', requireAdmin, async (req, res) => {
             id: m.id,
             message: m.message,
             author: {
-                avatar: author ? `https://cdn.discordapp.com/avatars/${author.user.id}/${author.user.avatar}.webp?size=80` : '',
+                avatar: author ? `${members.getAvatar(author.user)}?size=80` : '',
                 name: author ? `${author.user.username}#${author.user.discriminator}` : ''
             },
             date: {
@@ -347,7 +347,7 @@ app.get('/admin/twitchChannels', requireAdmin, async (req, res) => {
         const member = memberList.find(ml => ml.user.id === c.memberId)
         return {
             user: {
-                avatar: member ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : '',
+                avatar: member ? `${members.getAvatar(member.user)}?size=80` : '',
                 name: member ? `${member.user.username}#${member.user.discriminator}` : ''
             },
             name: c.channelName,

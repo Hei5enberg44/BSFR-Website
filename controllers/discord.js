@@ -1,4 +1,5 @@
 import fetch from 'node-fetch'
+import members from './members.js'
 import config from '../config.json' assert { type: 'json' }
 
 export default {
@@ -72,6 +73,7 @@ export default {
         const user = await this.send(discord, 'GET', 'https://discord.com/api/users/@me')
         user.isBSFR = false
         user.isAdmin = false
+        user.avatarURL = members.getAvatar(user)
         const member = await this.send(discord, 'GET', `https://discord.com/api/guilds/${config.discord.guild_id}/members/${user.id}`, null, true)
         if(!member) return user
         if(member) {
@@ -112,7 +114,7 @@ export default {
                     { name: 'Commentaires', value: datas.comments !== '' ? '```' + datas.comments + '```' : 'Pas de commentaires' }
                 ],
                 thumbnail: {
-                    url: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.webp`
+                    url: user.avatarURL
                 }
             }
 

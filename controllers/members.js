@@ -38,5 +38,14 @@ export default {
             expires: expires
         }
         return member
+    },
+
+    getAvatar(user) {
+        if(user.avatar) {
+            return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.webp`
+        } else {
+            const discriminator = parseInt(user.discriminator)
+            return `https://cdn.discordapp.com/embed/avatars/${discriminator % 5}.png`
+        }
     }
 }
