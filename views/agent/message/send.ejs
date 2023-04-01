@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
+    <link rel="stylesheet" href="/static/assets/libs/tabler/vendors.min.css">
+    <link rel="stylesheet" href="/static/assets/css/discord.min.css">
+    <link rel="stylesheet" href="/static/assets/css/alert.css">
+    <link rel="stylesheet" href="/static/assets/css/background.css">
+    <link rel="stylesheet" href="/static/assets/libs/animate/animate.min.css">
+    <title>Beat Saber FR - Agent - Envoyer un message</title>
+</head>
+<body class="">
+    <div class="background"><div class="blur"></div></div>
+
+    <div class="page">
+        <%- include('../includes/header.ejs') %>
+        
+        <div class="page-wrapper">
+            <div class="container-xl">
+                <!-- Page title -->
+                <div class="page-header d-print-none">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <h2 class="page-title text-white">
+                                Envoyer un message
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-body">
+                <div class="container-xl">
+                    <div class="row">
+                        <div class="col-12 col-lg-6 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h3>Message</h3>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-lg-6">
+                                            <div class="mb-2">
+                                                <label class="form-label required">Salon</label>
+                                                <select type="text" class="form-select" placeholder="Selectionnez un salon" id="channel" value="">
+                                                    <% for(const channel of channels) { %>
+                                                        <% if(channel.channels) { %>
+                                                        <optgroup label="<%= channel.name %>">
+                                                            <% for(const c of channel.channels) { %>
+                                                            <option value="<%= c.id %>"><%= `${c.type === 2 ? '📢' : '#'} ${c.name}` %></option>
+                                                            <% } %>
+                                                        </optgroup>
+                                                        <% } else { %>
+                                                        <option value="<%= channel.id %>"><%= `${channel.type === 2 ? '📢' : '#'} ${channel.name}` %></option>
+                                                        <% } %>
+                                                    <% } %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6">
+                                            <div class="mb-2">
+                                                <label class="form-label">
+                                                    Répondre à un message
+                                                    <span class="form-help" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Indiquez l'identifiant du message auquel vous voulez répondre ou laissez vide si ce n'est pas une réponse à un message">?</span>
+                                                </label>
+                                                <input type="text" id="message_reference" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 mb-2">
+                                            <label class="form-label">Contenu du message</label>
+                                            <textarea class="form-control" id="message"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h3>Embed</h3>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 mb-2">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Titre</span>
+                                                <input type="text" class="form-control" id="embed_title">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 mb-2">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Description</span>
+                                                <input type="text" class="form-control" id="embed_description">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 mb-2">
+                                            <div class="input-group">
+                                                <span class="input-group-text">URL</span>
+                                                <input type="text" class="form-control" id="embed_url">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 mb-2">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Couleur</span>
+                                                <input type="color" class="form-control form-control-color" id="embed_color" value="#3498db" title="Choisissez une couleur">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 mb-2">
+                                            <label class="form-label">Champs</label>
+                                            <div id="fields"></div>
+                                            <div class="row mt-1">
+                                                <div class="col-auto ms-auto">
+                                                    <button class="btn btn-icon btn-success" id="add_field">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path></svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-auto ms-auto">
+                                            <button class="btn btn-primary" id="send">Envoyer</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="card theme-light">
+                                <div class="card-body" id="message_preview"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/assets/libs/tabler/script.min.js"></script>
+    <script src="/static/assets/libs/autosize/autosize.min.js"></script>
+    <script src="/static/assets/js/agent/preview.js"></script>
+    <script src="/static/assets/js/agent/message.js"></script>
+</body>
+</html>

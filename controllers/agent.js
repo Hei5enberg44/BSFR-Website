@@ -1,3 +1,4 @@
+import discord from './discord.js'
 import { Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch } from './database.js'
 import { Op } from 'sequelize'
 
