@@ -232,7 +232,15 @@ if($btnSend) {
             $btnSend.setAttribute('disabled', '')
 
             const data = preview.getData()
-            if(messageReference !== '') data.message_reference = { message_id: messageReference }
+            if(messageReference !== '') {
+                data.message_reference = { message_id: messageReference }
+                data.allowed_mentions = {
+                    parse: []
+                }
+            } else {
+                delete data.message_reference
+                delete data.allowed_mentions
+            }
 
             const sendRequest = await fetch('/agent/message/send', {
                 method: 'POST',
