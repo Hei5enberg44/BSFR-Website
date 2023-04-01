@@ -5,6 +5,7 @@ import MySQLStore from 'express-mysql-session'
 import discord from './controllers/discord.js'
 import agent from './controllers/agent.js'
 import members from './controllers/members.js'
+import channels from './controllers/channels.js'
 import city from './controllers/city.js'
 import mpov from './controllers/mpov.js'
 import youtube from './controllers/youtube.js'
@@ -111,7 +112,7 @@ app.get('/forms/run/mpov', requireLogin, async (req, res) => {
         page: 'mpov',
         user: req.session.discord.user,
         inviteUrl: config.discord.invitation_url,
-        mpovInfos: mpovInfos
+        mpovInfos
     })
 })
 
@@ -294,7 +295,7 @@ app.get('/admin/birthdayMessages', requireAdmin, async (req, res) => {
     res.render('admin/birthdayMessages', {
         page: 'birthdayMessages',
         user: req.session.discord.user,
-        birthdayMessages: birthdayMessages
+        birthdayMessages
     })
 })
 
@@ -357,7 +358,52 @@ app.get('/admin/twitchChannels', requireAdmin, async (req, res) => {
     res.render('admin/twitchChannels', {
         page: 'twitchChannels',
         user: req.session.discord.user,
-        twitchChannels: twitchChannels
+        twitchChannels
+    })
+})
+
+app.get('/agent/', requireAdmin, async (req, res) => {
+    res.redirect('/agent/message/send')
+})
+
+app.get('/agent/message/send', requireAdmin, async (req, res) => {
+    const channelList = await channels.getGuildChannels(req.session)
+    res.render('agent/message/send', {
+        page: 'message_send',
+        user: req.session.discord.user,
+        channels: channelList
+    })
+})
+
+app.post('/agent/message/send', requireAdmin, async (req, res) => {
+    const { channel, payload } = req.body
+    const response = await discord.sendMessage(req.session.discord, channel, payload)
+    res.status(response ? 200 : 500).end()
+})
+
+app.get('/agent/message/edit', requireAdmin, async (req, res) => {
+    const channelList = await channels.getGuildChannels(req.session)
+    res.render('agent/message/edit', {
+        page: 'message_edit',
+        user: req.session.discord.user,
+        channels: channelList
+    })
+})
+
+app.get('/agent/message/get', requireAdmin, async (req, res) => {
+    const { channelId, messageId } = req.query
+    const message = await discord.getBotMessage(req.session.discord, channelId, messageId)
+    if(message) {
+        res.json(message)
+    } else {
+        res.send(500).end()
+    }
+})
+
+app.get('/agent/reaction/add', requireAdmin, async (req, res) => {
+    res.render('agent/reaction/add', {
+        page: 'reaction_add',
+        user: req.session.discord.user
     })
 })
 

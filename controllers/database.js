@@ -9,7 +9,8 @@ const sequelize = new Sequelize(config.database.name, config.database.username, 
     define: {
         timestamps: false,
         freezeTableName: true
-    }
+    },
+    timezone: 'Europe/Paris'
 })
 
 const Birthdays = sequelize.define('birthdays', {
@@ -120,18 +121,18 @@ const YoutubeVideos = sequelize.define('youtube_videos', {
 
 const Feur = sequelize.define('feur', {
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER(),
         autoIncrement: true,
         primaryKey: true
     },
     attackerId: DataTypes.STRING(255),
     victimId: DataTypes.STRING(255),
     messageId: DataTypes.STRING(255),
-    message: DataTypes.TEXT,
-    messageDate: DataTypes.DATE,
+    message: DataTypes.TEXT(),
+    messageDate: DataTypes.DATE(),
     responseId: DataTypes.STRING(255),
-    response: DataTypes.TEXT,
-    responseDate: DataTypes.DATE
+    response: DataTypes.TEXT(),
+    responseDate: DataTypes.DATE()
 })
 
 export {
