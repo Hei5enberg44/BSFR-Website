@@ -96,6 +96,11 @@ app.get('/', async (req, res) => {
     })
 })
 
+// Easter egg 2023
+app.get('/offres-internet', (req, res) => {
+    res.redirect('/static/rick.webm')
+})
+
 app.get('/forms/run/youtube', requireLogin, async (req, res) => {
     const lastVideo = await youtube.getLastVideo()
     res.render('forms/run/youtube.ejs', {
@@ -147,11 +152,14 @@ app.get('/guildMembers', async (req, res) => {
 })
 
 app.get('/feurboard', requireLogin, async (req, res) => {
-    const attackers = await feur.getAttackers(req.session)
-    const victims = await feur.getVictims(req.session)
+    const ranking = req.query?.ranking || 'week'
+
+    const attackers = await feur.getAttackers(req.session, ranking)
+    const victims = await feur.getVictims(req.session, ranking)
 
     res.render('feurboard.ejs', {
         page: 'feurboard',
+        ranking,
         user: req.session.discord.user,
         inviteUrl: config.discord.invitation_url,
         attackers,
