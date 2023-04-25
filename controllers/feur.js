@@ -1,12 +1,12 @@
 import members from './members.js'
 import { Feur } from './database.js'
-import { Sequelize, Op } from 'sequelize'
+import { Sequelize } from 'sequelize'
 
 export default {
-    async getAttackers(session, ranking) {
+    async getAttackers(session) {
         const memberList = await members.getGuildMembers(session)
-
-        const query = {
+        
+        const attackerList = await Feur.findAll({
             group: 'attackerId',
             attributes: [
                 'attackerId',
@@ -14,32 +14,7 @@ export default {
             ],
             order: [ [ 'count', 'desc' ] ],
             raw: true
-        }
-
-        switch(ranking) {
-            case 'global':
-                break
-            case 'month': {
-                const date = this.getMonthFirstDayDate()
-                query.where = {
-                    responseDate: {
-                        [Op.gte]: date
-                    }
-                }
-                break
-            }
-            case 'week':
-            default: {
-                const date = this.getMondayDate()
-                query.where = {
-                    responseDate: {
-                        [Op.gte]: date
-                    }
-                }
-            }
-        }
-        
-        const attackerList = await Feur.findAll(query)
+        })
 
         let rank = 1
         const attackers = attackerList.map(a => {
@@ -54,10 +29,10 @@ export default {
         return attackers
     },
 
-    async getVictims(session, ranking) {
+    async getVictims(session) {
         const memberList = await members.getGuildMembers(session)
 
-        const query = {
+        const victimList = await Feur.findAll({
             group: 'victimId',
             attributes: [
                 'victimId',
@@ -65,32 +40,7 @@ export default {
             ],
             order: [ [ 'count', 'desc' ] ],
             raw: true
-        }
-
-        switch(ranking) {
-            case 'global':
-                break
-            case 'month': {
-                const date = this.getMonthFirstDayDate()
-                query.where = {
-                    responseDate: {
-                        [Op.gte]: date
-                    }
-                }
-                break
-            }
-            case 'week':
-            default: {
-                const date = this.getMondayDate()
-                query.where = {
-                    responseDate: {
-                        [Op.gte]: date
-                    }
-                }
-            }
-        }
-        
-        const victimList = await Feur.findAll(query)
+        })
 
         let rank = 1
         const victims = victimList.map(a => {
@@ -103,26 +53,6 @@ export default {
         })
 
         return victims
-    },
-
-    /**
-     * @returns {Date}
-     */
-    getMondayDate() {
-        const d = new Date()
-        d.setDate(d.getDate() - d.getDay() + (d.getDay() === 0 ? -6 : 1))
-        d.setHours(0, 0, 0, 0)
-        return d
-    },
-
-    /**
-     * @returns {Date}
-     */
-    getMonthFirstDayDate() {
-        const d = new Date()
-        d.setDate(1)
-        d.setHours(0, 0, 0, 0)
-        return d
     },
 
     async getAttackerMessages(session, attackerId) {
