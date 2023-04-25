@@ -61,20 +61,13 @@
                                 <% } %>
 
                                 <% if(user.isBSFR) { %>
+                                <div class="alert alert-info" role="alert">
+                                    <div class="alert-title">Quoi ?</div>
+                                    <div class="text-muted">Et oui, le classement des "feur" est maintenant fermé. Le feurboard restera figé à tout jamais.</div>
+                                </div>
+
                                 <div class="card">
                                     <div class="card-body">
-                                        <ul class="nav bg-white nav-bordered mb-4">
-                                            <li class="nav-item">
-                                                <a class="nav-link<%= ranking === 'week' ? ' active' : '' %>" href="/feurboard?ranking=week">Classement de la semaine</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link<%= ranking === 'month' ? ' active' : '' %>" href="/feurboard?ranking=month">Classement du mois</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link<%= ranking === 'global' ? ' active' : '' %>" href="/feurboard?ranking=global">Classement global</a>
-                                            </li>
-                                        </ul>
-
                                         <div class="row row-sm row-cards">
                                             <div class="col-12 col-lg-6">
                                                 <div class="card m-0 border-0">
