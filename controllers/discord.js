@@ -113,7 +113,7 @@ export default {
                     { name: 'Leaderboard de la map', value: `[Lien](${data.map_leaderboard})`, inline: true },
                     { name: 'Beatsaver', value: `[Lien](${data.beatsaver})`, inline: true },
                     { name: '\u200b', value: '\u200b', inline: true },
-                    { name: 'Vidéo', value: `[${data.url}](${data.url})` },
+                    { name: 'Vidéo', value: data.url },
                     { name: 'Commentaires', value: data.comments !== '' ? '```' + data.comments + '```' : 'Pas de commentaires' }
                 ],
                 thumbnail: {
