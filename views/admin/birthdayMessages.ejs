@@ -123,7 +123,7 @@
                     <div class="mb-3">
                         <input type="hidden" id="editBirthdayMessageId" value="">
                         <label class="form-label required">Message</label>
-                        <textarea class="form-control" id="birthdayMessage" style="min-height:96px;max-height:96px"></textarea>
+                        <input type="text" class="form-control" id="birthdayMessage">
                         <small class="form-hint">Utilisez <code>!p</code> pour insérer le pseudo de l'utilisateur</small>
                     </div>
                 </div>
@@ -163,7 +163,6 @@
     </div>
 
     <script src="/static/assets/libs/tabler/script.min.js"></script>
-    <script src="/static/assets/libs/autosize/autosize.min.js"></script>
     <script src="/static/assets/libs/list.js/list.min.js"></script>
     <% if(birthdayMessages.length > 0) { %>
     <script>
