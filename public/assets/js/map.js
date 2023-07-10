@@ -59,6 +59,6 @@ window.onload = async function() {
         for(const u of p.users) {
             popupUsers.push(`<table><tbody><tr><td><span class="avatar avatar-rounded me-2" style="background-image: url(${u.avatar})"></span></td><td><b>${u.username}</b><br>${p.postalCode} ${p.cityName}</td></tr></tbody></table>`)
         }
-        marker.bindPopup(popupUsers.join('<hr style="my-2">'))
+        marker.bindPopup(popupUsers.join('<hr class="my-2">'))
     }
 }
