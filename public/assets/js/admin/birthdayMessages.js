@@ -1,5 +1,3 @@
-autosize(document.querySelector('#birthdayMessage'))
-
 // Ajout/Édition d'un message d'anniversaire
 const $modalAddOrEditBirthdayMessage = document.querySelector('#modalAddOrEditBirthdayMessage')
 if($modalAddOrEditBirthdayMessage) {
@@ -8,6 +6,7 @@ if($modalAddOrEditBirthdayMessage) {
     const $modalTitle = $modalAddOrEditBirthdayMessage.querySelector('.modal-title')
     const $modalAlert = $modalAddOrEditBirthdayMessage.querySelector('.modal-body .alert')
     const $birthdayMessageId = $modalAddOrEditBirthdayMessage.querySelector('#editBirthdayMessageId')
+    /** @type {HTMLInputElement} */
     const $birthdayMessage = $modalAddOrEditBirthdayMessage.querySelector('#birthdayMessage')
 
     $modalAddOrEditBirthdayMessage.addEventListener('hidden.bs.modal', function() {
@@ -40,11 +39,11 @@ if($modalAddOrEditBirthdayMessage) {
         $birthdayMessage.classList.remove('is-invalid')
         $modalAlert.classList.add('d-none')
 
-        if($birthdayMessage.value !== '') {
+        if($birthdayMessage.value.trim() !== '') {
             const addRequest = await fetch('/admin/birthdayMessage', {
                 method: 'POST',
                 body: JSON.stringify({
-                    message: $birthdayMessage.value
+                    message: $birthdayMessage.value.trim()
                 }),
                 headers: {
                     'Content-Type': 'application/json'
@@ -86,11 +85,11 @@ if($modalAddOrEditBirthdayMessage) {
         $birthdayMessage.classList.remove('is-invalid')
         $modalAlert.classList.add('d-none')
 
-        if($birthdayMessage.value !== '') {
+        if($birthdayMessage.value.trim() !== '') {
             const editRequest = await fetch(`/admin/birthdayMessage/${$birthdayMessageId.value}`, {
                 method: 'PATCH',
                 body: JSON.stringify({
-                    message: $birthdayMessage.value
+                    message: $birthdayMessage.value.trim()
                 }),
                 headers: {
                     'Content-Type': 'application/json'
