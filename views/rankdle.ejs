@@ -155,15 +155,38 @@
                                                         </a>
 
                                                         <p class="text-center" style="font-size: 1.1rem; font-weight: 500;">
-                                                            <%= result.won ? 'Awesome! You\'re a true Rankdle fan!' : 'Not Bad. At least you discovered a new Rankdle! 😉' %>
+                                                            <%= result.won ? result.skips === 0 ? 'Awesome! You\'re a true Rankdle fan!' : 'Not Bad. At least you discovered a new Rankdle! 😉' : 'You didn\'t get it, Better luck tomorrow' %>
                                                         </p>
 
-                                                        <div class="my-1 text-center">
+                                                        <div class="mt-1 mb-5 text-center">
                                                             <% for(const step of result.steps) {
                                                                 const className = step === null ? 'gray' : step === false ? 'red' : step === true ? 'green' : 'gray'
                                                             %>
                                                             <span class="try try-<%= className %>"></span>
                                                             <% } %>
+                                                        </div>
+
+                                                        <div class="progress" id="progress">
+                                                            <div class="progress-bar" id="seek-bar-placeholder" style="width: 100%;" role="progressbar"></div>
+                                                            <div class="bg-primary" id="seek-bar" style="width: 0%" role="progressbar"></div>
+
+                                                            <div class="progress-step" style="left: 3.33%;"></div>
+                                                            <div class="progress-step" style="left: 6.66%;"></div>
+                                                            <div class="progress-step" style="left: 13.33%;"></div>
+                                                            <div class="progress-step" style="left: 23.31%;"></div>
+                                                            <div class="progress-step" style="left: 36.63%;"></div>
+                                                            <div class="progress-step" style="left: 53.28%;"></div>
+                                                            <div class="progress-step" style="left: calc(100% - 1px);"></div>
+                                                        </div>
+            
+                                                        <div class="row d-flex align-items-center mt-5 mb-3">
+                                                            <div class="time" id="current-time">00:00</div>
+                                                            <div class="col">
+                                                                <div id="play-btn">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" /></svg>
+                                                                </div>
+                                                            </div>
+                                                            <div class="time text-end">00:30</div>
                                                         </div>
                                                     </div>
                                                 </div>
