@@ -19,40 +19,52 @@ const $btnSkip = document.querySelector('#skip')
 /** @type {HTMLButtonElement} */
 const $btnSubmit = document.querySelector('#submit')
 
-if($playBtn) {
-    const audio = new Audio('/rankdle/song')
+const audio = new Audio('/rankdle/song')
 
-    $playBtn.addEventListener('click', (e) => {
-        const isPlaying = audio.currentTime > 0 && !audio.paused && !audio.ended && audio.readyState > audio.HAVE_CURRENT_DATA
-        if(!isPlaying)
-            playAudio()
-        else
-            stopAudio()
-    })
+$playBtn.addEventListener('click', (e) => {
+    const isPlaying = audio.currentTime > 0 && !audio.paused && !audio.ended && audio.readyState > audio.HAVE_CURRENT_DATA
+    if(!isPlaying)
+        playAudio()
+    else
+        stopAudio()
+})
 
-    const playAudio = () => {
-        audio.load()
-        audio.play()
-        $playBtn.innerHTML = stopIcon
+const playAudio = () => {
+    audio.load()
+    audio.play()
+    $playBtn.innerHTML = stopIcon
+}
+
+const stopAudio = () => {
+    audio.pause()
+    audio.currentTime = 0
+    $playBtn.innerHTML = playIcon
+}
+
+audio.addEventListener('ended', () => {
+    $playBtn.innerHTML = playIcon
+})
+
+audio.addEventListener('timeupdate', () => {
+    const elapsed = Math.floor(audio.currentTime)
+    $seekBar.style.width = `${audio.currentTime * 100 / 30}%`
+    $currentTime.textContent = `00:${elapsed < 10 ? `0${elapsed}` : elapsed}`
+})
+
+if($btnSkip) {
+    const toggleButtons = (enabled) => {
+        if(!enabled) {
+            $btnSkip.classList.add('btn-loading')
+            $btnSubmit.classList.add('btn-loading')
+        } else {
+            $btnSkip.classList.remove('btn-loading')
+            $btnSubmit.classList.remove('btn-loading')
+        }
     }
-
-    const stopAudio = () => {
-        audio.pause()
-        audio.currentTime = 0
-        $playBtn.innerHTML = playIcon
-    }
-
-    audio.addEventListener('ended', () => {
-        $playBtn.innerHTML = playIcon
-    })
-
-    audio.addEventListener('timeupdate', () => {
-        const elapsed = Math.floor(audio.currentTime)
-        $seekBar.style.width = `${audio.currentTime * 100 / 30}%`
-        $currentTime.textContent = `00:${elapsed < 10 ? `0${elapsed}` : elapsed}`
-    })
 
     $btnSkip.addEventListener('click', async (e) => {
+        toggleButtons(false)
+
         const skipRequest = await fetch('/rankdle/skip', {
             method: 'POST'
         })
@@ -64,6 +76,8 @@ if($playBtn) {
     })
 
     $btnSubmit.addEventListener('click', async (e) => {
+        toggleButtons(false)
+
         const $song = document.querySelector('#song')
         const value = $song.value
     
@@ -116,6 +130,8 @@ if($playBtn) {
                 $skipSeconds.textContent = SKIPS[score.skips]
                 const currentDuration = [...SKIPS.slice(0, score.skips)].reduce((p, c) => p + c) + 1
                 $seekBarPlaceholder.style.width = `${currentDuration * 100 / 30}%`
+
+                toggleButtons(true)
             } else {
                 window.location.reload()
             }

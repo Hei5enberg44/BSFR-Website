@@ -395,6 +395,7 @@ export default class Rankdle {
 
         return {
             won: rankdleScore.success,
+            skips: rankdleScore.skips,
             steps,
             map: {
                 id: mapData.map.id,
