@@ -300,7 +300,7 @@ export default class Rankdle {
 
         if(score) {
             if(score.success === null) {
-                if(mapId === rankdle.mapId) {
+                if(mapId === rankdle.mapId && score.skips < 6) {
                     score.success = mapId === rankdle.mapId
                 } else {
                     if(score.skips === 6) {
