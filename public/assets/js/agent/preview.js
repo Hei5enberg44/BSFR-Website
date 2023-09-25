@@ -49,20 +49,15 @@ class Preview {
         const $timeSeparator = this.createElement('i', [ 'separator-AebOhG' ])
         $timeSeparator.textContent = ' — '
         const date = new Intl.DateTimeFormat('Fr-fr', { dateStyle: 'short', timeStyle: 'short' }).format(new Date())
-        $time.append($timeSeparator)
-        $time.append(date)
+        $time.append($timeSeparator, date)
         $timeContainer.append($time)
         const $message = this.createElement('div', [ 'markup-eYLPri', 'messageContent-2t3eCI' ])
         this.#message = $message
 
         $senderTagContainer.append($senderTag)
-        $senderContainer.append($sender)
-        $senderContainer.append($senderTagContainer)
-        $header.append($senderContainer)
-        $header.append($timeContainer)
-        $messageContent.append($avatar)
-        $messageContent.append($header)
-        $messageContent.append($message)
+        $senderContainer.append($sender, $senderTagContainer)
+        $header.append($senderContainer, $timeContainer)
+        $messageContent.append($avatar, $header, $message)
         $messageContainer.append($messageContent)
 
         this.#messagePreview = $messageContainer
@@ -127,8 +122,7 @@ class Preview {
                         $embedFieldName.textContent = field.name
                         const $embedFieldValue = this.createElement('div', [ 'embedFieldValue-3EHtvR' ])
                         $embedFieldValue.innerHTML = this.markdownToHTML(field.value)
-                        $embedField.append($embedFieldName)
-                        $embedField.append($embedFieldValue)
+                        $embedField.append($embedFieldName, $embedFieldValue)
                         $embedFields.append($embedField)
                     }
                     $grid.append($embedFields)

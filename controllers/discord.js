@@ -1,31 +1,70 @@
-import fetch from 'node-fetch'
+import jwt from 'jsonwebtoken'
 import members from './members.js'
 import config from '../config.json' assert { type: 'json' }
 
-const discordApiUrl = 'https://discord.com/api'
+const DISCORD_API_URL = 'https://discord.com/api'
 
-export default {
-    async send(discord, method, endpoint, headers = null, params = null, bot = false) {
-        if(!bot && Math.floor(new Date().getTime() / 1000) > discord.tokens.expiration_date + 3600) {
-            discord.tokens = await this.refreshToken(discord.tokens.refresh_token)
-        }
+export default class DiscordAPI {
+    session
 
-        const request = await fetch(endpoint + ((method === 'GET' && params) || ''), {
+    constructor(session) {
+        this.session = session
+    }
+
+    async send(method, endpoint, headers = null, body = null, bot = false) {
+        const token = !bot ? await this.getToken() : null
+
+        const request = await fetch(`${DISCORD_API_URL}${endpoint}`, {
             method: method,
             headers: {
-                'Authorization': `${bot ? 'Bot ' + config.discord.bot_token : 'Bearer ' + discord.tokens.access_token} `,
+                'Authorization': `${bot ? `Bot ${config.discord.bot_token}` : `${token.token_type} ${token.access_token}`}`,
                 ...headers ? headers : {}
             },
-            ...(method === 'POST' && params) ? { body: JSON.stringify(params) } : {}
+            ...(method === 'POST' && body) ? { body: JSON.stringify(body) } : {}
         })
 
         if(request.ok) {
             const response = await request.json()
             return response
         } else {
+            console.log(request)
             return false
         }
-    },
+    }
+
+    async setToken(token) {
+        this.session.token = await new Promise((res, rej) => {
+            jwt.sign({
+                ...token,
+                expiration_date: Math.floor(Date.now() / 1000) + token.expires_in - 60
+            }, config.cookie.secret, {
+                algorithm: 'HS512'
+            }, (err, token) => {
+                if(err) rej(err)
+                res(token)
+            })
+        })
+    }
+
+    async getToken() {
+        try {
+            const decodedToken = await new Promise((res, rej) => {
+                jwt.verify(this.session.token, config.cookie.secret, (err, decoded) => {
+                    if(err) rej(err)
+                    res(decoded)
+                })
+            })
+
+            if(Math.floor(new Date().getTime() / 1000) > decodedToken.expiration_date) {
+                const token = await this.refreshToken(decodedToken.refresh_token)
+                return token
+            }
+
+            return decodedToken
+        } catch(error) {
+            console.log(error)
+        }
+    }
 
     async refreshToken(refreshToken) {
         const options = new URLSearchParams({
@@ -35,7 +74,7 @@ export default {
             'refresh_token': refreshToken
         })
 
-        const request = await fetch(`${discordApiUrl}/oauth2/token`, {
+        const request = await fetch(`${DISCORD_API_URL}/oauth2/token`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -44,22 +83,24 @@ export default {
         })
 
         if(request.ok) {
-            const newTokens = await request.json()
-            newTokens.expiration_date = Math.floor(new Date().getTime() / 1000) + newTokens.expires_in
-            return newTokens
+            const token = await request.json()
+            await this.setToken(token)
+            return token
         } else {
-            return false
+            throw new Error('Failed to refresh token')
         }
-    },
+    }
 
-    async revokeToken(discord) {
+    async revokeToken() {
+        const token = await this.getToken()
+
         const options = new URLSearchParams({
-            'client_id': config.discord.client_id,
-            'client_secret': config.discord.client_secret,
-            'access_token': discord.tokens.access_token
+            client_id: config.discord.client_id,
+            client_secret: config.discord.client_secret,
+            token: token.access_token
         })
 
-        const revokeTokenRequest = await fetch(`${discordApiUrl}/oauth2/token/revoke`, {
+        await fetch(`${DISCORD_API_URL}/oauth2/token/revoke`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -67,17 +108,17 @@ export default {
             body: options
         })
 
-        if(revokeTokenRequest.ok) {
-            await revokeTokenRequest.json()
-        }
-    },
+        await new Promise(res => this.session.destroy(() => {
+            res()
+        }))
+    }
 
-    async getCurrentUser(discord) {
-        const user = await this.send(discord, 'GET', `${discordApiUrl}/users/@me`)
+    async getCurrentUser() {
+        const user = await this.send('GET', '/users/@me')
         user.isBSFR = false
         user.isAdmin = false
         user.avatarURL = members.getAvatar(user)
-        const member = await this.send(discord, 'GET', `${discordApiUrl}/guilds/${config.discord.guild_id}/members/${user.id}`, null, null, true)
+        const member = await this.send('GET', `/guilds/${config.discord.guild_id}/members/${user.id}`, null, null, true)
         if(!member) return user
         if(member) {
             user.isBSFR = true
@@ -86,15 +127,11 @@ export default {
             }
         }
         return user
-    },
+    }
 
-    async submitRun(discord, data) {
+    async submitRun(data) {
         try {
-            if(Math.floor(new Date().getTime() / 1000) > discord.tokens.expiration_date + 3600) {
-                discord.tokens = await this.refreshToken(discord.tokens.refresh_token)
-            }
-
-            const user = await this.getCurrentUser(discord)
+            const user = await this.getCurrentUser()
 
             let leaderboardName = 'ScoreSaber'
             if(data.leaderboard_profil.includes('beatleader')) leaderboardName = 'BeatLeader'
@@ -132,6 +169,7 @@ export default {
             })
 
             if(!response.ok) {
+                console.log(response)
                 throw new Error('Échec de l\'envoi de la run')
             }
 
@@ -143,25 +181,25 @@ export default {
                 error: error.message
             }
         }
-    },
+    }
 
-    async getGuildMembers(discord) {
-        const data = await this.send(discord, 'GET', `${discordApiUrl}/guilds/${config.discord.guild_id}/members?limit=1000`, null, null, true)
+    async getGuildMembers() {
+        const data = await this.send('GET', `/guilds/${config.discord.guild_id}/members?limit=1000`, null, null, true)
         return data
-    },
+    }
 
-    async getUserById(discord, memberId) {
-        const data = await this.send(discord, 'GET', `${discordApiUrl}/users/${memberId}`, null, null, true)
+    async getUserById(memberId) {
+        const data = await this.send('GET', `/users/${memberId}`, null, null, true)
         return data
-    },
+    }
 
-    async getGuildPreview(discord) {
-        const data = await this.send(discord, 'GET', `${discordApiUrl}/guilds/${config.discord.guild_id}/preview`, null, null, true)
+    async getGuildPreview() {
+        const data = await this.send('GET', `/guilds/${config.discord.guild_id}/preview`, null, null, true)
         return data
-    },
+    }
 
-    async getGuildEmojis(discord) {
-        const data = await this.send(discord, 'GET', `${discordApiUrl}/guilds/${config.discord.guild_id}/emojis`, null, null, true)
+    async getGuildEmojis() {
+        const data = await this.send('GET', `/guilds/${config.discord.guild_id}/emojis`, null, null, true)
         const emojis = []
         for(const emoji of data) {
             const emojiUrl = `https://cdn.discordapp.com/emojis/${emoji.id}.${emoji.animated ? 'gif' : 'webp'}?size=48&quality=lossless`
@@ -173,10 +211,10 @@ export default {
             })
         }
         return emojis
-    },
+    }
 
-    async getGuildChannels(discord) {
-        const data = await this.send(discord, 'GET', `${discordApiUrl}/guilds/${config.discord.guild_id}/channels`, null, null, true)
+    async getGuildChannels() {
+        const data = await this.send('GET', `/guilds/${config.discord.guild_id}/channels`, null, null, true)
         const channels = []
         for(const channel of data) {
             if(channel.type === 0 && !channel.parent_id) {
@@ -199,19 +237,19 @@ export default {
         }
         channels.sort((a, b) => a.position - b.position)
         return channels
-    },
+    }
 
-    async sendMessage(discord, channelId, payload) {
+    async sendMessage(channelId, payload) {
         const headers = {
             'Content-Type': 'application/json'
         }
 
-        const res = await this.send(discord, 'POST', `${discordApiUrl}/channels/${channelId}/messages`, headers, payload, true)
+        const res = await this.send('POST', `/channels/${channelId}/messages`, headers, payload, true)
         return res
-    },
+    }
 
-    async getBotMessage(discord, channelId, messageId) {
-        const message = await this.send(discord, 'GET', `${discordApiUrl}/channels/${channelId}/messages/${messageId}`, null, null, true)
+    async getBotMessage(channelId, messageId) {
+        const message = await this.send('GET', `/channels/${channelId}/messages/${messageId}`, null, null, true)
         if(message) {
             if(message.author.id === config.discord.client_id) {
                 return message

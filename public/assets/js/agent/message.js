@@ -140,8 +140,7 @@ function addEmbedField() {
     const $fieldName = document.createElement('input')
     $fieldName.classList.add('form-control', 'field-name')
     $fieldName.type = 'text'
-    $fieldNameContainer.append($fieldNameLabel)
-    $fieldNameContainer.append($fieldName)
+    $fieldNameContainer.append($fieldNameLabel, $fieldName)
     $fieldNameCol.append($fieldNameContainer)
     const $fieldValueCol = document.createElement('div')
     $fieldValueCol.classList.add('col-12', 'my-1')
@@ -153,8 +152,7 @@ function addEmbedField() {
     const $fieldValue = document.createElement('input')
     $fieldValue.classList.add('form-control', 'field-value')
     $fieldValue.type = 'text'
-    $fieldValueContainer.append($fieldValueLabel)
-    $fieldValueContainer.append($fieldValue)
+    $fieldValueContainer.append($fieldValueLabel, $fieldValue)
     $fieldValueCol.append($fieldValueContainer)
     const $fieldInlineCol = document.createElement('div')
     $fieldInlineCol.classList.add('col-12', 'my-1')
@@ -174,15 +172,10 @@ function addEmbedField() {
     const $fieldInlineOption3 = document.createElement('option')
     $fieldInlineOption3.value = 'false'
     $fieldInlineOption3.textContent = 'Non'
-    $fieldInline.append($fieldInlineOption1)
-    $fieldInline.append($fieldInlineOption2)
-    $fieldInline.append($fieldInlineOption3)
-    $fieldInlineContainer.append($fieldInlineLabel)
-    $fieldInlineContainer.append($fieldInline)
+    $fieldInline.append($fieldInlineOption1, $fieldInlineOption2, $fieldInlineOption3)
+    $fieldInlineContainer.append($fieldInlineLabel, $fieldInline)
     $fieldInlineCol.append($fieldInlineContainer)
-    $fieldRow.append($fieldNameCol)
-    $fieldRow.append($fieldValueCol)
-    $fieldRow.append($fieldInlineCol)
+    $fieldRow.append($fieldNameCol, $fieldValueCol, $fieldInlineCol)
     $fieldContainerCol.append($fieldRow)
     const $deleteFieldSvg = '<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M18 6l-12 12"></path><path d="M6 6l12 12"></path></svg>'
     const $deleteFieldCol = document.createElement('div')
@@ -191,8 +184,7 @@ function addEmbedField() {
     $deleteFieldBtn.classList.add('btn', 'btn-icon', 'h-100', 'delete-field')
     $deleteFieldBtn.append(document.createRange().createContextualFragment($deleteFieldSvg))
     $deleteFieldCol.append($deleteFieldBtn)
-    $fieldContainerRow.append($deleteFieldCol)
-    $fieldContainerRow.append($fieldContainerCol)
+    $fieldContainerRow.append($deleteFieldCol, $fieldContainerCol)
     $fields.append($fieldContainerRow)
 
     const field = preview.addEmbedField($fieldContainerRow)
