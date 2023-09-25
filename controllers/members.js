@@ -18,7 +18,7 @@ export default {
     },
 
     async getUser(session, userId) {
-        const members = this.getGuildMembers(session)
+        const members = await this.getGuildMembers(session)
         const user = members.find(m => m.user.id === userId)
         return user
     },
