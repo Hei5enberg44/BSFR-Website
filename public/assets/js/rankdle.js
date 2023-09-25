@@ -76,8 +76,6 @@ if($btnSkip) {
     })
 
     $btnSubmit.addEventListener('click', async (e) => {
-        toggleButtons(false)
-
         const $song = document.querySelector('#song')
         const value = $song.value
     
@@ -85,6 +83,8 @@ if($btnSkip) {
         if(value.trim() === '') {
             $song.nextElementSibling.classList.add('is-invalid')
         } else {
+            toggleButtons(false)
+
             const submitRequest = await fetch('/rankdle/submit', {
                 method: 'POST',
                 headers: {
