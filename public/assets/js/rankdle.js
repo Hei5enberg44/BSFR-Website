@@ -24,16 +24,23 @@ if($playBtn) {
 
     $playBtn.addEventListener('click', (e) => {
         const isPlaying = audio.currentTime > 0 && !audio.paused && !audio.ended && audio.readyState > audio.HAVE_CURRENT_DATA
-        if(!isPlaying) {
-            audio.load()
-            audio.play()
-            $playBtn.innerHTML = stopIcon
-        } else {
-            audio.pause()
-            audio.currentTime = 0
-            $playBtn.innerHTML = playIcon
-        }
+        if(!isPlaying)
+            playAudio()
+        else
+            stopAudio()
     })
+
+    const playAudio = () => {
+        audio.load()
+        audio.play()
+        $playBtn.innerHTML = stopIcon
+    }
+
+    const stopAudio = () => {
+        audio.pause()
+        audio.currentTime = 0
+        $playBtn.innerHTML = playIcon
+    }
 
     audio.addEventListener('ended', () => {
         $playBtn.innerHTML = playIcon
@@ -85,7 +92,11 @@ if($playBtn) {
         const $steps = [...document.querySelectorAll('#rankdle .step')]
     
         if(score) {
-            if(!score.success) {
+            songChoice.clear()
+
+            if(score.success === null) {
+                stopAudio()
+
                 for(let i = 0; i < $steps.length; i++) {
                     const detail = score.details[i] ?? null
     
@@ -105,13 +116,13 @@ if($playBtn) {
                 $skipSeconds.textContent = SKIPS[score.skips]
                 const currentDuration = [...SKIPS.slice(0, score.skips)].reduce((p, c) => p + c) + 1
                 $seekBarPlaceholder.style.width = `${currentDuration * 100 / 30}%`
-            } else if(score.success !== null) {
+            } else {
                 window.location.reload()
             }
         }
     }
 
-    new TomSelect('#song', {
+    const songChoice = new TomSelect('#song', {
         copyClassesToDropdown: false,
         dropdownParent: 'body',
         controlInput: '<input>',
