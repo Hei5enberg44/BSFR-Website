@@ -217,7 +217,7 @@ export default class Rankdle {
         const ffmpegStream = ffmpeg(fileStream)
             .format('ogg')
             .on('error', (err) => {})
-        if(skips < 6) ffmpegStream.addOutputOption(`-t ${range}`)
+        if(skips < 6 && !rankdleScore?.success) ffmpegStream.addOutputOption(`-t ${range}`)
         ffmpegStream.pipe(res, { end: true })
     }
 
@@ -268,7 +268,8 @@ export default class Rankdle {
                 skips: 1,
                 details: [
                     { status: 'skip', data: 'SKIP (6)' }
-                ]
+                ],
+                success: null
             })
         }
 
