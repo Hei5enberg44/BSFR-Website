@@ -1,78 +1,80 @@
-<header class="navbar navbar-expand-md navbar-dark sticky-top d-print-none">
-    <div class="container-xl">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <h1 class="navbar-brand d-none-navbar-horizontal pe-0 pe-md-3">
-            <a href="/">
-                <img src="/static/assets/images/logo.gif" width="32" height="32" alt="BSFR" class="navbar-brand-image me-2">
-                Beat Saber FR
-            </a>
-        </h1>
-        <div class="navbar-nav flex-row order-md-last">
-            <div class="nav-item dropdown">
-                <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu" aria-expanded="false">
-                    <span class="avatar avatar-sm" style="background-image: url(<%= user.avatarURL %>?size=80)"></span>
-                    <div class="d-none d-xl-block ps-2">
-                        <div><%= user.username %></div>
-                    </div>
+<div class="sticky-top">
+    <header class="navbar navbar-expand-md sticky-top d-print-none" data-bs-theme="dark">
+        <div class="container-xl">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <h1 class="navbar-brand d-none-navbar-horizontal pe-0 pe-md-3">
+                <a href="/">
+                    <img src="/static/assets/images/logo.gif" width="32" height="32" alt="BSFR" class="navbar-brand-image me-2">
+                    Beat Saber FR
                 </a>
-                <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <a href="/agent/" class="dropdown-item">Agent</a>
-                    <a href="/admin/" class="dropdown-item">Administration</a>
-                    <div class="dropdown-divider"></div>
-                    <a href="/discord/logout" class="dropdown-item">Déconnexion</a>
+            </h1>
+            <div class="navbar-nav flex-row order-md-last">
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu" aria-expanded="false">
+                        <span class="avatar avatar-sm" style="background-image: url(<%= user.avatarURL %>?size=80)"></span>
+                        <div class="d-none d-xl-block ps-2">
+                            <div><%= user.username %></div>
+                        </div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        <a href="/agent/" class="dropdown-item">Agent</a>
+                        <a href="/admin/" class="dropdown-item">Administration</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/discord/logout" class="dropdown-item">Déconnexion</a>
+                    </div>
                 </div>
-              </div>
+            </div>
         </div>
-    </div>
-</header>
-<div class="navbar-expand-md">
-    <div class="collapse navbar-collapse" id="navbar-menu">
-        <div class="navbar navbar-light">
-            <div class="container-xl">
-                <ul class="navbar-nav">
-                    <li class="nav-item<%= page === 'birthdays' ? ' active' : '' %>">
-                        <a class="nav-link" href="/admin/birthdays">
-                            <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M9 21h6v-9a1 1 0 0 0 -1 -1h-4a1 1 0 0 0 -1 1v9z"></path><path d="M12 3l1.465 1.638a2 2 0 1 1 -3.015 .099l1.55 -1.737z"></path></svg>
-                            </span>
-                            <span class="nav-link-title">Anniversaires</span>
-                        </a>
-                    </li>
-                    <li class="nav-item<%= page === 'mutes' ? ' active' : '' %>">
-                        <a class="nav-link" href="/admin/mutes">
-                            <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="3" y1="3" x2="21" y2="21"></line><path d="M9 5a3 3 0 0 1 6 0v5a3 3 0 0 1 -.13 .874m-2 2a3 3 0 0 1 -3.87 -2.872v-1"></path><path d="M5 10a7 7 0 0 0 10.846 5.85m2.002 -2a6.967 6.967 0 0 0 1.152 -3.85"></path><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-                            </span>
-                            <span class="nav-link-title">Mutes</span>
-                        </a>
-                    </li>
-                    <li class="nav-item<%= page === 'bans' ? ' active' : '' %>">
-                        <a class="nav-link" href="/admin/bans">
-                            <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="12" cy="12" r="9"></circle><line x1="5.7" y1="5.7" x2="18.3" y2="18.3"></line></svg>
-                            </span>
-                            <span class="nav-link-title">Bans</span>
-                        </a>
-                    </li>
-                    <li class="nav-item<%= page === 'birthdayMessages' ? ' active' : '' %>">
-                        <a class="nav-link" href="/admin/birthdayMessages">
-                            <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><rect x="4" y="5" width="16" height="16" rx="2"></rect><line x1="16" y1="3" x2="16" y2="7"></line><line x1="8" y1="3" x2="8" y2="7"></line><line x1="4" y1="11" x2="20" y2="11"></line><rect x="8" y="15" width="2" height="2"></rect></svg>
-                            </span>
-                            <span class="nav-link-title">Messages d'anniversaire</span>
-                        </a>
-                    </li>
-                    <li class="nav-item<%= page === 'twitchChannels' ? ' active' : '' %>">
-                        <a class="nav-link" href="/admin/twitchChannels">
-                            <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 5v11a1 1 0 0 0 1 1h2v4l4 -4h5.584c.266 0 .52 -.105 .707 -.293l2.415 -2.414c.187 -.188 .293 -.442 .293 -.708v-8.585a1 1 0 0 0 -1 -1h-14a1 1 0 0 0 -1 1z"></path><line x1="16" y1="8" x2="16" y2="12"></line><line x1="12" y1="8" x2="12" y2="12"></line></svg>
-                            </span>
-                            <span class="nav-link-title">Chaînes Twitch</span>
-                        </a>
-                    </li>
-                </ul>
+    </header>
+    <div class="navbar-expand-md">
+        <div class="collapse navbar-collapse" id="navbar-menu">
+            <div class="navbar navbar-light">
+                <div class="container-xl">
+                    <ul class="navbar-nav">
+                        <li class="nav-item<%= page === 'birthdays' ? ' active' : '' %>">
+                            <a class="nav-link" href="/admin/birthdays">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M9 21h6v-9a1 1 0 0 0 -1 -1h-4a1 1 0 0 0 -1 1v9z"></path><path d="M12 3l1.465 1.638a2 2 0 1 1 -3.015 .099l1.55 -1.737z"></path></svg>
+                                </span>
+                                <span class="nav-link-title">Anniversaires</span>
+                            </a>
+                        </li>
+                        <li class="nav-item<%= page === 'mutes' ? ' active' : '' %>">
+                            <a class="nav-link" href="/admin/mutes">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="3" y1="3" x2="21" y2="21"></line><path d="M9 5a3 3 0 0 1 6 0v5a3 3 0 0 1 -.13 .874m-2 2a3 3 0 0 1 -3.87 -2.872v-1"></path><path d="M5 10a7 7 0 0 0 10.846 5.85m2.002 -2a6.967 6.967 0 0 0 1.152 -3.85"></path><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                                </span>
+                                <span class="nav-link-title">Mutes</span>
+                            </a>
+                        </li>
+                        <li class="nav-item<%= page === 'bans' ? ' active' : '' %>">
+                            <a class="nav-link" href="/admin/bans">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="12" cy="12" r="9"></circle><line x1="5.7" y1="5.7" x2="18.3" y2="18.3"></line></svg>
+                                </span>
+                                <span class="nav-link-title">Bans</span>
+                            </a>
+                        </li>
+                        <li class="nav-item<%= page === 'birthdayMessages' ? ' active' : '' %>">
+                            <a class="nav-link" href="/admin/birthdayMessages">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><rect x="4" y="5" width="16" height="16" rx="2"></rect><line x1="16" y1="3" x2="16" y2="7"></line><line x1="8" y1="3" x2="8" y2="7"></line><line x1="4" y1="11" x2="20" y2="11"></line><rect x="8" y="15" width="2" height="2"></rect></svg>
+                                </span>
+                                <span class="nav-link-title">Messages d'anniversaire</span>
+                            </a>
+                        </li>
+                        <li class="nav-item<%= page === 'twitchChannels' ? ' active' : '' %>">
+                            <a class="nav-link" href="/admin/twitchChannels">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 5v11a1 1 0 0 0 1 1h2v4l4 -4h5.584c.266 0 .52 -.105 .707 -.293l2.415 -2.414c.187 -.188 .293 -.442 .293 -.708v-8.585a1 1 0 0 0 -1 -1h-14a1 1 0 0 0 -1 1z"></path><line x1="16" y1="8" x2="16" y2="12"></line><line x1="12" y1="8" x2="12" y2="12"></line></svg>
+                                </span>
+                                <span class="nav-link-title">Chaînes Twitch</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

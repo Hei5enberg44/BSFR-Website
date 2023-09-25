@@ -1,21 +1,19 @@
-import discord from './discord.js'
+import NodeCache from 'node-cache'
+import DiscordAPI from './discord.js'
+
+const cache = new NodeCache({ stdTTL: 600 })
 
 export default {
     async getGuildChannels(session) {
-        const date = Math.floor(Date.now() / 1000)
-        if(session.discord.guildChannels) {
-            if(date > session.discord.guildChannels.expires) {
-                session.discord.guildChannels = null
-            } else {
-                return session.discord.guildChannels.data
-            }
+        if(!cache.has('guildChannels')) {
+            const discord = new DiscordAPI(session)
+            const channels = await discord.getGuildChannels(session.discord)
+
+            cache.set('guildChannels', channels)
+            return channels
+        } else {
+            const channels = cache.get('guildChannels')
+            return channels
         }
-        const channels = await discord.getGuildChannels(session.discord)
-        const expires = date + 600
-        session.discord.guildChannels = {
-            data: channels,
-            expires: expires
-        }
-        return channels
     }
 }

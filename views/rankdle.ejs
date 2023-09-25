@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
+    <link rel="stylesheet" href="/static/assets/libs/tabler/vendors.min.css">
+    <link rel="stylesheet" href="/static/assets/css/alert.css">
+    <link rel="stylesheet" href="/static/assets/css/background.css">
+    <link rel="stylesheet" href="/static/assets/libs/animate/animate.min.css">
+    <link rel="stylesheet" href="/static/assets/css/rankdle.css">
+    <title>Beat Saber FR - Rankdle</title>
+</head>
+<body class="">
+    <div class="background"><div class="blur"></div></div>
+
+    <div class="page">
+        <%- include('./includes/header.ejs') %>
+        
+        <div class="page-wrapper">
+            <div class="container-xl">
+                <!-- Page title -->
+                <div class="page-header d-print-none">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <h2 class="page-title text-white">
+                                Rankdle
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-body">
+                <div class="container-xl">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <form class="form">
+                                <% if(!user.isBSFR) { %>
+                                <div class="alert alert-danger bg-white" role="alert">
+                                    <div class="text-muted">
+                                        Vous devez être membre du serveur Discord BSFR afin de pouvoir jouer à Rankdle.<br>
+                                        Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="<%= inviteUrl %>" target="_blank"><%= inviteUrl %></a><br>
+                                        <i>Actualisez la page après avoir rejoint le serveur Discord pour accéder à Rankdle.</i>
+                                    </div>
+                                </div>
+                                <% } %>
+
+                                <% if(user.isBSFR) { %>
+                                    <% if(typeof rankdle !== 'undefined') { %>
+                                        <% if(rankdle) { %>
+                                        <div class="row">
+                                            <div class="col-lg-8 col-12 mb-3">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div id="rankdle">
+                                                            <div id="step-1" class="step p-2 mb-2 d-flex align-items-center step-active">
+                                                                <div class="w-5 h-5"></div>
+                                                            </div>
+                                                            <div id="step-2" class="step p-2 mb-2 d-flex align-items-center">
+                                                                <div class="w-5 h-5"></div>
+                                                            </div>
+                                                            <div id="step-3" class="step p-2 mb-2 d-flex align-items-center">
+                                                                <div class="w-5 h-5"></div>
+                                                            </div>
+                                                            <div id="step-4" class="step p-2 mb-2 d-flex align-items-center">
+                                                                <div class="w-5 h-5"></div>
+                                                            </div>
+                                                            <div id="step-5" class="step p-2 mb-2 d-flex align-items-center">
+                                                                <div class="w-5 h-5"></div>
+                                                            </div>
+                                                            <div id="step-6" class="step p-2 mb-2 d-flex align-items-center">
+                                                                <div class="w-5 h-5"></div>
+                                                            </div>
+                                                            
+                                                            <div class="my-5 text-center">
+                                                                <p>Turn up the volume and tap to start the track!</p>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 9l6 6l6 -6" /></svg>
+                                                            </div>
+                
+                                                            <div class="progress" id="progress">
+                                                                <div class="progress-bar" id="seek-bar-placeholder" style="width: 3.3333%;" role="progressbar"></div>
+                                                                <div class="bg-primary" id="seek-bar" style="width: 0%" role="progressbar"></div>
+
+                                                                <div class="progress-step" style="left: 3.33%;"></div>
+                                                                <div class="progress-step" style="left: 6.66%;"></div>
+                                                                <div class="progress-step" style="left: 13.33%;"></div>
+                                                                <div class="progress-step" style="left: 23.31%;"></div>
+                                                                <div class="progress-step" style="left: 36.63%;"></div>
+                                                                <div class="progress-step" style="left: 53.28%;"></div>
+                                                                <div class="progress-step" style="left: calc(100% - 1px);"></div>
+                                                            </div>
+                
+                                                            <div class="row d-flex align-items-center mt-5 mb-3">
+                                                                <div class="time" id="current-time">00:00</div>
+                                                                <div class="col">
+                                                                    <div id="play-btn">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" /></svg>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="time text-end">00:30</div>
+                                                            </div>
+
+                                                            <div class="mb-3">
+                                                                <select type="text" class="form-select" id="song"></select>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <button type="button" class="btn" id="skip">SKIP (+<span id="skip-seconds">1</span>s)</button>
+                                                                </div>
+                                                                <div class="col-auto ms-auto">
+                                                                    <button type="button" class="btn btn-success" id="submit">SUBMIT</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-12">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h3 class="card-title">Classement</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% } else { %>
+                                        <div class="alert alert-danger bg-white" role="alert">
+                                            <div class="text-muted">
+                                                Il n'y a pas de Rankdle en cours.
+                                            </div>
+                                        </div>
+                                        <% } %>
+                                    <% } else { %>
+                                    <div class="row">
+                                        <div class="col-lg-8 col-12 mb-3">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div id="rankdle">
+                                                        <a class="card mb-3" href="https://beatsaver.com/maps/<%= result.map.id %>" target="_blank">
+                                                            <div class="card-status-start bg-<%= result.won ? 'success' : 'danger' %>"></div>
+                                                            <div class="card-body">
+                                                                <div class="row d-flex align-items-center">
+                                                                    <div class="col-auto">
+                                                                        <span class="avatar avatar-xl" style="background-image: url(<%= result.map.cover %>)"></span>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <h3><%= result.map.songName %></h3>
+                                                                        <div class="text-muted"><strong>Mapper:</strong> <%= result.map.levelAuthorName %></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+
+                                                        <p class="text-center" style="font-size: 1.1rem; font-weight: 500;">
+                                                            <%= result.won ? 'Awesome! You\'re a true Rankdle fan!' : 'Not Bad. At least you discovered a new Rankdle! 😉' %>
+                                                        </p>
+
+                                                        <div class="my-1 text-center">
+                                                            <% for(const step of result.steps) {
+                                                                const className = step === null ? 'gray' : step === false ? 'red' : step === true ? 'green' : 'gray'
+                                                            %>
+                                                            <span class="try try-<%= className %>"></span>
+                                                            <% } %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h3 class="card-title">Classement</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                                <% } %>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/assets/libs/tabler/script.min.js"></script>
+    <script src="/static/assets/libs/tom-select/tom-select.base.min.js"></script>
+    <script src="/static/assets/js/app.js"></script>
+    <% if(user.isBSFR) { %>
+    <script src="/static/assets/js/rankdle.js"></script>
+    <% } %>
+</body>
+</html>
