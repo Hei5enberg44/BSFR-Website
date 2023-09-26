@@ -425,9 +425,12 @@ export default class Rankedle {
         const rankingList = await RankedleScores.findAll({
             attributes: [
                 'memberId',
-                Sequelize.fn('avg', Sequelize.col('skips'))
+                [ Sequelize.fn('avg', Sequelize.col('skips')), 'avg_skips' ]
             ],
-            group: [ 'memberId' ]
+            group: [ 'memberId' ],
+            order: [
+                [ 'avg_skips', 'asc' ]
+            ]
         })
 
         let rank = 1
