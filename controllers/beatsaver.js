@@ -1,4 +1,4 @@
-import { RankdleMaps } from './database.js'
+import { RankedleMaps } from './database.js'
 
 const BEATSAVER_API_URL = 'https://api.beatsaver.com/'
 const MAPS_HASH_URL = BEATSAVER_API_URL + 'maps/hash/'
@@ -87,9 +87,9 @@ export default class BeatSaver {
             const data = await this.send(SEARCH_MAPS_URL + `${page}?${params}`)
 
             for(const map of data.docs) {
-                const exists = await RankdleMaps.findOne({ where: { 'map.id': map.id } })
+                const exists = await RankedleMaps.findOne({ where: { 'map.id': map.id } })
                 if(!exists) {
-                    await RankdleMaps.create({ map: map })
+                    await RankedleMaps.create({ map: map })
                     newMaps++
                 } else {
                     end = true

@@ -5,16 +5,15 @@ import ffmpeg from 'fluent-ffmpeg'
 import yauzl from 'yauzl'
 import tmp from 'tmp'
 import { Sequelize, Op } from 'sequelize'
-import beatsaver from './beatsaver.js'
-import { Rankdles, RankdleMaps, RankdleScores, RankdleStats } from './database.js'
+import { Rankedles, RankedleMaps, RankedleScores, RankedleStats } from './database.js'
 import Logger from '../utils/logger.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-const RANKDLE_PATH = path.resolve(__dirname, '../rankdle')
-const EGG_PATH = path.join(RANKDLE_PATH, 'song.egg')
-const OGG_PATH = path.join(RANKDLE_PATH, 'song.ogg')
-const TRIMED_OGG_PATH = path.join(RANKDLE_PATH, 'song_trimed.ogg')
+const RANKEDLE_PATH = path.resolve(__dirname, '../rankedle')
+const EGG_PATH = path.join(RANKEDLE_PATH, 'song.egg')
+const OGG_PATH = path.join(RANKEDLE_PATH, 'song.ogg')
+const TRIMED_OGG_PATH = path.join(RANKEDLE_PATH, 'song_trimed.ogg')
 const MAX_BITRATE = 96000
 const RANGES = [
     '00:01',
@@ -25,7 +24,7 @@ const RANGES = [
     '00:16'
 ]
 
-export default class Rankdle {
+export default class Rankedle {
     static async downloadSong(url) {
         const downloadRequest = await fetch(url)
         if(downloadRequest.ok) {
@@ -111,13 +110,13 @@ export default class Rankdle {
         })
     }
 
-    static async generateRankdle() {
+    static async generateRankedle() {
         try {
             // Get random map from database
-            const randomMap = await RankdleMaps.findAll({
-                where: { '$rankdle.id$': { [Op.eq]: null } },
+            const randomMap = await RankedleMaps.findAll({
+                where: { '$rankedle.id$': { [Op.eq]: null } },
                 include: {
-                    model: Rankdles,
+                    model: Rankedles,
                     required: false
                 },
                 order: Sequelize.literal('rand()'),
@@ -148,15 +147,15 @@ export default class Rankdle {
                 // Trim song
                 await this.trim(OGG_PATH, TRIMED_OGG_PATH, start)
 
-                await Rankdles.create({ mapId: mapId })
+                await Rankedles.create({ mapId: mapId })
             }
         } catch(e) {
-            Logger.log('Rankdle', 'ERROR', e.message)
+            Logger.log('Rankedle', 'ERROR', e.message)
         }
     }
 
     static async getSongList(query) {
-        const maps = await RankdleMaps.findAll({
+        const maps = await RankedleMaps.findAll({
             where: {
                 [Op.or]: {
                     'map.metadata.songAuthorName': {
@@ -167,6 +166,9 @@ export default class Rankdle {
                     },
                     'map.metadata.songSubName': {
                         [Op.like]: `%${query}%`
+                    },
+                    'map.metadata.levelAuthorName': {
+                        [Op.like]: `%${query}%`
                     }
                 }
             },
@@ -176,25 +178,25 @@ export default class Rankdle {
         return !maps ? {} : maps.map(m => {
             return {
                 id: m.id,
-                name: `${m.map.metadata.songAuthorName} - ${m.map.metadata.songName}${m.map.metadata.songSubName !== '' ? ` ${m.map.metadata.songSubName}` : ''}`
+                name: `${m.map.metadata.songAuthorName} - ${m.map.metadata.songName}${m.map.metadata.songSubName !== '' ? ` ${m.map.metadata.songSubName}` : ''}  (${m.map.metadata.levelAuthorName})`
             }
         })
     }
 
-    static async getCurrentRankdle() {
-        const rankdle = await Rankdles.findOne({
+    static async getCurrentRankedle() {
+        const rankedle = await Rankedles.findOne({
             where: { date: new Date() },
             order: [
                 [ 'id', 'desc' ]
             ],
             raw: true
         })
-        return rankdle
+        return rankedle
     }
 
-    static async getUserScore(rankdleId, memberId) {
-        const score = await RankdleScores.findOne({
-            where: { rankdleId,  memberId }
+    static async getUserScore(rankedleId, memberId) {
+        const score = await RankedleScores.findOne({
+            where: { rankedleId,  memberId }
         })
         return score
     }
@@ -203,12 +205,12 @@ export default class Rankdle {
         if(!req.session.user) throw new Error('User not connected')
         const user = req.session.user
 
-        const rankdle = await this.getCurrentRankdle()
-        if(!rankdle) throw new Error('No rankdle found')
+        const rankedle = await this.getCurrentRankedle()
+        if(!rankedle) throw new Error('No rankedle found')
 
-        const rankdleScore = await this.getUserScore(rankdle.id, user.id)
+        const rankedleScore = await this.getUserScore(rankedle.id, user.id)
 
-        const skips = rankdleScore ? rankdleScore.skips : 0
+        const skips = rankedleScore ? rankedleScore.skips : 0
         const range = RANGES[skips]
 
         res.writeHead(200, { 'Content-Type': 'audio/ogg' })
@@ -217,7 +219,7 @@ export default class Rankdle {
         const ffmpegStream = ffmpeg(fileStream)
             .format('ogg')
             .on('error', (err) => {})
-        if(skips < 6 && !rankdleScore?.success) ffmpegStream.addOutputOption(`-t ${range}`)
+        if(skips < 6 && !rankedleScore?.success) ffmpegStream.addOutputOption(`-t ${range}`)
         ffmpegStream.pipe(res, { end: true })
     }
 
@@ -225,24 +227,24 @@ export default class Rankdle {
         if(!req.session.user) throw new Error('User not connected')
         const user = req.session.user
 
-        const rankdle = await this.getCurrentRankdle()
-        if(!rankdle) throw new Error('No rankdle found')
+        const rankedle = await this.getCurrentRankedle()
+        if(!rankedle) throw new Error('No rankedle found')
 
-        const rankdleScore = await this.getUserScore(rankdle.id, user.id)
+        const rankedleScore = await this.getUserScore(rankedle.id, user.id)
 
-        res.json(rankdleScore)
+        res.json(rankedleScore)
     }
 
     static async skipRequest(req, res) {
         if(!req.session.user) throw new Error('User not connected')
         const user = req.session.user
 
-        const rankdle = await this.getCurrentRankdle()
-        if(!rankdle) throw new Error('No rankdle found')
+        const rankedle = await this.getCurrentRankedle()
+        if(!rankedle) throw new Error('No rankedle found')
 
-        let score = await RankdleScores.findOne({
+        let score = await RankedleScores.findOne({
             where: {
-                rankdleId: rankdle.id,
+                rankedleId: rankedle.id,
                 memberId: user.id
             }
         })
@@ -262,8 +264,8 @@ export default class Rankdle {
                 await score.save()
             }
         } else {
-            score = await RankdleScores.create({
-                rankdleId: rankdle.id,
+            score = await RankedleScores.create({
+                rankedleId: rankedle.id,
                 memberId: user.id,
                 skips: 1,
                 details: [
@@ -280,29 +282,29 @@ export default class Rankdle {
         if(!req.session.user) throw new Error('User not connected')
         const user = req.session.user
 
-        const rankdle = await this.getCurrentRankdle()
-        if(!rankdle) throw new Error('No rankdle found')
+        const rankedle = await this.getCurrentRankedle()
+        if(!rankedle) throw new Error('No rankedle found')
 
         const mapId = req.body?.id
         if(!mapId) throw new Error('Invalid request')
 
-        const mapData = await RankdleMaps.findOne({
+        const mapData = await RankedleMaps.findOne({
             where: { id: mapId }
         })
 
         const songName = `${mapData.map.metadata.songAuthorName} - ${mapData.map.metadata.songName}${mapData.map.metadata.songSubName !== '' ? ` ${mapData.map.metadata.songSubName}` : ''}`
 
-        let score = await RankdleScores.findOne({
+        let score = await RankedleScores.findOne({
             where: {
-                rankdleId: rankdle.id,
+                rankedleId: rankedle.id,
                 memberId: user.id
             }
         })
 
         if(score) {
             if(score.success === null) {
-                if(mapId === rankdle.mapId && score.skips < 6) {
-                    score.success = mapId === rankdle.mapId
+                if(mapId === rankedle.mapId && score.skips < 6) {
+                    score.success = mapId === rankedle.mapId
                 } else {
                     if(score.skips === 6) {
                         score.success = false
@@ -319,13 +321,13 @@ export default class Rankdle {
             }
         } else {
             const scoreData = {
-                rankdleId: rankdle.id,
+                rankedleId: rankedle.id,
                 memberId: user.id,
-                skips: mapId === rankdle.mapId ? 0 : 1,
-                success: mapId === rankdle.mapId ? true : null
+                skips: mapId === rankedle.mapId ? 0 : 1,
+                success: mapId === rankedle.mapId ? true : null
             }
-            if(mapId !== rankdle.mapId) scoreData.details = [{ status: 'fail', data: songName }]
-            score = await RankdleScores.create(scoreData)
+            if(mapId !== rankedle.mapId) scoreData.details = [{ status: 'fail', data: songName }]
+            score = await RankedleScores.create(scoreData)
         }
 
         if(score.success) {
@@ -336,7 +338,7 @@ export default class Rankdle {
     }
 
     static async updatePlayerStats(score) {
-        const stats = await RankdleStats.findOne({
+        const stats = await RankedleStats.findOne({
             where: { memberId: score.memberId }
         })
 
@@ -366,7 +368,7 @@ export default class Rankdle {
                 maxStreak: score.success ? 1 : 0
             }
             if(score.skips > 0) statsData[`skip${score.skips}`] = 1
-            await RankdleStats.create(statsData)
+            await RankedleStats.create(statsData)
         }
     }
 
@@ -374,29 +376,29 @@ export default class Rankdle {
         if(!req.session.user) throw new Error('User not connected')
         const user = req.session.user
 
-        const rankdle = await this.getCurrentRankdle()
-        if(!rankdle) throw new Error('No rankdle found')
+        const rankedle = await this.getCurrentRankedle()
+        if(!rankedle) throw new Error('No rankedle found')
 
-        const rankdleScore = await this.getUserScore(rankdle.id, user.id)
-        if(!rankdleScore || rankdleScore.success === null) throw new Error('Don\'t try to cheat please')
+        const rankedleScore = await this.getUserScore(rankedle.id, user.id)
+        if(!rankedleScore || rankedleScore.success === null) throw new Error('Don\'t try to cheat please')
 
-        const mapData = await RankdleMaps.findOne({
-            where: { id: rankdle.mapId },
+        const mapData = await RankedleMaps.findOne({
+            where: { id: rankedle.mapId },
             raw: true
         })
 
         const steps = [ null, null, null, null, null, null ]
-        if(rankdleScore.details) {
-            for(let i = 0; i < rankdleScore.details.length; i++) {
-                const detail = rankdleScore.details[i]
+        if(rankedleScore.details) {
+            for(let i = 0; i < rankedleScore.details.length; i++) {
+                const detail = rankedleScore.details[i]
                 if(detail.status === 'fail') steps[i] = false
             }
         }
-        if(rankdleScore.success) steps[rankdleScore.skips] = true
+        if(rankedleScore.success) steps[rankedleScore.skips] = true
 
         return {
-            won: rankdleScore.success,
-            skips: rankdleScore.skips,
+            won: rankedleScore.success,
+            skips: rankedleScore.skips,
             steps,
             map: {
                 id: mapData.map.id,

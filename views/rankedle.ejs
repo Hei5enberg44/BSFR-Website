@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="/static/assets/css/alert.css">
     <link rel="stylesheet" href="/static/assets/css/background.css">
     <link rel="stylesheet" href="/static/assets/libs/animate/animate.min.css">
-    <link rel="stylesheet" href="/static/assets/css/rankdle.css">
-    <title>Beat Saber FR - Rankdle</title>
+    <link rel="stylesheet" href="/static/assets/css/rankedle.css">
+    <title>Beat Saber FR - Rankedle</title>
 </head>
 <body class="">
     <div class="background"><div class="blur"></div></div>
@@ -26,7 +26,7 @@
                     <div class="row g-2 align-items-center">
                         <div class="col">
                             <h2 class="page-title text-white">
-                                Rankdle
+                                Rankedle
                             </h2>
                         </div>
                     </div>
@@ -40,21 +40,21 @@
                                 <% if(!user.isBSFR) { %>
                                 <div class="alert alert-danger bg-white" role="alert">
                                     <div class="text-muted">
-                                        Vous devez être membre du serveur Discord BSFR afin de pouvoir jouer à Rankdle.<br>
+                                        Vous devez être membre du serveur Discord BSFR afin de pouvoir jouer à Rankedle.<br>
                                         Vous pouvez nous rejoindre en cliquant sur ce lien d'invitation : <a href="<%= inviteUrl %>" target="_blank"><%= inviteUrl %></a><br>
-                                        <i>Actualisez la page après avoir rejoint le serveur Discord pour accéder à Rankdle.</i>
+                                        <i>Actualisez la page après avoir rejoint le serveur Discord pour accéder à Rankedle.</i>
                                     </div>
                                 </div>
                                 <% } %>
 
                                 <% if(user.isBSFR) { %>
-                                    <% if(typeof rankdle !== 'undefined') { %>
-                                        <% if(rankdle) { %>
+                                    <% if(typeof rankedle !== 'undefined') { %>
+                                        <% if(rankedle) { %>
                                         <div class="row">
                                             <div class="col-lg-8 col-12 mb-3">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <div id="rankdle">
+                                                        <div id="rankedle">
                                                             <div id="step-1" class="step p-2 mb-2 d-flex align-items-center step-active">
                                                                 <div class="w-5 h-5"></div>
                                                             </div>
@@ -75,8 +75,24 @@
                                                             </div>
                                                             
                                                             <div class="my-5 text-center">
-                                                                <p>Turn up the volume and tap to start the track!</p>
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 9l6 6l6 -6" /></svg>
+                                                                <p>Montez le son et cliquez pour démarrer la musique !</p>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 9l6 6l6 -6" /></svg>
+                                                            </div>
+
+                                                            <div class="row mb-3 d-flex justify-content-center">
+                                                                <div class="col-3">
+                                                                    <div class="row row-sm">
+                                                                        <div class="col-auto">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8a5 5 0 0 1 0 8" /><path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" /></svg>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <div class="form-range" id="volume"></div>
+                                                                        </div>
+                                                                        <div class="col-auto">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8a5 5 0 0 1 0 8" /><path d="M17.7 5a9 9 0 0 1 0 14" /><path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" /></svg>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                 
                                                             <div class="progress" id="progress">
@@ -108,10 +124,10 @@
 
                                                             <div class="row">
                                                                 <div class="col">
-                                                                    <button type="button" class="btn" id="skip">SKIP (+<span id="skip-seconds">1</span>s)</button>
+                                                                    <button type="button" class="btn" id="skip">PASSER (+<span id="skip-seconds">1</span>s)</button>
                                                                 </div>
                                                                 <div class="col-auto ms-auto">
-                                                                    <button type="button" class="btn btn-success" id="submit">SUBMIT</button>
+                                                                    <button type="button" class="btn btn-success" id="submit">ENVOYER</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -129,7 +145,7 @@
                                         <% } else { %>
                                         <div class="alert alert-danger bg-white" role="alert">
                                             <div class="text-muted">
-                                                Il n'y a pas de Rankdle en cours.
+                                                Il n'y a pas de Rankedle en cours.
                                             </div>
                                         </div>
                                         <% } %>
@@ -138,7 +154,7 @@
                                         <div class="col-lg-8 col-12 mb-3">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <div id="rankdle">
+                                                    <div id="rankedle">
                                                         <a class="card mb-3" href="https://beatsaver.com/maps/<%= result.map.id %>" target="_blank">
                                                             <div class="card-status-start bg-<%= result.won ? 'success' : 'danger' %>"></div>
                                                             <div class="card-body">
@@ -155,7 +171,7 @@
                                                         </a>
 
                                                         <p class="text-center" style="font-size: 1.1rem; font-weight: 500;">
-                                                            <%= result.won ? result.skips === 0 ? 'Awesome! You\'re a true Rankdle fan!' : 'Not Bad. At least you discovered a new Rankdle! 😉' : 'You didn\'t get it, Better luck tomorrow' %>
+                                                            <%= result.won ? result.skips === 0 ? 'Point faible, trop fort·e !' : 'Pas mal 😉' : 'Vous ne l\'avez pas eu. Vous aurez plus de chance demain !' %>
                                                         </p>
 
                                                         <div class="mt-1 mb-5 text-center">
@@ -164,6 +180,22 @@
                                                             %>
                                                             <span class="try try-<%= className %>"></span>
                                                             <% } %>
+                                                        </div>
+
+                                                        <div class="row mb-3 d-flex justify-content-center">
+                                                            <div class="col-3">
+                                                                <div class="row row-sm">
+                                                                    <div class="col-auto">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8a5 5 0 0 1 0 8" /><path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" /></svg>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <div class="form-range" id="volume"></div>
+                                                                    </div>
+                                                                    <div class="col-auto">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8a5 5 0 0 1 0 8" /><path d="M17.7 5a9 9 0 0 1 0 14" /><path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" /></svg>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
 
                                                         <div class="progress" id="progress">
@@ -212,9 +244,10 @@
 
     <script src="/static/assets/libs/tabler/script.min.js"></script>
     <script src="/static/assets/libs/tom-select/tom-select.base.min.js"></script>
+    <script src="/static/assets/libs/nouislider/nouislider.min.js"></script>
     <script src="/static/assets/js/app.js"></script>
     <% if(user.isBSFR) { %>
-    <script src="/static/assets/js/rankdle.js"></script>
+    <script src="/static/assets/js/rankedle.js"></script>
     <% } %>
 </body>
 </html>

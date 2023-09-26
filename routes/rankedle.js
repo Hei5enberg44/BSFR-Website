@@ -1,5 +1,5 @@
 import express from 'express'
-import rankdle from '../controllers/rankdle.js'
+import rankedle from '../controllers/rankedle.js'
 import { requireLogin, requireAdmin } from './middlewares.js'
 import config from '../config.json' assert { type: 'json' }
 
@@ -7,19 +7,19 @@ const app = express()
 
 app.get('/', requireAdmin, async (req, res) => {
     try {
-        const result = await rankdle.getResult(req, res)
-        res.render('rankdle.ejs', {
-            page: 'rankdle',
+        const result = await rankedle.getResult(req, res)
+        res.render('rankedle.ejs', {
+            page: 'rankedle',
             user: req.session.user,
             result,
             inviteUrl: config.discord.invitation_url
         })
     } catch(e) {
-        const currentRankdle = await rankdle.getCurrentRankdle()
-        res.render('rankdle.ejs', {
-            page: 'rankdle',
+        const currentRankedle = await rankedle.getCurrentRankedle()
+        res.render('rankedle.ejs', {
+            page: 'rankedle',
             user: req.session.user,
-            rankdle: currentRankdle,
+            rankedle: currentRankedle,
             inviteUrl: config.discord.invitation_url
         })
     }
@@ -27,7 +27,7 @@ app.get('/', requireAdmin, async (req, res) => {
 
 app.get('/song', async (req, res) => {
     try {
-        await rankdle.playRequest(req, res)
+        await rankedle.playRequest(req, res)
     } catch(e) {
         res.status(404).end()
     }
@@ -35,7 +35,7 @@ app.get('/song', async (req, res) => {
 
 app.get('/songs', async (req, res) => {
     try {
-        const songs = await rankdle.getSongList(req.query.q)
+        const songs = await rankedle.getSongList(req.query.q)
         res.json(songs)
     } catch(e) {
         console.log(e)
@@ -45,7 +45,7 @@ app.get('/songs', async (req, res) => {
 
 app.get('/score', async (req, res) => {
     try {
-        await rankdle.scoreRequest(req, res)
+        await rankedle.scoreRequest(req, res)
     } catch(e) {
         res.status(404).end()
     }
@@ -53,7 +53,7 @@ app.get('/score', async (req, res) => {
 
 app.post('/skip', async (req, res) => {
     try {
-        await rankdle.skipRequest(req, res)
+        await rankedle.skipRequest(req, res)
     } catch(e) {
         res.status(404).end()
     }
@@ -61,7 +61,7 @@ app.post('/skip', async (req, res) => {
 
 app.post('/submit', async (req, res) => {
     try {
-        await rankdle.submitRequest(req, res)
+        await rankedle.submitRequest(req, res)
     } catch(e) {
         res.status(404).end()
     }

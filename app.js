@@ -8,7 +8,7 @@ import discordRoutes from './routes/discord.js'
 import formsRoutes from './routes/forms.js'
 import mapRoutes from './routes/map.js'
 import feurboardRoutes from './routes/feurboard.js'
-import rankdleRoutes from './routes/rankdle.js'
+import rankedleRoutes from './routes/rankedle.js'
 import adminRoutes from './routes/admin.js'
 import agentRoutes from './routes/agent.js'
 import config from './config.json' assert { type: 'json' }
@@ -97,7 +97,7 @@ app.use('/discord', discordRoutes)
 app.use('/forms', formsRoutes)
 app.use('/interactive-map', mapRoutes)
 app.use('/feurboard', feurboardRoutes)
-app.use('/rankdle', rankdleRoutes)
+app.use('/rankedle', rankedleRoutes)
 app.use('/admin', adminRoutes)
 app.use('/agent', agentRoutes)
 
