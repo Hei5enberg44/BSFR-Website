@@ -1,3 +1,7 @@
+#rankedle > * {
+    user-select: none;
+}
+
 #rankedle .step {
     max-height: 38px;
     border: 1px solid var(--tblr-border-color);
