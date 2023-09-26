@@ -292,6 +292,10 @@ export default class Rankedle {
             where: { id: mapId }
         })
 
+        const validMapData = await RankedleMaps.findOne({
+            where: { id: rankedle.mapId }
+        })
+
         const songName = `${mapData.map.metadata.songAuthorName} - ${mapData.map.metadata.songName}${mapData.map.metadata.songSubName !== '' ? ` ${mapData.map.metadata.songSubName}` : ''}`
 
         let score = await RankedleScores.findOne({
@@ -303,8 +307,8 @@ export default class Rankedle {
 
         if(score) {
             if(score.success === null) {
-                if(mapId === rankedle.mapId && score.skips < 6) {
-                    score.success = mapId === rankedle.mapId
+                if((mapData.map.metadata.songAuthorName === validMapData.map.metadata.songAuthorName && mapData.map.metadata.songName === validMapData.map.metadata.songName) && score.skips < 6) {
+                    score.success = true
                 } else {
                     if(score.skips === 6) {
                         score.success = false
