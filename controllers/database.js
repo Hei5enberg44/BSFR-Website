@@ -13,7 +13,7 @@ const sequelizeWebsite = new Sequelize(config.databases.website.name, config.dat
     timezone: 'Europe/Paris'
 })
 
-const Rankdles = sequelizeWebsite.define('rankdles', {
+const Rankedles = sequelizeWebsite.define('rankedles', {
     id: {
         type: DataTypes.INTEGER(),
         autoIncrement: true,
@@ -23,7 +23,7 @@ const Rankdles = sequelizeWebsite.define('rankdles', {
     date: DataTypes.DATEONLY()
 })
 
-const RankdleMaps = sequelizeWebsite.define('rankdle_maps', {
+const RankedleMaps = sequelizeWebsite.define('rankedle_maps', {
     id: {
         type: DataTypes.INTEGER(),
         autoIncrement: true,
@@ -32,20 +32,20 @@ const RankdleMaps = sequelizeWebsite.define('rankdle_maps', {
     map: DataTypes.JSON()
 })
 
-const RankdleScores = sequelizeWebsite.define('rankdle_scores', {
+const RankedleScores = sequelizeWebsite.define('rankedle_scores', {
     id: {
         type: DataTypes.INTEGER(),
         autoIncrement: true,
         primaryKey: true
     },
-    rankdleId: DataTypes.INTEGER(),
+    rankedleId: DataTypes.INTEGER(),
     memberId: DataTypes.STRING(255),
     skips: DataTypes.INTEGER(),
     details: DataTypes.JSON(),
     success: DataTypes.BOOLEAN()
 })
 
-const RankdleStats = sequelizeWebsite.define('rankdle_stats', {
+const RankedleStats = sequelizeWebsite.define('rankedle_stats', {
     id: {
         type: DataTypes.INTEGER(),
         autoIncrement: true,
@@ -64,7 +64,7 @@ const RankdleStats = sequelizeWebsite.define('rankdle_stats', {
     maxStreak: DataTypes.INTEGER()
 })
 
-RankdleMaps.hasOne(Rankdles, {
+RankedleMaps.hasOne(Rankedles, {
     sourceKey: 'id',
     foreignKey: 'mapId',
     targetKey: 'mapId'
@@ -205,6 +205,6 @@ const Feur = sequelizeAgent.define('feur', {
 })
 
 export {
-    Rankdles, RankdleMaps, RankdleScores, RankdleStats,
+    Rankedles, RankedleMaps, RankedleScores, RankedleStats,
     Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, Cities, MPOV, YoutubeVideos, Feur
 }

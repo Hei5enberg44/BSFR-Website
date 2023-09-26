@@ -19,7 +19,7 @@ const $btnSkip = document.querySelector('#skip')
 /** @type {HTMLButtonElement} */
 const $btnSubmit = document.querySelector('#submit')
 
-const audio = new Audio('/rankdle/song')
+const audio = new Audio('/rankedle/song')
 
 $playBtn.addEventListener('click', (e) => {
     const isPlaying = audio.currentTime > 0 && !audio.paused && !audio.ended && audio.readyState > audio.HAVE_CURRENT_DATA
@@ -31,6 +31,7 @@ $playBtn.addEventListener('click', (e) => {
 
 const playAudio = () => {
     audio.load()
+    audio.volume = window.localStorage.getItem('rankedleVolume') ? parseInt(window.localStorage.getItem('rankedleVolume')) / 100 : 0.5
     audio.play()
     $playBtn.innerHTML = stopIcon
 }
@@ -65,7 +66,7 @@ if($btnSkip) {
     $btnSkip.addEventListener('click', async (e) => {
         toggleButtons(false)
 
-        const skipRequest = await fetch('/rankdle/skip', {
+        const skipRequest = await fetch('/rankedle/skip', {
             method: 'POST'
         })
 
@@ -85,7 +86,7 @@ if($btnSkip) {
         } else {
             toggleButtons(false)
 
-            const submitRequest = await fetch('/rankdle/submit', {
+            const submitRequest = await fetch('/rankedle/submit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -103,7 +104,7 @@ if($btnSkip) {
     })
 
     const update = (score) => {
-        const $steps = [...document.querySelectorAll('#rankdle .step')]
+        const $steps = [...document.querySelectorAll('#rankedle .step')]
     
         if(score) {
             songChoice.clear()
@@ -142,12 +143,12 @@ if($btnSkip) {
         copyClassesToDropdown: false,
         dropdownParent: 'body',
         controlInput: '<input>',
-        placeholder: 'Know it? Search for the artist / title',
+        placeholder: 'Vous reconnaissez ? Recherchez pour un·e artiste / titre',
         valueField: 'id',
         labelField: 'name',
         searchField: 'name',
         load: (query, callback) => {
-            fetch('/rankdle/songs?q=' + query)
+            fetch('/rankedle/songs?q=' + query)
                 .then(response => response.json())
                 .then(json => {
                     callback(json)
@@ -172,7 +173,7 @@ if($btnSkip) {
     })
     
     document.addEventListener('DOMContentLoaded', async (e) => {
-        const scoreRequest = await fetch('/rankdle/score')
+        const scoreRequest = await fetch('/rankedle/score')
     
         if(scoreRequest.ok) {
             const score = await scoreRequest.json()
@@ -180,3 +181,20 @@ if($btnSkip) {
         }
     })
 }
+
+document.addEventListener('DOMContentLoaded', async (e) => {
+    const volumeSlider = noUiSlider.create(document.querySelector('#volume'), {
+        start: window.localStorage.getItem('rankedleVolume') ? parseInt(window.localStorage.getItem('rankedleVolume')) : 50,
+        connect: [true, false],
+        step: 5,
+        range: {
+            min: 0,
+            max: 100
+        }
+    })
+
+    volumeSlider.on('update', (e) => {
+        window.localStorage.setItem('rankedleVolume', e[0])
+        audio.volume = parseInt(e[0]) / 100
+    })
+})

@@ -1,13 +1,13 @@
-#rankdle .step {
+#rankedle .step {
     max-height: 38px;
     border: 1px solid var(--tblr-border-color);
 }
 
-#rankdle .step.step-active {
+#rankedle .step.step-active {
     border-color: var(--tblr-primary);
 }
 
-#rankdle #play-btn {
+#rankedle #play-btn {
     width: 56px;
     height: 56px;
     padding: 10px;
@@ -18,49 +18,49 @@
     margin: 0 auto;
 }
 
-#rankdle #progress {
+#rankedle #progress {
     position: relative;
     background: #f1f5f9;
     height: 24px;
 }
 
-#rankdle #progress #seek-bar {
+#rankedle #progress #seek-bar {
     position: relative;
 }
 
-#rankdle #progress #seek-bar-placeholder {
+#rankedle #progress #seek-bar-placeholder {
     position: absolute;
     background: #c8d3e1;
 }
 
-#rankdle #progress .progress-step {
+#rankedle #progress .progress-step {
     position: absolute;
     width: 1px;
     height: 100%;
     background: #9ba9be;
 }
 
-#rankdle .time {
+#rankedle .time {
     width: 60px;
     font-size: 1.1rem;
     font-weight: 500;
 }
 
-#rankdle .try {
+#rankedle .try {
     display: inline-block;
     width: 25px;
     height: 5px;
     margin: 0 2px;
 }
 
-#rankdle .try.try-gray {
+#rankedle .try.try-gray {
     background: var(--tblr-muted);
 }
 
-#rankdle .try.try-red {
+#rankedle .try.try-red {
     background: var(--tblr-danger);
 }
 
-#rankdle .try.try-green {
+#rankedle .try.try-green {
     background: var(--tblr-success);
 }
