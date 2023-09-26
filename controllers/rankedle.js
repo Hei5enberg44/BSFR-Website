@@ -14,7 +14,7 @@ const RANKEDLE_PATH = path.resolve(__dirname, '../rankedle')
 const EGG_PATH = path.join(RANKEDLE_PATH, 'song.egg')
 const OGG_PATH = path.join(RANKEDLE_PATH, 'song.ogg')
 const TRIMED_OGG_PATH = path.join(RANKEDLE_PATH, 'song_trimed.ogg')
-const MAX_BITRATE = 96000
+const BITRATE = 96
 const RANGES = [
     '00:01',
     '00:02',
@@ -65,14 +65,15 @@ export default class Rankedle {
         })
     }
 
-    static async trimSilence(songPath, outPath, bitrate = MAX_BITRATE) {
+    static async trimSilence(songPath, outPath) {
         return new Promise((res, rej) => {
             ffmpeg(songPath)
             .audioFilters([
                 'silenceremove=1:0:-50dB'
             ])
             .addOptions('-c:a libopus')
-            .audioBitrate((bitrate > MAX_BITRATE ? MAX_BITRATE : bitrate) / 1000)
+            .addOutputOption('-map_metadata -1')
+            .audioBitrate(BITRATE)
             .output(outPath)
             .on('error', (err) => {
                 rej(err)
@@ -135,9 +136,7 @@ export default class Rankedle {
                 songZip.removeCallback()
         
                 // Trim silence
-                const data = await this.getSongMetaData(EGG_PATH)
-                const bitrate = data.format.bit_rate
-                await this.trimSilence(EGG_PATH, OGG_PATH, bitrate)
+                await this.trimSilence(EGG_PATH, OGG_PATH)
         
                 // Get time range
                 const dataTrimed = await this.getSongMetaData(OGG_PATH)
@@ -166,19 +165,17 @@ export default class Rankedle {
                     },
                     'map.metadata.songSubName': {
                         [Op.like]: `%${query}%`
-                    },
-                    'map.metadata.levelAuthorName': {
-                        [Op.like]: `%${query}%`
                     }
                 }
             },
+            limit: 5,
             raw: true
         })
 
         return !maps ? {} : maps.map(m => {
             return {
                 id: m.id,
-                name: `${m.map.metadata.songAuthorName} - ${m.map.metadata.songName}${m.map.metadata.songSubName !== '' ? ` ${m.map.metadata.songSubName}` : ''}  (${m.map.metadata.levelAuthorName})`
+                name: `${m.map.metadata.songAuthorName} - ${m.map.metadata.songName}${m.map.metadata.songSubName !== '' ? ` ${m.map.metadata.songSubName}` : ''}`
             }
         })
     }
@@ -218,6 +215,8 @@ export default class Rankedle {
         const fileStream = fs.createReadStream(TRIMED_OGG_PATH)
         const ffmpegStream = ffmpeg(fileStream)
             .format('ogg')
+            .addOptions('-c:a libopus')
+            .audioBitrate(BITRATE)
             .on('error', (err) => {})
         if(skips < 6 && !rankedleScore?.success) ffmpegStream.addOutputOption(`-t ${range}`)
         ffmpegStream.pipe(res, { end: true })
