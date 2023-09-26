@@ -5,6 +5,7 @@ import ffmpeg from 'fluent-ffmpeg'
 import yauzl from 'yauzl'
 import tmp from 'tmp'
 import { Sequelize, Op } from 'sequelize'
+import members from './members.js'
 import { Rankedles, RankedleMaps, RankedleScores, RankedleStats } from './database.js'
 import Logger from '../utils/logger.js'
 
@@ -210,7 +211,13 @@ export default class Rankedle {
         const skips = rankedleScore ? rankedleScore.skips : 0
         const range = RANGES[skips]
 
-        res.writeHead(200, { 'Content-Type': 'audio/ogg' })
+        res.writeHead(200, {
+            'Accept-Ranges': 'bytes',
+            'Content-Type': 'audio/ogg',
+            'Cache-Controle': 'max-age=0, no-cache, no-store, must-revalidate, proxy-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': 'Wed, 21 Oct 2015 01:00:00 GMT'
+        })
 
         const fileStream = fs.createReadStream(TRIMED_OGG_PATH)
         const ffmpegStream = ffmpeg(fileStream)
@@ -304,9 +311,11 @@ export default class Rankedle {
             }
         })
 
+        const success = mapData.map.metadata.songAuthorName === validMapData.map.metadata.songAuthorName && mapData.map.metadata.songName === validMapData.map.metadata.songName
+
         if(score) {
             if(score.success === null) {
-                if((mapData.map.metadata.songAuthorName === validMapData.map.metadata.songAuthorName && mapData.map.metadata.songName === validMapData.map.metadata.songName) && score.skips < 6) {
+                if((success) && score.skips < 6) {
                     score.success = true
                 } else {
                     if(score.skips === 6) {
@@ -326,10 +335,10 @@ export default class Rankedle {
             const scoreData = {
                 rankedleId: rankedle.id,
                 memberId: user.id,
-                skips: mapId === rankedle.mapId ? 0 : 1,
-                success: mapId === rankedle.mapId ? true : null
+                skips: success ? 0 : 1,
+                success: success ? true : null
             }
-            if(mapId !== rankedle.mapId) scoreData.details = [{ status: 'fail', data: songName }]
+            if(!success) scoreData.details = [{ status: 'fail', data: songName }]
             score = await RankedleScores.create(scoreData)
         }
 
@@ -410,5 +419,27 @@ export default class Rankedle {
                 levelAuthorName: mapData.map.metadata.levelAuthorName
             }
         }
+    }
+
+    static async getRanking(session) {
+        const rankingList = await RankedleScores.findAll({
+            attributes: [
+                'memberId',
+                Sequelize.fn('avg', Sequelize.col('skips'))
+            ],
+            group: [ 'memberId' ]
+        })
+
+        let rank = 1
+        const ranking = await Promise.all(rankingList.map(async (r) => {
+            const member = await members.getUser(session, r.memberId)
+            r.avatar = member ? `${members.getAvatar(member.user)}?size=80` : ''
+            r.name = member ? member.user.username : ''
+            r.rank = rank
+            rank++
+            return r
+        }))
+
+        return ranking
     }
 }

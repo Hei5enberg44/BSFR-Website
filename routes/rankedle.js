@@ -6,12 +6,14 @@ import config from '../config.json' assert { type: 'json' }
 const app = express()
 
 app.get('/', requireAdmin, async (req, res) => {
+    const ranking = await rankedle.getRanking(req.session)
     try {
         const result = await rankedle.getResult(req, res)
         res.render('rankedle.ejs', {
             page: 'rankedle',
             user: req.session.user,
             result,
+            ranking,
             inviteUrl: config.discord.invitation_url
         })
     } catch(e) {
@@ -20,6 +22,7 @@ app.get('/', requireAdmin, async (req, res) => {
             page: 'rankedle',
             user: req.session.user,
             rankedle: currentRankedle,
+            ranking,
             inviteUrl: config.discord.invitation_url
         })
     }

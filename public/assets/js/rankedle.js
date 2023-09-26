@@ -18,8 +18,16 @@ const $skipSeconds = document.querySelector('#skip-seconds')
 const $btnSkip = document.querySelector('#skip')
 /** @type {HTMLButtonElement} */
 const $btnSubmit = document.querySelector('#submit')
+/** @type {HTMLButtonElement} */
+const $btnEnd = document.querySelector('#end')
+/** @type {HTMLDivElement} */
+const $progress = document.querySelector('#progress')
+/** @type {HTMLDivElement} */
+const $seekCursor = document.querySelector('#seek-cursor')
 
-const audio = new Audio('/rankedle/song')
+const SONG_URL = '/rankedle/song'
+
+const audio = new Audio(SONG_URL)
 
 $playBtn.addEventListener('click', (e) => {
     const isPlaying = audio.currentTime > 0 && !audio.paused && !audio.ended && audio.readyState > audio.HAVE_CURRENT_DATA
@@ -30,6 +38,7 @@ $playBtn.addEventListener('click', (e) => {
 })
 
 const playAudio = () => {
+    audio.src = `${SONG_URL}?nocache=${Date.now()}`
     audio.load()
     audio.volume = window.localStorage.getItem('rankedleVolume') ? parseInt(window.localStorage.getItem('rankedleVolume')) / 100 : 0.5
     audio.play()
@@ -42,6 +51,15 @@ const stopAudio = () => {
     $playBtn.innerHTML = playIcon
 }
 
+const resumeAudio = () => {
+    const isPlaying = audio.duration > 0 && !audio.paused
+    const currentTime = audio.currentTime
+    audio.src = `${SONG_URL}?nocache=${Date.now()}`
+    audio.load()
+    audio.currentTime = currentTime
+    if(isPlaying) audio.play()
+}
+
 audio.addEventListener('ended', () => {
     $playBtn.innerHTML = playIcon
 })
@@ -52,14 +70,33 @@ audio.addEventListener('timeupdate', () => {
     $currentTime.textContent = `00:${elapsed < 10 ? `0${elapsed}` : elapsed}`
 })
 
+const getElementOffset = (el) => {
+    let top = 0
+    let left = 0
+    let element = el
+
+    do {
+        top += element.offsetTop || 0
+        left += element.offsetLeft || 0
+        element = element.offsetParent
+    } while(element)
+
+    return {
+        top,
+        left,
+    }
+}
+
 if($btnSkip) {
     const toggleButtons = (enabled) => {
         if(!enabled) {
             $btnSkip.classList.add('btn-loading')
             $btnSubmit.classList.add('btn-loading')
+            $btnEnd.classList.add('btn-loading')
         } else {
             $btnSkip.classList.remove('btn-loading')
             $btnSubmit.classList.remove('btn-loading')
+            $btnEnd.classList.remove('btn-loading')
         }
     }
 
@@ -73,6 +110,7 @@ if($btnSkip) {
         if(skipRequest.ok) {
             const score = await skipRequest.json()
             update(score)
+            resumeAudio()
         }
     })
 
@@ -99,8 +137,13 @@ if($btnSkip) {
             if(submitRequest.ok) {
                 const score = await submitRequest.json()
                 update(score)
+                resumeAudio()
             }
         }
+    })
+
+    $btnEnd.addEventListener('click', async (e) => {
+        $btnSkip.click()
     })
 
     const update = (score) => {
@@ -110,8 +153,6 @@ if($btnSkip) {
             songChoice.clear()
 
             if(score.success === null) {
-                stopAudio()
-
                 for(let i = 0; i < $steps.length; i++) {
                     const detail = score.details[i] ?? null
     
@@ -127,6 +168,12 @@ if($btnSkip) {
                         $steps[i].innerHTML = icon + detail.data
                     }
                     if(i === score.skips && score.skips < 6) $steps[i].classList.add('step-active')
+                    if(score.skips === 6) {
+                        $btnSkip.classList.add('disabled')
+                        $btnSubmit.classList.add('d-none')
+                        $btnEnd.classList.remove('d-none')
+                        songChoice.disable()
+                    }
                 }
                 $skipSeconds.textContent = SKIPS[score.skips]
                 const currentDuration = [...SKIPS.slice(0, score.skips)].reduce((p, c) => p + c) + 1
@@ -147,8 +194,9 @@ if($btnSkip) {
         valueField: 'id',
         labelField: 'name',
         searchField: 'name',
+        maxOptions: 5,
         load: (query, callback) => {
-            fetch('/rankedle/songs?q=' + query)
+            fetch('/rankedle/songs?q=' + encodeURIComponent(query))
                 .then(response => response.json())
                 .then(json => {
                     callback(json)
@@ -183,10 +231,11 @@ if($btnSkip) {
 }
 
 document.addEventListener('DOMContentLoaded', async (e) => {
+    // Volume
     const volumeSlider = noUiSlider.create(document.querySelector('#volume'), {
         start: window.localStorage.getItem('rankedleVolume') ? parseInt(window.localStorage.getItem('rankedleVolume')) : 50,
         connect: [true, false],
-        step: 5,
+        step: 0.5,
         range: {
             min: 0,
             max: 100

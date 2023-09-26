@@ -12,6 +12,20 @@
     <link rel="stylesheet" href="/static/assets/libs/animate/animate.min.css">
     <link rel="stylesheet" href="/static/assets/css/rankedle.css">
     <title>Beat Saber FR - Rankedle</title>
+    <style>
+        .list-group-item:nth-child(1) .rank .avatar {
+            background: #ffc71e;
+            color: white;
+        }
+        .list-group-item:nth-child(2) .rank .avatar {
+            background: #959595;
+            color: white;
+        }
+        .list-group-item:nth-child(3) .rank .avatar {
+            background: #b5532d;
+            color: white;
+        }
+    </style>
 </head>
 <body class="">
     <div class="background"><div class="blur"></div></div>
@@ -128,6 +142,7 @@
                                                                 </div>
                                                                 <div class="col-auto ms-auto">
                                                                     <button type="button" class="btn btn-success" id="submit">ENVOYER</button>
+                                                                    <button type="button" class="btn btn-success d-none" id="end">TERMINER</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -138,6 +153,26 @@
                                                 <div class="card">
                                                     <div class="card-body">
                                                         <h3 class="card-title">Classement</h3>
+                                                        <div class="list-group list-group-flush list-group-hoverable">
+                                                            <% for(const rank of ranking) { %>
+                                                            <div class="list-group-item">
+                                                                <div class="row align-items-center">
+                                                                    <div class="col-auto rank">
+                                                                        <span class="avatar"><%= rank.rank %></span>
+                                                                    </div>
+                                                                    <div class="col-auto">
+                                                                        <span class="avatar" style="background-image: url(<%= rank.avatar %>)"></span>
+                                                                    </div>
+                                                                    <div class="col text-truncate">
+                                                                        <span class="text-reset d-block" data-member-id="<%= rank.attackerId %>"><%= rank.name %></span>
+                                                                    </div>
+                                                                    <div class="col-auto">
+                                                                        <%= rank.count %>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <% } %>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -228,6 +263,26 @@
                                             <div class="card">
                                                 <div class="card-body">
                                                     <h3 class="card-title">Classement</h3>
+                                                    <div class="list-group list-group-flush list-group-hoverable">
+                                                        <% for(const rank of ranking) { %>
+                                                        <div class="list-group-item">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-auto rank">
+                                                                    <span class="avatar"><%= rank.rank %></span>
+                                                                </div>
+                                                                <div class="col-auto">
+                                                                    <span class="avatar" style="background-image: url(<%= rank.avatar %>)"></span>
+                                                                </div>
+                                                                <div class="col text-truncate">
+                                                                    <span class="text-reset d-block" data-member-id="<%= rank.attackerId %>"><%= rank.name %></span>
+                                                                </div>
+                                                                <div class="col-auto">
+                                                                    <%= rank.count %>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <% } %>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
