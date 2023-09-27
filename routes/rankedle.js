@@ -6,26 +6,18 @@ import config from '../config.json' assert { type: 'json' }
 const app = express()
 
 app.get('/', requireAdmin, async (req, res) => {
+    const user = req.session.user
+    const currentRankedle = await rankedle.getCurrentRankedle()
     const ranking = await rankedle.getRanking(req.session)
-    try {
-        const result = await rankedle.getResult(req, res)
-        res.render('rankedle.ejs', {
-            page: 'rankedle',
-            user: req.session.user,
-            result,
-            ranking,
-            inviteUrl: config.discord.invitation_url
-        })
-    } catch(e) {
-        const currentRankedle = await rankedle.getCurrentRankedle()
-        res.render('rankedle.ejs', {
-            page: 'rankedle',
-            user: req.session.user,
-            rankedle: currentRankedle,
-            ranking,
-            inviteUrl: config.discord.invitation_url
-        })
-    }
+    const result = await rankedle.getResult(currentRankedle, user.id)
+    res.render('rankedle.ejs', {
+        page: 'rankedle',
+        user: req.session.user,
+        rankedle: currentRankedle,
+        ranking,
+        result,
+        inviteUrl: config.discord.invitation_url
+    })
 })
 
 app.get('/song', async (req, res) => {
