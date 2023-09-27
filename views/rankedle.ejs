@@ -62,13 +62,13 @@
                                 <% } %>
 
                                 <% if(user.isBSFR) { %>
-                                    <% if(rankedle) { %>
-                                        <% if(!result) { %>
-                                        <div class="row">
-                                            <div class="col-lg-8 col-12 mb-3">
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <div id="rankedle">
+                                    <div class="row">
+                                        <div class="col-lg-8 col-12 mb-3">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div id="rankedle">
+                                                        <% if(rankedle) { %>
+                                                            <% if(!result) { %>
                                                             <div id="step-1" class="step p-2 mb-2 d-flex align-items-center step-active">
                                                                 <div class="w-5 h-5"></div>
                                                             </div>
@@ -145,44 +145,9 @@
                                                                     <button type="button" class="btn btn-success d-none" id="end">TERMINER</button>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 col-12">
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <h3 class="card-title">Classement</h3>
-                                                        <div class="list-group list-group-flush list-group-hoverable">
-                                                            <% for(const rank of ranking) { %>
-                                                            <div class="list-group-item">
-                                                                <div class="row align-items-center">
-                                                                    <div class="col-auto rank">
-                                                                        <span class="avatar"><%= rank.rank %></span>
-                                                                    </div>
-                                                                    <div class="col-auto">
-                                                                        <span class="avatar" style="background-image: url(<%= rank.avatar %>)"></span>
-                                                                    </div>
-                                                                    <div class="col text-truncate">
-                                                                        <span class="text-reset d-block" data-member-id="<%= rank.attackerId %>"><%= rank.name %></span>
-                                                                    </div>
-                                                                    <div class="col-auto">
-                                                                        <%= rank.count %>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <% } %>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <% } else { %>
-                                        <div class="row">
-                                            <div class="col-lg-8 col-12 mb-3">
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <div id="rankedle">
+
+                                                            <% } else { %>
+
                                                             <a class="card mb-3" href="https://beatsaver.com/maps/<%= result.map.id %>" target="_blank">
                                                                 <div class="card-status-start bg-<%= result.won ? 'success' : 'danger' %>"></div>
                                                                 <div class="card-body">
@@ -248,16 +213,24 @@
                                                                 </div>
                                                                 <div class="time text-end">00:30</div>
                                                             </div>
+
+                                                            <% } %>
+                                                        <% } else { %>
+                                                        <div class="alert alert-danger bg-white" role="alert">
+                                                            <div class="text-muted">
+                                                                Il n'y a pas de Rankedle en cours.
+                                                            </div>
                                                         </div>
+                                                        <% } %>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-4 col-12">
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <h3 class="card-title">Classement</h3>
-                                                    </div>
-                                                    <div class="list-group list-group-flush overflow-auto" style="max-height: 35rem;">
+                                        </div>
+                                        <div class="col-lg-4 col-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h3 class="card-title">Classement</h3>
+                                                    <div class="list-group list-group-flush list-group-hoverable">
                                                         <% for(const rank of ranking) { %>
                                                         <div class="list-group-item">
                                                             <div class="row align-items-center">
@@ -280,14 +253,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <% } %>
-                                    <% } else { %>
-                                    <div class="alert alert-danger bg-white" role="alert">
-                                        <div class="text-muted">
-                                            Il n'y a pas de Rankedle en cours.
-                                        </div>
                                     </div>
-                                    <% } %>
                                 <% } %>
                             </form>
                         </div>
