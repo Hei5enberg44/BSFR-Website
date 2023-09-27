@@ -62,8 +62,8 @@
                                 <% } %>
 
                                 <% if(user.isBSFR) { %>
-                                    <% if(typeof rankedle !== 'undefined') { %>
-                                        <% if(rankedle) { %>
+                                    <% if(rankedle) { %>
+                                        <% if(!result) { %>
                                         <div class="row">
                                             <div class="col-lg-8 col-12 mb-3">
                                                 <div class="card">
@@ -178,92 +178,86 @@
                                             </div>
                                         </div>
                                         <% } else { %>
-                                        <div class="alert alert-danger bg-white" role="alert">
-                                            <div class="text-muted">
-                                                Il n'y a pas de Rankedle en cours.
-                                            </div>
-                                        </div>
-                                        <% } %>
-                                    <% } else { %>
-                                    <div class="row">
-                                        <div class="col-lg-8 col-12 mb-3">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div id="rankedle">
-                                                        <a class="card mb-3" href="https://beatsaver.com/maps/<%= result.map.id %>" target="_blank">
-                                                            <div class="card-status-start bg-<%= result.won ? 'success' : 'danger' %>"></div>
-                                                            <div class="card-body">
-                                                                <div class="row d-flex align-items-center">
-                                                                    <div class="col-auto">
-                                                                        <span class="avatar avatar-xl" style="background-image: url(<%= result.map.cover %>)"></span>
+                                        <div class="row">
+                                            <div class="col-lg-8 col-12 mb-3">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div id="rankedle">
+                                                            <a class="card mb-3" href="https://beatsaver.com/maps/<%= result.map.id %>" target="_blank">
+                                                                <div class="card-status-start bg-<%= result.won ? 'success' : 'danger' %>"></div>
+                                                                <div class="card-body">
+                                                                    <div class="row d-flex align-items-center">
+                                                                        <div class="col-auto">
+                                                                            <span class="avatar avatar-xl" style="background-image: url(<%= result.map.cover %>)"></span>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <h3><%= result.map.songName %></h3>
+                                                                            <div class="text-muted"><strong>Mapper:</strong> <%= result.map.levelAuthorName %></div>
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="col">
-                                                                        <h3><%= result.map.songName %></h3>
-                                                                        <div class="text-muted"><strong>Mapper:</strong> <%= result.map.levelAuthorName %></div>
+                                                                </div>
+                                                            </a>
+
+                                                            <p class="text-center" style="font-size: 1.1rem; font-weight: 500;">
+                                                                <%= result.won ? result.skips === 0 ? 'Point faible, trop fort·e !' : 'Pas mal 😉' : 'Vous ne l\'avez pas eu. Vous aurez plus de chance demain !' %>
+                                                            </p>
+
+                                                            <div class="mt-1 mb-5 text-center">
+                                                                <% for(const step of result.steps) {
+                                                                    const className = step === null ? 'gray' : step === false ? 'red' : step === true ? 'green' : 'gray'
+                                                                %>
+                                                                <span class="try try-<%= className %>"></span>
+                                                                <% } %>
+                                                            </div>
+
+                                                            <div class="row mb-3 d-flex justify-content-center">
+                                                                <div class="col-3">
+                                                                    <div class="row row-sm">
+                                                                        <div class="col-auto">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8a5 5 0 0 1 0 8" /><path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" /></svg>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <div class="form-range" id="volume"></div>
+                                                                        </div>
+                                                                        <div class="col-auto">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8a5 5 0 0 1 0 8" /><path d="M17.7 5a9 9 0 0 1 0 14" /><path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" /></svg>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </a>
 
-                                                        <p class="text-center" style="font-size: 1.1rem; font-weight: 500;">
-                                                            <%= result.won ? result.skips === 0 ? 'Point faible, trop fort·e !' : 'Pas mal 😉' : 'Vous ne l\'avez pas eu. Vous aurez plus de chance demain !' %>
-                                                        </p>
+                                                            <div class="progress" id="progress">
+                                                                <div class="progress-bar" id="seek-bar-placeholder" style="width: 100%;" role="progressbar"></div>
+                                                                <div class="bg-primary" id="seek-bar" style="width: 0%" role="progressbar"></div>
 
-                                                        <div class="mt-1 mb-5 text-center">
-                                                            <% for(const step of result.steps) {
-                                                                const className = step === null ? 'gray' : step === false ? 'red' : step === true ? 'green' : 'gray'
-                                                            %>
-                                                            <span class="try try-<%= className %>"></span>
-                                                            <% } %>
-                                                        </div>
-
-                                                        <div class="row mb-3 d-flex justify-content-center">
-                                                            <div class="col-3">
-                                                                <div class="row row-sm">
-                                                                    <div class="col-auto">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8a5 5 0 0 1 0 8" /><path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" /></svg>
-                                                                    </div>
-                                                                    <div class="col">
-                                                                        <div class="form-range" id="volume"></div>
-                                                                    </div>
-                                                                    <div class="col-auto">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8a5 5 0 0 1 0 8" /><path d="M17.7 5a9 9 0 0 1 0 14" /><path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" /></svg>
+                                                                <div class="progress-step" style="left: 3.33%;"></div>
+                                                                <div class="progress-step" style="left: 6.66%;"></div>
+                                                                <div class="progress-step" style="left: 13.33%;"></div>
+                                                                <div class="progress-step" style="left: 23.31%;"></div>
+                                                                <div class="progress-step" style="left: 36.63%;"></div>
+                                                                <div class="progress-step" style="left: 53.28%;"></div>
+                                                                <div class="progress-step" style="left: calc(100% - 1px);"></div>
+                                                            </div>
+                
+                                                            <div class="row d-flex align-items-center mt-5 mb-3">
+                                                                <div class="time" id="current-time">00:00</div>
+                                                                <div class="col">
+                                                                    <div id="play-btn">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" /></svg>
                                                                     </div>
                                                                 </div>
+                                                                <div class="time text-end">00:30</div>
                                                             </div>
-                                                        </div>
-
-                                                        <div class="progress" id="progress">
-                                                            <div class="progress-bar" id="seek-bar-placeholder" style="width: 100%;" role="progressbar"></div>
-                                                            <div class="bg-primary" id="seek-bar" style="width: 0%" role="progressbar"></div>
-
-                                                            <div class="progress-step" style="left: 3.33%;"></div>
-                                                            <div class="progress-step" style="left: 6.66%;"></div>
-                                                            <div class="progress-step" style="left: 13.33%;"></div>
-                                                            <div class="progress-step" style="left: 23.31%;"></div>
-                                                            <div class="progress-step" style="left: 36.63%;"></div>
-                                                            <div class="progress-step" style="left: 53.28%;"></div>
-                                                            <div class="progress-step" style="left: calc(100% - 1px);"></div>
-                                                        </div>
-            
-                                                        <div class="row d-flex align-items-center mt-5 mb-3">
-                                                            <div class="time" id="current-time">00:00</div>
-                                                            <div class="col">
-                                                                <div id="play-btn">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" /></svg>
-                                                                </div>
-                                                            </div>
-                                                            <div class="time text-end">00:30</div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-lg-4 col-12">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <h3 class="card-title">Classement</h3>
-                                                    <div class="list-group list-group-flush list-group-hoverable">
+                                            <div class="col-lg-4 col-12">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">Classement</h3>
+                                                    </div>
+                                                    <div class="list-group list-group-flush overflow-auto" style="max-height: 35rem;">
                                                         <% for(const rank of ranking) { %>
                                                         <div class="list-group-item">
                                                             <div class="row align-items-center">
@@ -285,6 +279,12 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <% } %>
+                                    <% } else { %>
+                                    <div class="alert alert-danger bg-white" role="alert">
+                                        <div class="text-muted">
+                                            Il n'y a pas de Rankedle en cours.
                                         </div>
                                     </div>
                                     <% } %>

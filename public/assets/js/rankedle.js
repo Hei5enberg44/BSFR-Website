@@ -29,14 +29,6 @@ const SONG_URL = '/rankedle/song'
 
 const audio = new Audio(SONG_URL)
 
-$playBtn.addEventListener('click', (e) => {
-    const isPlaying = audio.currentTime > 0 && !audio.paused && !audio.ended && audio.readyState > audio.HAVE_CURRENT_DATA
-    if(!isPlaying)
-        playAudio()
-    else
-        stopAudio()
-})
-
 const playAudio = () => {
     audio.src = `${SONG_URL}?nocache=${Date.now()}`
     audio.load()
@@ -85,6 +77,34 @@ const getElementOffset = (el) => {
         top,
         left,
     }
+}
+
+if($playBtn) {
+    $playBtn.addEventListener('click', (e) => {
+        const isPlaying = audio.currentTime > 0 && !audio.paused && !audio.ended && audio.readyState > audio.HAVE_CURRENT_DATA
+        if(!isPlaying)
+            playAudio()
+        else
+            stopAudio()
+    })
+
+    document.addEventListener('DOMContentLoaded', async (e) => {
+        // Volume
+        const volumeSlider = noUiSlider.create(document.querySelector('#volume'), {
+            start: window.localStorage.getItem('rankedleVolume') ? parseInt(window.localStorage.getItem('rankedleVolume')) : 50,
+            connect: [true, false],
+            step: 0.5,
+            range: {
+                min: 0,
+                max: 100
+            }
+        })
+    
+        volumeSlider.on('update', (e) => {
+            window.localStorage.setItem('rankedleVolume', e[0])
+            audio.volume = parseInt(e[0]) / 100
+        })
+    })
 }
 
 if($btnSkip) {
@@ -229,21 +249,3 @@ if($btnSkip) {
         }
     })
 }
-
-document.addEventListener('DOMContentLoaded', async (e) => {
-    // Volume
-    const volumeSlider = noUiSlider.create(document.querySelector('#volume'), {
-        start: window.localStorage.getItem('rankedleVolume') ? parseInt(window.localStorage.getItem('rankedleVolume')) : 50,
-        connect: [true, false],
-        step: 0.5,
-        range: {
-            min: 0,
-            max: 100
-        }
-    })
-
-    volumeSlider.on('update', (e) => {
-        window.localStorage.setItem('rankedleVolume', e[0])
-        audio.volume = parseInt(e[0]) / 100
-    })
-})

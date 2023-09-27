@@ -384,15 +384,11 @@ export default class Rankedle {
         }
     }
 
-    static async getResult(req, res) {
-        if(!req.session.user) throw new Error('User not connected')
-        const user = req.session.user
+    static async getResult(rankedle, memberId) {
+        if(!rankedle) return null
 
-        const rankedle = await this.getCurrentRankedle()
-        if(!rankedle) throw new Error('No rankedle found')
-
-        const rankedleScore = await this.getUserScore(rankedle.id, user.id)
-        if(!rankedleScore || rankedleScore.success === null) throw new Error('Don\'t try to cheat please')
+        const rankedleScore = await this.getUserScore(rankedle.id, memberId)
+        if(!rankedleScore || rankedleScore.success === null) return null
 
         const mapData = await RankedleMaps.findOne({
             where: { id: rankedle.mapId },
@@ -423,6 +419,11 @@ export default class Rankedle {
 
     static async getRanking(session) {
         const rankingList = await RankedleScores.findAll({
+            where: {
+                success: {
+                    [Op.ne]: null
+                }
+            },
             attributes: [
                 'memberId',
                 [ Sequelize.fn('avg', Sequelize.col('skips')), 'avg_skips' ]
