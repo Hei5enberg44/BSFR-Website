@@ -261,8 +261,22 @@ if($btnSkip) {
 if($btnStats) {
     $btnStats.addEventListener('click', async (e) => {
         $btnStats.classList.add('btn-loading')
+        await getUserStats()
+        $btnStats.classList.remove('btn-loading')
+    })
 
-        const statsRequest = await fetch('/rankedle/stats')
+    const $playerStats = [...document.querySelectorAll('.player-stats')]
+    for(const $playerStat of $playerStats) {
+        $playerStat.addEventListener('click', async (e) => {
+            e.preventDefault()
+
+            const memberId = $playerStat.dataset.memberId
+            await getUserStats(memberId)
+        })
+    }
+
+    const getUserStats = async (userId = null) => {
+        const statsRequest = await fetch(`/rankedle/stats${userId ? `?userId=${userId}` : ''}`)
     
         if(statsRequest.ok) {
             const stats = await statsRequest.json()
@@ -288,9 +302,7 @@ if($btnStats) {
 
         const modalStats = bootstrap.Modal.getOrCreateInstance($modalStats)
         modalStats.show()
-
-        $btnStats.classList.remove('btn-loading')
-    })
+    }
 }
 
 if($btnShare) {
