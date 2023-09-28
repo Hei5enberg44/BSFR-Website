@@ -1,7 +1,7 @@
 import NodeCache from 'node-cache'
 import DiscordAPI from './discord.js'
 
-const cache = new NodeCache({ stdTTL: 600 })
+const cache = new NodeCache({ stdTTL: 60 * 60 * 24 })
 
 export default {
     async getGuildMembers(session) {
