@@ -42,7 +42,8 @@ const RankedleScores = sequelizeWebsite.define('rankedle_scores', {
     memberId: DataTypes.STRING(255),
     skips: DataTypes.INTEGER(),
     details: DataTypes.JSON(),
-    success: DataTypes.BOOLEAN()
+    success: DataTypes.BOOLEAN(),
+    resultMessage: DataTypes.STRING(255)
 })
 
 const RankedleStats = sequelizeWebsite.define('rankedle_stats', {

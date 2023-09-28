@@ -30,7 +30,8 @@ app.get('/song', async (req, res) => {
 
 app.get('/songs', async (req, res) => {
     try {
-        const songs = await rankedle.getSongList(req.query.q)
+        const user = req.session.user
+        const songs = await rankedle.getSongList(user.id, req.query.q)
         res.json(songs)
     } catch(e) {
         console.log(e)
