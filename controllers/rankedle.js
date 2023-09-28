@@ -14,7 +14,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const RANKEDLE_PATH = path.resolve(__dirname, '../rankedle')
 const EGG_PATH = path.join(RANKEDLE_PATH, 'song.egg')
 const OGG_PATH = path.join(RANKEDLE_PATH, 'song.ogg')
-const TRIMED_OGG_PATH = path.join(RANKEDLE_PATH, 'song_trimed.ogg')
+const TRIMED_OGG_PATH = path.join(RANKEDLE_PATH, 'preview_full.ogg')
 const BITRATE = 96
 const RANGES = [
     '00:01',
@@ -112,11 +112,12 @@ export default class Rankedle {
         })
     }
 
-    static async generateRankedle() {
+    static async generateRankedle(mapId = null) {
         try {
             // Get random map from database
+            const where = mapId ? { 'id': mapId } : {}
             const randomMap = await RankedleMaps.findAll({
-                where: { '$rankedle.id$': { [Op.eq]: null } },
+                where: { '$rankedle.id$': { [Op.eq]: null }, ...where },
                 include: {
                     model: Rankedles,
                     required: false
@@ -146,6 +147,10 @@ export default class Rankedle {
         
                 // Trim song
                 await this.trim(OGG_PATH, TRIMED_OGG_PATH, start)
+
+                for(let i = 0; i < RANGES.length; i++) {
+                    await this.trim(TRIMED_OGG_PATH, path.join(RANKEDLE_PATH, `preview_${i}.ogg`), '00:00', RANGES[i])
+                }
 
                 await Rankedles.create({ mapId: mapId })
             }
@@ -209,24 +214,48 @@ export default class Rankedle {
         const rankedleScore = await this.getUserScore(rankedle.id, user.id)
 
         const skips = rankedleScore ? rankedleScore.skips : 0
-        const range = RANGES[skips]
+        const preview = path.join(RANKEDLE_PATH, `preview_${skips < 6 ? skips : 'full'}.ogg`)
 
-        res.writeHead(200, {
-            'Accept-Ranges': 'bytes',
-            'Content-Type': 'audio/ogg',
-            'Cache-Controle': 'max-age=0, no-cache, no-store, must-revalidate, proxy-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': 'Wed, 21 Oct 2015 01:00:00 GMT'
-        })
+        const stat = fs.statSync(preview)
+        const fileSize = stat.size
+        const range = req.headers.range
 
-        const fileStream = fs.createReadStream(TRIMED_OGG_PATH)
-        const ffmpegStream = ffmpeg(fileStream)
-            .format('ogg')
-            .addOptions('-c:a libopus')
-            .audioBitrate(BITRATE)
-            .on('error', (err) => {})
-        if(skips < 6 && !rankedleScore?.success) ffmpegStream.addOutputOption(`-t ${range}`)
-        ffmpegStream.pipe(res, { end: true })
+        if(range) {
+            const parts = range.replace(/bytes=/, '').split('-')
+            const start = parseInt(parts[0], 10)
+            const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1
+
+            if(start >= fileSize) {
+                res.status(416).send('Requested range not satisfiable\n' + start + ' >= ' + fileSize)
+                return
+            }
+
+            const chunksize = (end - start) + 1
+            const file = fs.createReadStream(preview, { start, end })
+            const head = {
+                'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+                'Accept-Ranges': 'bytes',
+                'Content-Length': chunksize,
+                'Content-Type': 'audio/ogg',
+                'Cache-Controle': 'max-age=0, no-cache, no-store, must-revalidate, proxy-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': 'Wed, 21 Oct 2015 01:00:00 GMT'
+            }
+
+            res.writeHead(206, head)
+            file.pipe(res)
+        } else {
+            const head = {
+                'Content-Length': fileSize,
+                'Content-Type': 'audio/ogg',
+                'Cache-Controle': 'max-age=0, no-cache, no-store, must-revalidate, proxy-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': 'Wed, 21 Oct 2015 01:00:00 GMT'
+            }
+
+            res.writeHead(200, head)
+            fs.createReadStream(preview).pipe(res)
+        }
     }
 
     static async scoreRequest(req, res) {

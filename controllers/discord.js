@@ -184,8 +184,14 @@ export default class DiscordAPI {
     }
 
     async getGuildMembers() {
-        const data = await this.send('GET', `/guilds/${config.discord.guild_id}/members?limit=1000`, null, null, true)
-        return data
+        let members = []
+        let after = null
+        do {
+            const data = await this.send('GET', `/guilds/${config.discord.guild_id}/members?limit=1000${after ? `&after=${after}` : ''}`, null, null, true)
+            after = data.length > 0 ? ([...data].pop()).user.id : null
+            members = [ ...members, ...data ]
+        } while(after !== null)
+        return members
     }
 
     async getUserById(memberId) {
