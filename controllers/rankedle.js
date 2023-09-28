@@ -535,7 +535,7 @@ export default class Rankedle {
         if(!req.session.user) throw new Error('User not connected')
         const user = req.session.user
 
-        const userId = req.query.userId ? parseInt(req.query.userId) : user.id
+        const userId = req.query.userId ?? user.id
 
         const rankedleStats = await this.getUserStats(userId)
 
