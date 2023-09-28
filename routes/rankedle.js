@@ -63,4 +63,20 @@ app.post('/submit', async (req, res) => {
     }
 })
 
+app.get('/share', async (req, res) => {
+    try {
+        await rankedle.shareRequest(req, res)
+    } catch(e) {
+        res.status(404).end()
+    }
+})
+
+app.get('/stats', async (req, res) => {
+    try {
+        await rankedle.statsRequest(req, res)
+    } catch(e) {
+        res.status(404).end()
+    }
+})
+
 export default app
