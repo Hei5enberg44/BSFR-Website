@@ -30,7 +30,7 @@ const FIRST_TRY_TEXT = [
     'Hole-in-one! ⛳',
     'Bravo. Mais avoues, c\'était facile...',
     'Impressionnant',
-    'Quelle expertiste !',
+    'Quelle expertise !',
     'Tu as l\'oreille d\'un pro ! 👂',
     '🎉',
     '👏 👏 👏',
