@@ -20,6 +20,12 @@ const $btnSkip = document.querySelector('#skip')
 const $btnSubmit = document.querySelector('#submit')
 /** @type {HTMLButtonElement} */
 const $btnEnd = document.querySelector('#end')
+/** @type {HTMLButtonElement} */
+const $btnShare = document.querySelector('#share')
+/** @type {HTMLButtonElement} */
+const $btnStats = document.querySelector('#stats')
+/** @type {HTMLDivElement} */
+const $modalStats = document.querySelector('#modalStats')
 /** @type {HTMLDivElement} */
 const $progress = document.querySelector('#progress')
 /** @type {HTMLDivElement} */
@@ -249,5 +255,71 @@ if($btnSkip) {
             const score = await scoreRequest.json()
             update(score)
         }
+    })
+}
+
+if($btnStats) {
+    $btnStats.addEventListener('click', async (e) => {
+        $btnStats.classList.add('btn-loading')
+
+        const statsRequest = await fetch('/rankedle/stats')
+    
+        if(statsRequest.ok) {
+            const stats = await statsRequest.json()
+
+            if(stats) {
+                $modalStats.querySelector('#stats-played').textContent = stats.played
+                $modalStats.querySelector('#stats-win-rate').textContent = Math.round(stats.won * 100 / stats.played)
+                $modalStats.querySelector('#stats-current-streak').textContent = stats.currentStreak
+                $modalStats.querySelector('#stats-max-streak').textContent = stats.maxStreak
+
+                for(let i = 1; i <= 7; i++) {
+                    const tries = i !== 7 ? stats[`try${i}`] : stats.played - stats.won
+                    const $statSkip = i !== 7 ? document.querySelector(`#stats-try-${i}`) : document.querySelector(`#stats-loses`)
+                    $statSkip.querySelector('.progressbg-text').textContent = tries
+                    if(tries > 0) {
+                        $statSkip.querySelector('.progress-bar').classList.remove('bg-secondary')
+                        $statSkip.querySelector('.progress-bar').classList.add(i !== 7 ? 'bg-success' : 'bg-danger')
+                        $statSkip.querySelector('.progress-bar').style.width = `${Math.round(tries * 100 / stats.played)}%`
+                    }
+                }
+            }
+        }
+
+        const modalStats = bootstrap.Modal.getOrCreateInstance($modalStats)
+        modalStats.show()
+
+        $btnStats.classList.remove('btn-loading')
+    })
+}
+
+if($btnShare) {
+    let copiedTimeout = null
+
+    $btnShare.addEventListener('click', async (e) => {
+        $btnShare.classList.add('btn-loading')
+
+        const shareRequest = await fetch('/rankedle/share')
+    
+        if(shareRequest.ok) {
+            const result = await shareRequest.text()
+            const $textArea = document.createElement('textarea')
+            $textArea.style.position = 'absolute'
+            $textArea.style.top = -9999
+            $textArea.style.opacity = 0
+            $textArea.value = result
+            document.body.append($textArea)
+            $textArea.select()
+            document.execCommand('copy')
+            $textArea.remove()
+
+            $btnShare.querySelector('span').textContent = 'Copié !'
+            if(copiedTimeout) clearTimeout(copiedTimeout)
+            copiedTimeout = setTimeout(() => {
+                $btnShare.querySelector('span').textContent = 'Partager'
+            }, 2000)
+        }
+
+        $btnShare.classList.remove('btn-loading')
     })
 }

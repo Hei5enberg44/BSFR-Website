@@ -68,3 +68,8 @@
 #rankedle .try.try-green {
     background: var(--tblr-success);
 }
+
+.modal .modal-footer {
+    --tblr-modal-footer-border-width: 0;
+    padding-top: 0;
+}

@@ -246,6 +246,13 @@ export default class Rankedle {
         return score
     }
 
+    static async getUserStats(memberId) {
+        const stats = await RankedleStats.findOne({
+            where: { memberId }
+        })
+        return stats
+    }
+
     static async playRequest(req, res) {
         if(!req.session.user) throw new Error('User not connected')
         const user = req.session.user
@@ -353,6 +360,10 @@ export default class Rankedle {
             })
         }
 
+        if(score.success !== null) {
+            await this.updatePlayerStats(score)
+        }
+
         res.json(score)
     }
 
@@ -418,7 +429,7 @@ export default class Rankedle {
             score = await RankedleScores.create(scoreData)
         }
 
-        if(score.success) {
+        if(score.success !== null) {
             await this.updatePlayerStats(score)
         }
 
@@ -431,7 +442,7 @@ export default class Rankedle {
         })
 
         if(stats) {
-            if(score.skips > 0) stats[`skip${score.skips}`]++
+            if(score.skips < 6) stats[`try${score.skips + 1}`]++
             stats.played++
             if(score.success) {
                 stats.won++
@@ -444,12 +455,12 @@ export default class Rankedle {
         } else {
             const statsData = {
                 memberId: score.memberId,
-                skip1: 0,
-                skip2: 0,
-                skip3: 0,
-                skip4: 0,
-                skip5: 0,
-                skip6: 0,
+                try1: 0,
+                try2: 0,
+                try3: 0,
+                try4: 0,
+                try5: 0,
+                try6: 0,
                 played: 1,
                 won: score.success ? 1 : 0,
                 currentStreak: score.success ? 1 : 0,
@@ -492,6 +503,41 @@ export default class Rankedle {
             },
             text: rankedleScore.resultMessage
         }
+    }
+
+    static async shareRequest(req, res) {
+        if(!req.session.user) throw new Error('User not connected')
+        const user = req.session.user
+
+        const rankedle = await this.getCurrentRankedle()
+        if(!rankedle) throw new Error('No rankedle found')
+
+        const rankedleScore = await this.getUserScore(rankedle.id, user.id)
+        if(!rankedleScore || rankedleScore.success === null) return null
+
+        const steps = [ null, null, null, null, null, null ]
+        if(rankedleScore.details) {
+            for(let i = 0; i < rankedleScore.details.length; i++) {
+                const detail = rankedleScore.details[i]
+                steps[i] = detail.status
+            }
+        }
+        if(rankedleScore.success) steps[rankedleScore.skips] = 'success'
+
+        let result = `#Rankedle #${rankedle.id}\n\n`
+        result += (rankedle.sucess ? '🔊' : '🔇') + steps.map(s => s === 'skip' ? '⬛️' : s === 'fail' ? '🟥' : s === 'success' ? '🟩' : '⬜️').join('') + '\n\n'
+        result += '<https://bsaber.fr/rankedle>'
+
+        res.send(result)
+    }
+
+    static async statsRequest(req, res) {
+        if(!req.session.user) throw new Error('User not connected')
+        const user = req.session.user
+
+        const rankedleStats = await this.getUserStats(user.id)
+
+        res.json(rankedleStats)
     }
 
     static getRandomText(texts) {

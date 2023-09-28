@@ -67,6 +67,13 @@
                                             <div class="card">
                                                 <div class="card-body">
                                                     <div id="rankedle">
+                                                        <div class="row mb-3">
+                                                            <div class="col-auto ms-auto">
+                                                                <button type="button" class="btn btn-icon" id="stats">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="0.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M9 8m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M15 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M4 20l14 0" /></svg>
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                         <% if(rankedle) { %>
                                                             <% if(!result) { %>
                                                             <div id="step-1" class="step p-2 mb-2 d-flex align-items-center step-active">
@@ -163,16 +170,25 @@
                                                                 </div>
                                                             </a>
 
-                                                            <p class="text-center" style="font-size: 1.1rem; font-weight: 500;">
-                                                                <%= result.text %>
-                                                            </p>
+                                                            <div class="text-center">
+                                                                <p style="font-size: 1.1rem; font-weight: 500;">
+                                                                    <%= result.text %>
+                                                                </p>
 
-                                                            <div class="mt-1 mb-5 text-center">
-                                                                <% for(const step of result.steps) {
-                                                                    const className = step === null ? 'gray' : step === false ? 'red' : step === true ? 'green' : 'gray'
-                                                                %>
-                                                                <span class="try try-<%= className %>"></span>
-                                                                <% } %>
+                                                                <div class="mt-1">
+                                                                    <% for(const step of result.steps) {
+                                                                        const className = step === null ? 'gray' : step === false ? 'red' : step === true ? 'green' : 'gray'
+                                                                    %>
+                                                                    <span class="try try-<%= className %>"></span>
+                                                                    <% } %>
+                                                                </div>
+
+                                                                <div class="my-5">
+                                                                    <button type="button" class="btn btn-primary" id="share">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h3m9 -9v-5a2 2 0 0 0 -2 -2h-2" /><path d="M13 17v-1a1 1 0 0 1 1 -1h1m3 0h1a1 1 0 0 1 1 1v1m0 3v1a1 1 0 0 1 -1 1h-1m-3 0h-1a1 1 0 0 1 -1 -1v-1" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /></svg>
+                                                                        <span>Partager</span>
+                                                                    </button>
+                                                                </div>
                                                             </div>
 
                                                             <div class="row mb-3 d-flex justify-content-center">
@@ -250,6 +266,144 @@
                                                         </div>
                                                         <% } %>
                                                     </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal" id="modalStats" tabindex="-1">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Statistiques</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row mb-3">
+                                                        <div class="col-3">
+                                                            <div class="card card-sm">
+                                                                <div class="card-body px-0 text-center">
+                                                                    <div class="display-6 mb-2 fw-bold text-success" id="stats-played">0</div>
+                                                                    <div class="text-muted">Parties</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="card card-sm">
+                                                                <div class="card-body px-0 text-center">
+                                                                    <div class="display-6 mb-2 fw-bold text-success" id="stats-win-rate">0</div>
+                                                                    <div class="text-muted">Victoires (%)</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="card card-sm">
+                                                                <div class="card-body px-0 text-center">
+                                                                    <div class="display-6 mb-2 fw-bold text-success" id="stats-current-streak">0</div>
+                                                                    <div class="text-muted">Série actuelle</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="card card-sm">
+                                                                <div class="card-body px-0 text-center">
+                                                                    <div class="display-6 mb-2 fw-bold text-success" id="stats-max-streak">0</div>
+                                                                    <div class="text-muted">Meilleure série</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <h3>Performances</h3>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <div class="row row-sm mb-2 d-flex align-items-center" id="stats-try-1">
+                                                                <div class="w-5 text-center"><span class="fw-bold">1</span></div>
+                                                                <div class="col">
+                                                                    <div class="progressbg h-4">
+                                                                        <div class="progress progressbg-progress">
+                                                                            <div class="progress-bar bg-secondary" style="width: 6%" role="progressbar"></div>
+                                                                        </div>
+                                                                        <div class="progressbg-text text-white d-flex align-items-center">0</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row row-sm mb-2 d-flex align-items-center" id="stats-try-2">
+                                                                <div class="w-5 text-center"><span class="fw-bold">2</span></div>
+                                                                <div class="col">
+                                                                    <div class="progressbg h-4">
+                                                                        <div class="progress progressbg-progress">
+                                                                            <div class="progress-bar bg-secondary" style="width: auto" role="progressbar"></div>
+                                                                        </div>
+                                                                        <div class="progressbg-text text-white d-flex align-items-center">0</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row row-sm mb-2 d-flex align-items-center" id="stats-try-3">
+                                                                <div class="w-5 text-center"><span class="fw-bold">3</span></div>
+                                                                <div class="col">
+                                                                    <div class="progressbg h-4">
+                                                                        <div class="progress progressbg-progress">
+                                                                            <div class="progress-bar bg-secondary" style="width: 6%" role="progressbar"></div>
+                                                                        </div>
+                                                                        <div class="progressbg-text text-white d-flex align-items-center">0</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row row-sm mb-2 d-flex align-items-center" id="stats-try-4">
+                                                                <div class="w-5 text-center"><span class="fw-bold">4</span></div>
+                                                                <div class="col">
+                                                                    <div class="progressbg h-4">
+                                                                        <div class="progress progressbg-progress">
+                                                                            <div class="progress-bar bg-secondary" style="width: 6%" role="progressbar"></div>
+                                                                        </div>
+                                                                        <div class="progressbg-text text-white d-flex align-items-center">0</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row row-sm mb-2 d-flex align-items-center" id="stats-try-5">
+                                                                <div class="w-5 text-center"><span class="fw-bold">5</span></div>
+                                                                <div class="col">
+                                                                    <div class="progressbg h-4">
+                                                                        <div class="progress progressbg-progress">
+                                                                            <div class="progress-bar bg-secondary" style="width: 6%" role="progressbar"></div>
+                                                                        </div>
+                                                                        <div class="progressbg-text text-white d-flex align-items-center">0</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row row-sm mb-2 d-flex align-items-center" id="stats-try-6">
+                                                                <div class="w-5 text-center"><span class="fw-bold">6</span></div>
+                                                                <div class="col">
+                                                                    <div class="progressbg h-4">
+                                                                        <div class="progress progressbg-progress">
+                                                                            <div class="progress-bar bg-secondary" style="width: 6%" role="progressbar"></div>
+                                                                        </div>
+                                                                        <div class="progressbg-text text-white d-flex align-items-center">0</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row row-sm mb-2 d-flex align-items-center" id="stats-loses">
+                                                                <div class="w-5 text-center">
+                                                                    <span class="fw-bold">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 4c4.418 0 8 3.358 8 7.5c0 1.901 -.755 3.637 -2 4.96l0 2.54a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1v-2.54c-1.245 -1.322 -2 -3.058 -2 -4.96c0 -4.142 3.582 -7.5 8 -7.5z" /><path d="M10 17v3" /><path d="M14 17v3" /><path d="M9 11m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M15 11m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
+                                                                    </span>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <div class="progressbg h-4">
+                                                                        <div class="progress progressbg-progress">
+                                                                            <div class="progress-bar bg-secondary" style="width: 6%" role="progressbar"></div>
+                                                                        </div>
+                                                                        <div class="progressbg-text text-white d-flex align-items-center">0</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                                                 </div>
                                             </div>
                                         </div>
