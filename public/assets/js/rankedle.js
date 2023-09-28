@@ -295,6 +295,10 @@ if($btnStats) {
                         $statSkip.querySelector('.progress-bar').classList.remove('bg-secondary')
                         $statSkip.querySelector('.progress-bar').classList.add(i !== 7 ? 'bg-success' : 'bg-danger')
                         $statSkip.querySelector('.progress-bar').style.width = `${Math.round(tries * 100 / stats.played)}%`
+                    } else {
+                        $statSkip.querySelector('.progress-bar').classList.remove('bg-success', 'bg-danger')
+                        $statSkip.querySelector('.progress-bar').classList.add('bg-secondary')
+                        $statSkip.querySelector('.progress-bar').style.width = '6%'
                     }
                 }
             }
