@@ -326,6 +326,7 @@ export default class Rankedle {
             if(score.success === null) {
                 if(score.skips === 6) {
                     score.success = false
+                    score.resultMessage = this.getRandomText(LOSE_TEXT)
                 } else {
                     score.skips++
                     const details = [
