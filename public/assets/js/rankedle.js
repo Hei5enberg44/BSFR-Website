@@ -91,7 +91,7 @@ if($playBtn) {
     document.addEventListener('DOMContentLoaded', async (e) => {
         // Volume
         const volumeSlider = noUiSlider.create(document.querySelector('#volume'), {
-            start: window.localStorage.getItem('rankedleVolume') ? parseInt(window.localStorage.getItem('rankedleVolume')) : 50,
+            start: window.localStorage.getItem('rankedleVolume') ? parseInt(window.localStorage.getItem('rankedleVolume')) : 25,
             connect: [true, false],
             step: 0.5,
             range: {
