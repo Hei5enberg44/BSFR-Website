@@ -4,6 +4,8 @@ import fileUpload from 'express-fileupload'
 import MySQLStore from 'express-mysql-session'
 import members from './controllers/members.js'
 import city from './controllers/city.js'
+import rankedle from './controllers/rankedle.js'
+import { CronJob } from 'cron'
 import discordRoutes from './routes/discord.js'
 import formsRoutes from './routes/forms.js'
 import mapRoutes from './routes/map.js'
@@ -109,4 +111,8 @@ app.use(function(req, res) {
     res.status(404).render('errors/404')
 })
 
-app.listen(port)
+app.listen(port, () => {
+    new CronJob('0 0 * * *', async () => {
+        await rankedle.generateRankedle()
+    }, null, true, 'Europe/Paris')
+})

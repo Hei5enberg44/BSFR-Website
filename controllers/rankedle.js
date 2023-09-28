@@ -58,15 +58,19 @@ const LOSE_TEXT = [
 
 export default class Rankedle {
     static async downloadSong(url) {
-        const downloadRequest = await fetch(url)
-        if(downloadRequest.ok) {
-            const songZip = await downloadRequest.arrayBuffer()
-            const zipBuffer = Buffer.from(songZip)
-            const songTmp = tmp.fileSync()
-            fs.writeFileSync(songTmp.name, zipBuffer)
-            return songTmp
-        } else {
-            throw new Error('Song download failed')
+        try {
+            const downloadRequest = await fetch(url)
+            if(downloadRequest.ok) {
+                const songZip = await downloadRequest.arrayBuffer()
+                const zipBuffer = Buffer.from(songZip)
+                const songTmp = tmp.fileSync()
+                fs.writeFileSync(songTmp.name, zipBuffer)
+                return songTmp
+            } else {
+                throw new Error(`Song download failed (url: ${url})`)
+            }
+        } catch(e) {
+            throw new Error(`Song download failed (url: ${url})`)
         }
     }
 
@@ -186,7 +190,7 @@ export default class Rankedle {
                 await Rankedles.create({ mapId: mapId })
             }
         } catch(e) {
-            Logger.log('Rankedle', 'ERROR', e.message)
+            Logger.log('Rankedle', 'ERROR', `Imposible de générer une Rankedle pour la map (${e.message})`)
         }
     }
 
