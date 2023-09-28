@@ -549,7 +549,7 @@ export default class Rankedle {
         const rankingList = await RankedleScores.findAll({
             where: {
                 success: {
-                    [Op.ne]: null
+                    [Op.eq]: true
                 }
             },
             attributes: [
