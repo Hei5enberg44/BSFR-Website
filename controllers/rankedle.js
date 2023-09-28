@@ -3,6 +3,7 @@ import * as path from 'node:path'
 import { fileURLToPath } from 'url'
 import ffmpeg from 'fluent-ffmpeg'
 import yauzl from 'yauzl'
+import crypto from 'node:crypto'
 import tmp from 'tmp'
 import { Sequelize, Op } from 'sequelize'
 import members from './members.js'
@@ -23,6 +24,36 @@ const RANGES = [
     '00:07',
     '00:11',
     '00:16'
+]
+const FIRST_TRY_TEXT = [
+    'Point faible : trop fort·e',
+    'Hole-in-one! ⛳',
+    'Bravo. Mais avoues, c\'était facile...',
+    'Impressionnant',
+    'Quelle expertiste !',
+    'Tu as l\'oreille d\'un pro ! 👂',
+    '🎉',
+    '👏 👏 👏',
+    'One shotted',
+    'Du premier coup ! 🤯',
+    'A Winner Is You'
+]
+const WON_TEXT = [
+    'Une modeste victoire, mais une victoire tout de même.',
+    'Bravo ! Tu as trouvé la réponse !'
+]
+const LOSE_TEXT = [
+    'Qui aurait cru que trouver la bonne réponse serait aussi difficile ? Vous, apparemment !',
+    'Dommage, tu as perdu.',
+    'Zut alors, pourtant c\'était facile.',
+    'Tu feras mieux la prochaine fois...',
+    'Tu feras mieux la prochaine fois... ou pas.',
+    'On t\'a pourtant donné trente secondes et six essais...',
+    'Tu feras mieux demain 🥶',
+    'Ce n\'est que partie remise.',
+    'Avoue, tu n\'aimes pas la map de toute manière.',
+    'À ce stade, même Shazam serait perdu !',
+    'Bah alors ?'
 ]
 
 export default class Rankedle {
@@ -159,7 +190,11 @@ export default class Rankedle {
         }
     }
 
-    static async getSongList(query) {
+    static async getSongList(memberId, query) {
+        const currentRankedle = await this.getCurrentRankedle()
+        const userScore = await this.getUserScore(currentRankedle.id, memberId)
+        const mapsToExclude = userScore?.details ? userScore.details.filter(d => d.status === 'fail').map(d => d.mapId) : []
+
         const maps = await RankedleMaps.findAll({
             where: {
                 [Op.or]: {
@@ -172,6 +207,9 @@ export default class Rankedle {
                     'map.metadata.songSubName': {
                         [Op.like]: `%${query}%`
                     }
+                },
+                id: {
+                    [Op.notIn]: mapsToExclude
                 }
             },
             limit: 5,
@@ -214,7 +252,7 @@ export default class Rankedle {
         const rankedleScore = await this.getUserScore(rankedle.id, user.id)
 
         const skips = rankedleScore ? rankedleScore.skips : 0
-        const preview = path.join(RANKEDLE_PATH, `preview_${skips < 6 ? skips : 'full'}.ogg`)
+        const preview = path.join(RANKEDLE_PATH, `preview_${skips < 6 && !rankedleScore?.success ? skips : 'full'}.ogg`)
 
         const stat = fs.statSync(preview)
         const fileSize = stat.size
@@ -292,7 +330,7 @@ export default class Rankedle {
                     score.skips++
                     const details = [
                         ...score.details,
-                        { status: 'skip', data: `SKIP (${6 - score.skips + 1})` }
+                        { status: 'skip', text: `SKIP (${6 - score.skips + 1})` }
                     ]
                     score.details = details
                 }
@@ -304,7 +342,7 @@ export default class Rankedle {
                 memberId: user.id,
                 skips: 1,
                 details: [
-                    { status: 'skip', data: 'SKIP (6)' }
+                    { status: 'skip', text: 'SKIP (6)' }
                 ],
                 success: null
             })
@@ -344,20 +382,23 @@ export default class Rankedle {
 
         if(score) {
             if(score.success === null) {
-                if((success) && score.skips < 6) {
+                if(success && score.skips < 6) {
                     score.success = true
+                    score.resultMessage = this.getRandomText(WON_TEXT)
                 } else {
                     if(score.skips === 6) {
                         score.success = false
+                        score.resultMessage = this.getRandomText(LOSE_TEXT)
                     } else {
                         score.skips++
                         const details = [
                             ...score.details,
-                            { status: 'fail', data: songName }
+                            { status: 'fail', text: songName, mapId: mapData.id }
                         ]
                         score.details = details
                     }
                 }
+
                 await score.save()
             }
         } else {
@@ -365,9 +406,10 @@ export default class Rankedle {
                 rankedleId: rankedle.id,
                 memberId: user.id,
                 skips: success ? 0 : 1,
-                success: success ? true : null
+                success: success ? true : null,
+                resultMessage: success ? this.getRandomText(FIRST_TRY_TEXT) : null
             }
-            if(!success) scoreData.details = [{ status: 'fail', data: songName }]
+            if(!success) scoreData.details = [{ status: 'fail', text: songName, mapId: mapData.id }]
             score = await RankedleScores.create(scoreData)
         }
 
@@ -442,8 +484,14 @@ export default class Rankedle {
                 cover: mapData.map.versions[mapData.map.versions.length - 1].coverURL,
                 songName: `${mapData.map.metadata.songAuthorName} - ${mapData.map.metadata.songName}${mapData.map.metadata.songSubName !== '' ? ` ${mapData.map.metadata.songSubName}` : ''}`,
                 levelAuthorName: mapData.map.metadata.levelAuthorName
-            }
+            },
+            text: rankedleScore.resultMessage
         }
+    }
+
+    static getRandomText(texts) {
+        const random = crypto.randomInt(texts.length)
+        return texts[random]
     }
 
     static async getRanking(session) {

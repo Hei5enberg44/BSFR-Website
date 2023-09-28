@@ -185,7 +185,7 @@ if($btnSkip) {
                             icon = failIcon
                             $steps[i].classList.add('text-red')
                         }
-                        $steps[i].innerHTML = icon + detail.data
+                        $steps[i].innerHTML = icon + detail.text
                     }
                     if(i === score.skips && score.skips < 6) $steps[i].classList.add('step-active')
                     if(score.skips === 6) {
@@ -215,6 +215,7 @@ if($btnSkip) {
         labelField: 'name',
         searchField: 'name',
         maxOptions: 5,
+        openOnFocus: false,
         load: (query, callback) => {
             fetch('/rankedle/songs?q=' + encodeURIComponent(query))
                 .then(response => response.json())
