@@ -158,6 +158,7 @@ if($btnSkip) {
                 const score = await submitRequest.json()
                 update(score)
                 resumeAudio()
+                songChoice.removeOption(value)
             }
         }
     })
