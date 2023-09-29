@@ -524,7 +524,7 @@ export default class Rankedle {
         if(rankedleScore.success) steps[rankedleScore.skips] = 'success'
 
         let result = `Rankedle #${rankedle.id}\n\n`
-        result += (rankedleScore.sucess ? '🔊' : '🔇') + steps.map(s => s === 'skip' ? '⬛️' : s === 'fail' ? '🟥' : s === 'success' ? '🟩' : '⬜️').join('') + '\n\n'
+        result += (rankedleScore.success ? '🔊' : '🔇') + steps.map(s => s === 'skip' ? '⬛️' : s === 'fail' ? '🟥' : s === 'success' ? '🟩' : '⬜️').join('') + '\n\n'
         result += '<https://bsaber.fr/rankedle>'
 
         res.send(result)
