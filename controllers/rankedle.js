@@ -107,7 +107,10 @@ export default class Rankedle {
                 'silenceremove=1:0:-50dB'
             ])
             .addOptions('-c:a libopus')
-            .addOutputOption('-map_metadata -1')
+            .outputOptions([
+                '-map_metadata -1',
+                '-map 0:a'
+            ])
             .audioBitrate(BITRATE)
             .output(outPath)
             .on('error', (err) => {
