@@ -48,7 +48,6 @@ const LOSE_TEXT = [
     'Zut alors, pourtant c\'était facile.',
     'Tu feras mieux la prochaine fois...',
     'Tu feras mieux la prochaine fois... ou pas.',
-    'On t\'a pourtant donné trente secondes et six essais...',
     'Tu feras mieux demain 🥶',
     'Ce n\'est que partie remise.',
     'Avoue, tu n\'aimes pas la map de toute manière.',
@@ -466,7 +465,7 @@ export default class Rankedle {
                 currentStreak: score.success ? 1 : 0,
                 maxStreak: score.success ? 1 : 0
             }
-            if(score.skips > 0) statsData[`skip${score.skips}`] = 1
+            if(score.skips < 6) statsData[`try${score.skips + 1}`] = 1
             await RankedleStats.create(statsData)
         }
     }
