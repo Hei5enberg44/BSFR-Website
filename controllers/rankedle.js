@@ -523,8 +523,8 @@ export default class Rankedle {
         }
         if(rankedleScore.success) steps[rankedleScore.skips] = 'success'
 
-        let result = `#Rankedle #${rankedle.id}\n\n`
-        result += (rankedle.sucess ? '🔊' : '🔇') + steps.map(s => s === 'skip' ? '⬛️' : s === 'fail' ? '🟥' : s === 'success' ? '🟩' : '⬜️').join('') + '\n\n'
+        let result = `Rankedle #${rankedle.id}\n\n`
+        result += (rankedleScore.sucess ? '🔊' : '🔇') + steps.map(s => s === 'skip' ? '⬛️' : s === 'fail' ? '🟥' : s === 'success' ? '🟩' : '⬜️').join('') + '\n\n'
         result += '<https://bsaber.fr/rankedle>'
 
         res.send(result)
@@ -547,19 +547,17 @@ export default class Rankedle {
     }
 
     static async getRanking(session) {
-        const rankingList = await RankedleScores.findAll({
-            where: {
-                success: {
-                    [Op.ne]: null
-                }
-            },
+        const rankingList = await RankedleStats.findAll({
             attributes: [
                 'memberId',
-                [ Sequelize.fn('avg', Sequelize.col('skips')), 'avg_skips' ]
+                'played',
+                'won',
+                'currentStreak',
+                'maxStreak',
+                [ Sequelize.literal('(try1 * 8) + (try2 * 6) + (try3 * 4) + (try4 * 3) + (try5 * 2) + try6'), 'score' ]
             ],
-            group: [ 'memberId' ],
             order: [
-                [ 'avg_skips', 'asc' ]
+                [ 'score', 'desc' ]
             ]
         })
 
