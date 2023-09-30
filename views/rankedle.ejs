@@ -13,15 +13,15 @@
     <link rel="stylesheet" href="/static/assets/css/rankedle.css">
     <title>Beat Saber FR - Rankedle</title>
     <style>
-        .list-group-item:nth-child(1) .rank .avatar {
+        #ranking .avatar.rank:nth-child(1) {
             background: #ffc71e;
             color: white;
         }
-        .list-group-item:nth-child(2) .rank .avatar {
+        #ranking .avatar.rank:nth-child(2) {
             background: #959595;
             color: white;
         }
-        .list-group-item:nth-child(3) .rank .avatar {
+        #ranking .avatar.rank:nth-child(3) {
             background: #b5532d;
             color: white;
         }
@@ -234,12 +234,12 @@
                                             <div class="card">
                                                 <div class="card-body">
                                                     <h3 class="card-title">Classement</h3>
-                                                    <div class="list-group list-group-flush list-group-hoverable">
+                                                    <div class="list-group list-group-flush list-group-hoverable" id="ranking">
                                                         <% for(const rank of ranking) { %>
                                                         <div class="list-group-item">
                                                             <div class="row align-items-center">
                                                                 <div class="col-auto">
-                                                                    <span class="avatar"><%= rank.rank %></span>
+                                                                    <span class="avatar rank"><%= rank.rank %></span>
                                                                 </div>
                                                                 <a href="#" data-member-id="<%= rank.memberId %>" class="col-auto player-stats">
                                                                     <span class="avatar" style="background-image: url(<%= rank.avatar %>)"></span>
