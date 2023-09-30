@@ -73,6 +73,10 @@
     background: var(--tblr-success);
 }
 
+#rankedle #ranking {
+    max-height: 35rem;
+}
+
 .modal .modal-footer {
     --tblr-modal-footer-border-width: 0;
     padding-top: 0;
