@@ -3,12 +3,16 @@
 }
 
 #rankedle .step {
-    max-height: 38px;
+    min-height: 38px;
     border: 1px solid var(--tblr-border-color);
 }
 
 #rankedle .step.step-active {
     border-color: var(--tblr-primary);
+}
+
+#rankedle .step .icon {
+    min-width: 32px;
 }
 
 #rankedle #play-btn {
