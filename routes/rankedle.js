@@ -1,11 +1,11 @@
 import express from 'express'
 import rankedle from '../controllers/rankedle.js'
-import { requireLogin, requireAdmin } from './middlewares.js'
+import { requireLogin } from './middlewares.js'
 import config from '../config.json' assert { type: 'json' }
 
 const app = express()
 
-app.get('/', requireAdmin, async (req, res) => {
+app.get('/', requireLogin, async (req, res) => {
     const user = req.session.user
     const currentRankedle = await rankedle.getCurrentRankedle()
     const ranking = await rankedle.getRanking(req.session)
