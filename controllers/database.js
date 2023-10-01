@@ -43,7 +43,7 @@ const RankedleScores = sequelizeWebsite.define('rankedle_scores', {
     skips: DataTypes.INTEGER(),
     details: DataTypes.JSON(),
     success: DataTypes.BOOLEAN(),
-    resultMessage: DataTypes.STRING(255)
+    messageId: DataTypes.INTEGER()
 })
 
 const RankedleStats = sequelizeWebsite.define('rankedle_stats', {
@@ -63,6 +63,17 @@ const RankedleStats = sequelizeWebsite.define('rankedle_stats', {
     won: DataTypes.INTEGER(),
     currentStreak: DataTypes.INTEGER(),
     maxStreak: DataTypes.INTEGER()
+})
+
+const RankedleMessages = sequelizeWebsite.define('rankedle_messages', {
+    id: {
+        type: DataTypes.INTEGER(),
+        autoIncrement: true,
+        primaryKey: true
+    },
+    type: DataTypes.STRING(255),
+    content: DataTypes.TEXT(),
+    image: DataTypes.BLOB()
 })
 
 RankedleMaps.hasOne(Rankedles, {
@@ -206,6 +217,6 @@ const Feur = sequelizeAgent.define('feur', {
 })
 
 export {
-    Rankedles, RankedleMaps, RankedleScores, RankedleStats,
+    Rankedles, RankedleMaps, RankedleScores, RankedleStats, RankedleMessages,
     Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, Cities, MPOV, YoutubeVideos, Feur
 }

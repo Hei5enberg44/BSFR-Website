@@ -159,8 +159,12 @@
                                                             </a>
 
                                                             <div class="text-center">
+                                                                <% if(result.message.image) { %>
+                                                                <img width="500px" src="<%= result.message.image %>">
+                                                                <% } %>
+
                                                                 <p style="font-size: 1.1rem; font-weight: 500;">
-                                                                    <%= result.text %>
+                                                                    <%= result.message.content %>
                                                                 </p>
 
                                                                 <div class="mt-1">
