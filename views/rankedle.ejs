@@ -236,28 +236,28 @@
                                         </div>
                                         <div class="col-lg-4 col-12">
                                             <div class="card">
-                                                <div class="card-body">
+                                                <div class="card-header">
                                                     <h3 class="card-title">Classement</h3>
-                                                    <div class="list-group list-group-flush overflow-auto" id="ranking">
-                                                        <% for(const rank of ranking) { %>
-                                                        <div class="list-group-item">
-                                                            <div class="row align-items-center">
-                                                                <div class="col-auto">
-                                                                    <span class="avatar rank"><%= rank.rank %></span>
-                                                                </div>
-                                                                <a href="#" data-member-id="<%= rank.memberId %>" class="col-auto player-stats">
-                                                                    <span class="avatar" style="background-image: url(<%= rank.avatar %>)"></span>
-                                                                </a>
-                                                                <a href="#" data-member-id="<%= rank.memberId %>" class="col text-truncate player-stats">
-                                                                    <span class="text-reset d-block"><%= rank.name %></span>
-                                                                </a>
-                                                                <div class="col-auto">
-                                                                    <%= rank.count %>
-                                                                </div>
+                                                </div>
+                                                <div class="list-group list-group-flush overflow-auto" id="ranking">
+                                                    <% for(const rank of ranking) { %>
+                                                    <div class="list-group-item">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-auto">
+                                                                <span class="avatar rank"><%= rank.rank %></span>
+                                                            </div>
+                                                            <a href="#" data-member-id="<%= rank.memberId %>" class="col-auto player-stats">
+                                                                <span class="avatar" style="background-image: url(<%= rank.avatar %>)"></span>
+                                                            </a>
+                                                            <a href="#" data-member-id="<%= rank.memberId %>" class="col text-truncate player-stats">
+                                                                <span class="text-reset d-block"><%= rank.name %></span>
+                                                            </a>
+                                                            <div class="col-auto">
+                                                                <%= rank.count %>
                                                             </div>
                                                         </div>
-                                                        <% } %>
                                                     </div>
+                                                    <% } %>
                                                 </div>
                                             </div>
                                         </div>
