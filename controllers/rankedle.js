@@ -3,11 +3,11 @@ import * as path from 'node:path'
 import { fileURLToPath } from 'url'
 import ffmpeg from 'fluent-ffmpeg'
 import yauzl from 'yauzl'
-import crypto from 'node:crypto'
 import tmp from 'tmp'
 import { Sequelize, Op } from 'sequelize'
 import members from './members.js'
-import { Rankedles, RankedleMaps, RankedleScores, RankedleStats } from './database.js'
+import { Rankedles, RankedleMaps, RankedleScores, RankedleStats, RankedleMessages } from './database.js'
+import mime from '../utils/mime.js'
 import Logger from '../utils/logger.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -24,35 +24,6 @@ const RANGES = [
     '00:07',
     '00:11',
     '00:16'
-]
-const FIRST_TRY_TEXT = [
-    'Point faible : trop fort·e',
-    'Hole-in-one! ⛳',
-    'Bravo. Mais avoues, c\'était facile...',
-    'Impressionnant',
-    'Quelle expertise !',
-    'Tu as l\'oreille d\'un pro ! 👂',
-    '🎉',
-    '👏 👏 👏',
-    'One shotted',
-    'Du premier coup ! 🤯',
-    'A Winner Is You'
-]
-const WON_TEXT = [
-    'Une modeste victoire, mais une victoire tout de même.',
-    'Bravo ! Tu as trouvé la réponse !'
-]
-const LOSE_TEXT = [
-    'Qui aurait cru que trouver la bonne réponse serait aussi difficile ? Vous, apparemment !',
-    'Dommage, tu as perdu.',
-    'Zut alors, pourtant c\'était facile.',
-    'Tu feras mieux la prochaine fois...',
-    'Tu feras mieux la prochaine fois... ou pas.',
-    'Tu feras mieux demain 🥶',
-    'Ce n\'est que partie remise.',
-    'Avoue, tu n\'aimes pas la map de toute manière.',
-    'À ce stade, même Shazam serait perdu !',
-    'Bah alors ?'
 ]
 
 export default class Rankedle {
@@ -339,7 +310,7 @@ export default class Rankedle {
             if(score.success === null) {
                 if(score.skips === 6) {
                     score.success = false
-                    score.resultMessage = this.getRandomText(LOSE_TEXT)
+                    score.messageId = await this.getRandomMessage('lose')
                 } else {
                     score.skips++
                     const details = [
@@ -402,11 +373,11 @@ export default class Rankedle {
             if(score.success === null) {
                 if(success && score.skips < 6) {
                     score.success = true
-                    score.resultMessage = this.getRandomText(WON_TEXT)
+                    score.messageId = await this.getRandomMessage('won')
                 } else {
                     if(score.skips === 6) {
                         score.success = false
-                        score.resultMessage = this.getRandomText(LOSE_TEXT)
+                        score.messageId = await this.getRandomMessage('lose')
                     } else {
                         score.skips++
                         const details = [
@@ -425,7 +396,7 @@ export default class Rankedle {
                 memberId: user.id,
                 skips: success ? 0 : 1,
                 success: success ? true : null,
-                resultMessage: success ? this.getRandomText(FIRST_TRY_TEXT) : null
+                messageId: success ? await this.getRandomMessage('first_try') : null
             }
             if(!success) scoreData.details = [{ status: 'fail', text: songName, mapId: mapData.id }]
             score = await RankedleScores.create(scoreData)
@@ -503,7 +474,7 @@ export default class Rankedle {
                 songName: `${mapData.map.metadata.songAuthorName} - ${mapData.map.metadata.songName}${mapData.map.metadata.songSubName !== '' ? ` ${mapData.map.metadata.songSubName}` : ''}`,
                 levelAuthorName: mapData.map.metadata.levelAuthorName
             },
-            text: rankedleScore.resultMessage
+            message: await this.getMessageById(rankedleScore.messageId)
         }
     }
 
@@ -544,9 +515,27 @@ export default class Rankedle {
         res.json(rankedleStats)
     }
 
-    static getRandomText(texts) {
-        const random = crypto.randomInt(texts.length)
-        return texts[random]
+    static async getRandomMessage(type) {
+        const randomMessage = await RankedleMessages.findAll({
+            where: { type },
+            order: Sequelize.literal('rand()'),
+            limit: 1,
+            attributes: [ 'id' ],
+            raw: true
+        })
+        return randomMessage.length === 1 ? randomMessage[0].id : null
+    }
+
+    static async getMessageById(messageId) {
+        const message = await RankedleMessages.findOne({
+            where: { id: messageId },
+        })
+        if(message?.image) {
+            const imageBuffer = Buffer.from(message.image)
+            const imageMimeType = message.image ? mime.getImageMimeType(imageBuffer) : null
+            message.image = imageMimeType ? `data:${imageMimeType};base64,${imageBuffer.toString('base64')}` : null
+        }
+        return message
     }
 
     static async getRanking(session) {
