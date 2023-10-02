@@ -553,13 +553,14 @@ export default class Rankedle {
             ]
         })
 
-        const ranking = await Promise.all(rankingList.map(async (r, i) => {
-            const member = await members.getUser(session, r.memberId)
+        const memberList = await members.getGuildMembers(session)
+        const ranking = rankingList.map((r, i) => {
+            const member = memberList.find(m => m.user.id === r.memberId)
             r.avatar = member ? `${members.getAvatar(member.user)}?size=80` : ''
             r.name = member ? member.user.username : ''
             r.rank = i + 1
             return r
-        }))
+        })
 
         return ranking
     }
