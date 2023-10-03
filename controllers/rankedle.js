@@ -122,6 +122,8 @@ export default class Rankedle {
 
     static async generateRankedle(mapId = null) {
         try {
+            await this.finish()
+
             // Get random map from database
             const where = mapId ? { 'id': mapId } : {}
             const randomMap = await RankedleMaps.findAll({
@@ -207,6 +209,17 @@ export default class Rankedle {
             order: [
                 [ 'id', 'desc' ]
             ],
+            raw: true
+        })
+        return rankedle
+    }
+
+    static async getLastRankedle() {
+        const rankedle = await Rankedles.findOne({
+            order: [
+                [ 'id', 'desc' ]
+            ],
+            limit: 1,
             raw: true
         })
         return rankedle
@@ -415,9 +428,9 @@ export default class Rankedle {
         })
 
         if(stats) {
-            if(score.skips < 6) stats[`try${score.skips + 1}`]++
             stats.played++
             if(score.success) {
+                stats[`try${score.skips + 1}`]++
                 stats.won++
                 stats.currentStreak++
                 if(stats.currentStreak > stats.maxStreak) stats.maxStreak = stats.currentStreak
@@ -435,11 +448,16 @@ export default class Rankedle {
                 try5: 0,
                 try6: 0,
                 played: 1,
-                won: score.success ? 1 : 0,
-                currentStreak: score.success ? 1 : 0,
-                maxStreak: score.success ? 1 : 0
+                won: 0,
+                currentStreak: 0,
+                maxStreak: 0
             }
-            if(score.skips < 6) statsData[`try${score.skips + 1}`] = 1
+            if(score.success) {
+                statsData[`try${score.skips + 1}`] = 1
+                statsData.won = 1
+                statsData.currentStreak = 1
+                statsData.maxStreak = 1
+            }
             await RankedleStats.create(statsData)
         }
     }
@@ -563,5 +581,27 @@ export default class Rankedle {
         })
 
         return ranking
+    }
+
+    static async finish() {
+        const rankedle = await this.getLastRankedle()
+        
+        if(rankedle) {
+            const scores = await this.getRankedleScores(rankedle.id)
+            const unfinishedScores = scores.filter(s => s.success === null)
+
+            for(const score of unfinishedScores) {
+                score.success = false
+                await score.save()
+                await this.updatePlayerStats(score)
+            }
+        }
+    }
+
+    static async getRankedleScores(rankedleId) {
+        const scores = await RankedleScores.findAll({
+            where: { rankedleId }
+        })
+        return scores
     }
 }
