@@ -30,6 +30,8 @@ const $modalStats = document.querySelector('#modalStats')
 const $progress = document.querySelector('#progress')
 /** @type {HTMLDivElement} */
 const $seekCursor = document.querySelector('#seek-cursor')
+/** @type {HTMLSpanElement} */
+const $countdown = document.querySelector('#countdown')
 
 const SONG_URL = '/rankedle/song'
 
@@ -339,4 +341,27 @@ if($btnShare) {
 
         $btnShare.classList.remove('btn-loading')
     })
+}
+
+if($countdown) {
+    const nextRankedleDate = new Date()
+    nextRankedleDate.setDate(nextRankedleDate.getDate() + 1)
+    nextRankedleDate.setHours(0, 0, 0, 0)
+
+    const updateCountdown = () => {
+        const date = new Date()
+        const diff = nextRankedleDate.getTime() - date.getTime()
+
+        const hoursLeft = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+        const minutesLeft = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+        const secondsLeft = Math.floor((diff % (1000 * 60)) / 1000)
+
+        if(hoursLeft > 0 && minutesLeft > 0 && secondsLeft > 0)
+            $countdown.textContent = `${hoursLeft < 10 ? '0' : ''}${hoursLeft}:${minutesLeft < 10 ? '0' : ''}${minutesLeft}:${secondsLeft < 10 ? '0' : ''}${secondsLeft}`
+        else
+            $countdown.textContent = '00:00:00'
+    }
+
+    updateCountdown()
+    setInterval(updateCountdown, 1000)
 }
