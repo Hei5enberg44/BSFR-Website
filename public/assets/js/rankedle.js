@@ -352,14 +352,15 @@ if($countdown) {
         const date = new Date()
         const diff = nextRankedleDate.getTime() - date.getTime()
 
-        const hoursLeft = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-        const minutesLeft = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-        const secondsLeft = Math.floor((diff % (1000 * 60)) / 1000)
-
-        if(hoursLeft > 0 && minutesLeft > 0 && secondsLeft > 0)
+        if(diff >= 0) {
+            const hoursLeft = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+            const minutesLeft = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+            const secondsLeft = Math.floor((diff % (1000 * 60)) / 1000)
+            
             $countdown.textContent = `${hoursLeft < 10 ? '0' : ''}${hoursLeft}:${minutesLeft < 10 ? '0' : ''}${minutesLeft}:${secondsLeft < 10 ? '0' : ''}${secondsLeft}`
-        else
+        } else {
             $countdown.textContent = '00:00:00'
+        }
     }
 
     updateCountdown()
