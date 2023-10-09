@@ -191,7 +191,6 @@ export default class Rankedle {
                     [Op.notIn]: mapsToExclude
                 }
             },
-            limit: 5,
             raw: true
         })
 
