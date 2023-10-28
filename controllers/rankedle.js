@@ -656,6 +656,7 @@ export default class Rankedle {
             }
     
             history.push({
+                id: rankedle.id,
                 cover: mapData ? mapData.map.versions[mapData.map.versions.length - 1].coverURL : null,
                 songName: mapData ? `${mapData.map.metadata.songAuthorName} - ${mapData.map.metadata.songName}${mapData.map.metadata.songSubName !== '' ? ` ${mapData.map.metadata.songSubName}` : ''}`: null,
                 levelAuthorName: mapData ? mapData.map.metadata.levelAuthorName: null,

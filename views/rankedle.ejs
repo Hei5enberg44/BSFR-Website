@@ -285,7 +285,7 @@
                                                     <table class="table table-vcenter">
                                                         <thead>
                                                             <tr>
-                                                                <th></th>
+                                                                <th>#</th>
                                                                 <th>Map</th>
                                                                 <th>Mapper</th>
                                                                 <th>Score</th>
@@ -497,20 +497,11 @@
     </div>
 
     <script src="/static/assets/libs/tabler/script.min.js"></script>
-    <script src="/static/assets/libs/list.js/list.min.js"></script>
     <script src="/static/assets/libs/tom-select/tom-select.base.min.js"></script>
     <script src="/static/assets/libs/nouislider/nouislider.min.js"></script>
     <script src="/static/assets/js/app.js"></script>
     <% if(user.isBSFR) { %>
     <script src="/static/assets/js/rankedle.js"></script>
     <% } %>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const list = new List('table-history', {
-                listClass: 'table-tbody',
-                valueNames: [ 'history-cover', 'history-map', 'history-mapper', 'history-score', 'history-date' ]
-            })
-        })
-    </script>
 </body>
 </html>

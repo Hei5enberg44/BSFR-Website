@@ -403,14 +403,22 @@ if($modalHistory) {
 
             for(const historyEntrie of history) {
                 const $tr = document.createElement('tr')
-                const $tdCover = document.createElement('td')
-                $tdCover.classList.add('history-cover')
+                const $tdN = document.createElement('td')
+                $tdN.textContent = `#${historyEntrie.id}`
                 const $avatar = document.createElement('div')
                 $avatar.classList.add('avatar', 'avatar-lg')
                 $avatar.style.backgroundImage = `url(${historyEntrie.cover})`
-                $tdCover.append($avatar)
                 const $tdMap = document.createElement('td')
-                $tdMap.textContent = historyEntrie.songName
+                const $tdMapRow = document.createElement('div')
+                $tdMapRow.classList.add('row', 'align-items-center')
+                const $tdMapCover = document.createElement('div')
+                $tdMapCover.classList.add('col-auto')
+                $tdMapCover.append($avatar)
+                const $tdMapName = document.createElement('div')
+                $tdMapName.classList.add('col', 'text-truncate')
+                $tdMapName.textContent = historyEntrie.songName
+                $tdMapRow.append($tdMapCover, $tdMapName)
+                $tdMap.append($tdMapRow)
                 const $tdMapper = document.createElement('td')
                 $tdMapper.textContent = historyEntrie.levelAuthorName
                 const $tdScore = document.createElement('td')
@@ -419,7 +427,7 @@ if($modalHistory) {
                 }
                 const $tdDate = document.createElement('td')
                 $tdDate.textContent = historyEntrie.date
-                $tr.append($tdCover, $tdMap, $tdMapper, $tdScore, $tdDate)
+                $tr.append($tdN, $tdMap, $tdMapper, $tdScore, $tdDate)
                 $tbody.append($tr)
             }
 
