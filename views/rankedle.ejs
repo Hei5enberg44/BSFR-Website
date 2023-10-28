@@ -40,7 +40,7 @@
                     <div class="row g-2 align-items-center">
                         <div class="col">
                             <h2 class="page-title text-white">
-                                Rankedle
+                                Rankedle<%= rankedle ? ` #${rankedle.id}` : '' %>
                             </h2>
                         </div>
                     </div>
@@ -69,11 +69,13 @@
                                                     <div id="rankedle">
                                                         <div class="row mb-3">
                                                             <div class="col">
-                                                                
+                                                                <button type="button" class="btn btn-icon" data-bs-toggle="modal" data-bs-target="#modalHistory">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 20.777a8.942 8.942 0 0 1 -2.48 -.969" /><path d="M14 3.223a9.003 9.003 0 0 1 0 17.554" /><path d="M4.579 17.093a8.961 8.961 0 0 1 -1.227 -2.592" /><path d="M3.124 10.5c.16 -.95 .468 -1.85 .9 -2.675l.169 -.305" /><path d="M6.907 4.579a8.954 8.954 0 0 1 3.093 -1.356" /><path d="M12 8v4l3 3" /></svg>
+                                                                </button>
                                                             </div>
                                                             <div class="col-auto ms-auto">
                                                                 <button type="button" class="btn btn-icon" id="stats">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="0.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M9 8m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M15 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M4 20l14 0" /></svg>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M9 8m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M15 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M4 20l14 0" /></svg>
                                                                 </button>
                                                                 <button type="button" class="btn btn-icon" data-bs-toggle="modal" data-bs-target="#modalAbout">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>
@@ -174,11 +176,7 @@
                                                                 </h2>
 
                                                                 <div class="mt-1">
-                                                                    <% for(const step of result.steps) {
-                                                                        const className = step === null ? 'gray' : step === false ? 'red' : step === true ? 'green' : 'gray'
-                                                                    %>
-                                                                    <span class="try try-<%= className %>"></span>
-                                                                    <% } %>
+                                                                    <%= result.score %>
                                                                 </div>
 
                                                                 <div class="my-4">
@@ -273,6 +271,43 @@
                                         </div>
                                     </div>
 
+                                    <div class="modal modal-xl" id="modalHistory" tabindex="-1">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Historique des Rankedles</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                                                </div>
+                                                <div class="modal-body text-center">
+                                                    <div class="spinner-border"></div>
+                                                </div>
+                                                <div class="table-responsive d-none" id="table-history">
+                                                    <table class="table table-vcenter">
+                                                        <thead>
+                                                            <tr>
+                                                                <th></th>
+                                                                <th>Map</th>
+                                                                <th>Mapper</th>
+                                                                <th>Score</th>
+                                                                <th>Date</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="table-tbody"></tbody>
+                                                    </table>
+
+                                                    <div class="modal-footer border-0">
+                                                        <button type="button" id="history-prev" class="btn btn-icon btn-primary me-auto">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>
+                                                        </button>
+                                                        <button type="button" id="history-next" class="btn btn-icon btn-primary">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="modal modal-lg" id="modalAbout" tabindex="-1">
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
@@ -313,9 +348,6 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -452,9 +484,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -468,11 +497,20 @@
     </div>
 
     <script src="/static/assets/libs/tabler/script.min.js"></script>
+    <script src="/static/assets/libs/list.js/list.min.js"></script>
     <script src="/static/assets/libs/tom-select/tom-select.base.min.js"></script>
     <script src="/static/assets/libs/nouislider/nouislider.min.js"></script>
     <script src="/static/assets/js/app.js"></script>
     <% if(user.isBSFR) { %>
     <script src="/static/assets/js/rankedle.js"></script>
     <% } %>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const list = new List('table-history', {
+                listClass: 'table-tbody',
+                valueNames: [ 'history-cover', 'history-map', 'history-mapper', 'history-score', 'history-date' ]
+            })
+        })
+    </script>
 </body>
 </html>

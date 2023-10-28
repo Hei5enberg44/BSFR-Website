@@ -79,4 +79,13 @@ app.get('/stats', async (req, res) => {
     }
 })
 
+app.get('/history', async (req, res) => {
+    try {
+        const page = req.query.page ? parseInt(req.query.page) : 0
+        await rankedle.getRankedleHistory(req, res, page)
+    } catch(e) {
+        res.status(404).end()
+    }
+})
+
 export default app

@@ -54,25 +54,6 @@
     font-weight: 500;
 }
 
-#rankedle .try {
-    display: inline-block;
-    width: 25px;
-    height: 5px;
-    margin: 0 2px;
-}
-
-#rankedle .try.try-gray {
-    background: var(--tblr-muted);
-}
-
-#rankedle .try.try-red {
-    background: var(--tblr-danger);
-}
-
-#rankedle .try.try-green {
-    background: var(--tblr-success);
-}
-
 #ranking {
     max-height: 35rem;
 }

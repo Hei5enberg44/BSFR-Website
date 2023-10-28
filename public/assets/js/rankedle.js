@@ -27,6 +27,8 @@ const $btnStats = document.querySelector('#stats')
 /** @type {HTMLDivElement} */
 const $modalStats = document.querySelector('#modalStats')
 /** @type {HTMLDivElement} */
+const $modalHistory = document.querySelector('#modalHistory')
+/** @type {HTMLDivElement} */
 const $progress = document.querySelector('#progress')
 /** @type {HTMLDivElement} */
 const $seekCursor = document.querySelector('#seek-cursor')
@@ -341,6 +343,107 @@ if($btnShare) {
 
         $btnShare.classList.remove('btn-loading')
     })
+}
+
+if($modalHistory) {
+    const modalHistory = bootstrap.Modal.getOrCreateInstance($modalHistory)
+
+    /** @type {HTMLDivElement} */
+    const $tableHistory = $modalHistory.querySelector('#table-history')
+    /** @type {HTMLDivElement} */
+    const $modalBody = $modalHistory.querySelector('.modal-body')
+    /** @type {HTMLButtonElement} */
+    const $historyPrev = $modalHistory.querySelector('#history-prev')
+    /** @type {HTMLButtonElement} */
+    const $historyNext = $modalHistory.querySelector('#history-next')
+
+    $modalHistory.addEventListener('show.bs.modal', async () => {
+        $modalBody.classList.remove('d-none')
+        $tableHistory.classList.add('d-none')
+    })
+
+    $modalHistory.addEventListener('shown.bs.modal', async () => {
+        const historyData = await getHistory()
+        showHistory(historyData)
+    })
+
+    $historyPrev.addEventListener('click', async () => {
+        $historyPrev.classList.add('btn-loading')
+        const historyData = await getHistory(parseInt($historyPrev.dataset.page))
+        showHistory(historyData)
+        $historyPrev.classList.remove('btn-loading')
+    })
+
+    $historyNext.addEventListener('click', async () => {
+        $historyNext.classList.add('btn-loading')
+        const historyData = await getHistory(parseInt($historyNext.dataset.page))
+        showHistory(historyData)
+        $historyNext.classList.remove('btn-loading')
+    })
+
+    const getHistory = async (page = 0) => {
+        const historyRequest = await fetch(`/rankedle/history?page=${page}`, {
+            method: 'GET'
+        })
+
+        if(historyRequest.ok) {
+            const history = await historyRequest.json()
+            return history
+        }
+
+        return null
+    }
+
+    const showHistory = (historyData) => {
+        if(historyData) {
+            const { total, page, history } = historyData
+
+            const $tbody = $tableHistory.querySelector('.table-tbody')
+            $tbody.innerHTML = ''
+
+            for(const historyEntrie of history) {
+                const $tr = document.createElement('tr')
+                const $tdCover = document.createElement('td')
+                $tdCover.classList.add('history-cover')
+                const $avatar = document.createElement('div')
+                $avatar.classList.add('avatar', 'avatar-lg')
+                $avatar.style.backgroundImage = `url(${historyEntrie.cover})`
+                $tdCover.append($avatar)
+                const $tdMap = document.createElement('td')
+                $tdMap.textContent = historyEntrie.songName
+                const $tdMapper = document.createElement('td')
+                $tdMapper.textContent = historyEntrie.levelAuthorName
+                const $tdScore = document.createElement('td')
+                if(historyEntrie.score) {
+                    $tdScore.textContent = historyEntrie.score
+                }
+                const $tdDate = document.createElement('td')
+                $tdDate.textContent = historyEntrie.date
+                $tr.append($tdCover, $tdMap, $tdMapper, $tdScore, $tdDate)
+                $tbody.append($tr)
+            }
+
+            const $modalBody = $modalHistory.querySelector('.modal-body')
+            $modalBody.classList.add('d-none')
+            $tableHistory.classList.remove('d-none')
+
+            if(page > 0) {
+                $historyPrev.classList.remove('disabled')
+                $historyPrev.dataset.page = page - 1
+            } else {
+                $historyPrev.classList.add('disabled')
+                delete $historyPrev.dataset.page
+            }
+
+            if(page < Math.ceil(total / 8) - 1) {
+                $historyNext.classList.remove('disabled')
+                $historyNext.dataset.page = page + 1
+            } else {
+                $historyNext.classList.add('disabled')
+                delete $historyNext.dataset.page
+            }
+        }
+    }
 }
 
 if($countdown) {
