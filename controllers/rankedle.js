@@ -480,11 +480,12 @@ export default class Rankedle {
             }
         }
         if(rankedleScore.success) steps[rankedleScore.skips] = true
+        const score = (!rankedleScore.success ? '🔇' : rankedleScore.skips === 0 ? '🔊' : '🔉') + steps.map(s => s === 'skip' ? '⬛️' : s === 'fail' ? '🟥' : s === 'success' ? '🟩' : '⬜️').join('')
 
         return {
             won: rankedleScore.success,
             skips: rankedleScore.skips,
-            steps,
+            score,
             map: {
                 id: mapData.map.id,
                 cover: mapData.map.versions[mapData.map.versions.length - 1].coverURL,
@@ -602,5 +603,71 @@ export default class Rankedle {
             where: { rankedleId }
         })
         return scores
+    }
+
+    static async getRankedleHistory(req, res, page) {
+        if(!req.session.user) throw new Error('User not connected')
+        const user = req.session.user
+
+        const userId = req.query.userId ?? user.id
+
+        const history = []
+        const count = 8
+
+        const { count: total, rows: rankedles } = await Rankedles.findAndCountAll({
+            where: {
+                date: {
+                    [Op.lt]: new Date()
+                }
+            },
+            order: [
+                [ 'date', 'desc' ]
+            ],
+            offset: page * count,
+            limit: count,
+            raw: true
+        })
+
+        for(const rankedle of rankedles) {
+            const mapData = await RankedleMaps.findOne({
+                where: { id: rankedle.mapId },
+                raw: true
+            })
+    
+            const rankedleScore = await RankedleScores.findOne({
+                where: {
+                    rankedleId: rankedle.id,
+                    memberId: userId
+                },
+                raw: true
+            })
+
+            let score = null
+            if(rankedleScore) {
+                const steps = [ null, null, null, null, null, null ]
+                if(rankedleScore.details) {
+                    for(let i = 0; i < rankedleScore.details.length; i++) {
+                        const detail = rankedleScore.details[i]
+                        steps[i] = detail.status
+                    }
+                }
+                if(rankedleScore.success) steps[rankedleScore.skips] = 'success'
+                score = (!rankedleScore.success ? '🔇' : rankedleScore.skips === 0 ? '🔊' : '🔉') + steps.map(s => s === 'skip' ? '⬛️' : s === 'fail' ? '🟥' : s === 'success' ? '🟩' : '⬜️').join('')
+            }
+    
+            history.push({
+                cover: mapData ? mapData.map.versions[mapData.map.versions.length - 1].coverURL : null,
+                songName: mapData ? `${mapData.map.metadata.songAuthorName} - ${mapData.map.metadata.songName}${mapData.map.metadata.songSubName !== '' ? ` ${mapData.map.metadata.songSubName}` : ''}`: null,
+                levelAuthorName: mapData ? mapData.map.metadata.levelAuthorName: null,
+                score: score,
+                date: new Intl.DateTimeFormat('FR-fr').format(new Date(rankedle.date))
+            })
+        }
+
+        res.json({
+            page,
+            total,
+            history
+        })
     }
 }
