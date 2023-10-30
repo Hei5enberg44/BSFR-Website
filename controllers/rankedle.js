@@ -476,10 +476,10 @@ export default class Rankedle {
         if(rankedleScore.details) {
             for(let i = 0; i < rankedleScore.details.length; i++) {
                 const detail = rankedleScore.details[i]
-                if(detail.status === 'fail') steps[i] = false
+                steps[i] = detail.status
             }
         }
-        if(rankedleScore.success) steps[rankedleScore.skips] = true
+        if(rankedleScore.success) steps[rankedleScore.skips] = 'success'
         const score = (!rankedleScore.success ? '🔇' : rankedleScore.skips === 0 ? '🔊' : '🔉') + steps.map(s => s === 'skip' ? '⬛️' : s === 'fail' ? '🟥' : s === 'success' ? '🟩' : '⬜️').join('')
 
         return {
