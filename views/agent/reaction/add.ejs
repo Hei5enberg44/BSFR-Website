@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="/static/assets/css/background.css">
     <link rel="stylesheet" href="/static/assets/libs/animate/animate.min.css">
     <title>Beat Saber FR - Agent - Envoyer une réaction</title>
+    <style>
+        .emoji-mart-emoji { display: flex; }
+    </style>
 </head>
 <body class="">
     <div class="background"><div class="blur"></div></div>
@@ -34,7 +37,58 @@
                 <div class="container-xl">
                     <div class="row">
                         <div class="col-12">
-                            
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h3>Réaction</h3>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-lg-6">
+                                            <div class="mb-2">
+                                                <label class="form-label required">Salon</label>
+                                                <select type="text" class="form-select" placeholder="Selectionnez un salon" id="channel" value="">
+                                                    <% for(const channel of channels) { %>
+                                                        <% if(channel.channels) { %>
+                                                        <optgroup label="<%= channel.name %>">
+                                                            <% for(const c of channel.channels) { %>
+                                                            <option value="<%= c.id %>"><%= `${c.type === 2 ? '📢' : '#'} ${c.name}` %></option>
+                                                            <% } %>
+                                                        </optgroup>
+                                                        <% } else { %>
+                                                        <option value="<%= channel.id %>"><%= `${channel.type === 2 ? '📢' : '#'} ${channel.name}` %></option>
+                                                        <% } %>
+                                                    <% } %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6">
+                                            <div class="mb-2">
+                                                <label class="form-label">
+                                                    Message
+                                                    <span class="form-help" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Indiquez l'identifiant du message auquel vous voulez insérer une réaction">?</span>
+                                                </label>
+                                                <input type="text" id="message" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 mb-2">
+                                            <label class="form-label required">Réaction</label>
+                                            <button type="button" class="btn btn-icon p-0" id="show-picker" style="font-size: 24px;">
+                                                <em-emoji shortcodes=":grinning:" set="twitter"></em-emoji>
+                                            </button>
+                                            <div id="picker" class="d-none"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-auto ms-auto">
+                                            <button class="btn btn-primary" id="send">Envoyer</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -43,6 +97,8 @@
     </div>
 
     <script src="/static/assets/libs/tabler/script.min.js"></script>
-    <script src="/static/assets/js/agent/reaction.js"></script>
+    <script src="/static/assets/libs/emoji-mart/browser.js"></script>
+    <script src="/static/assets/js/app.js"></script>
+    <script src="/static/assets/js/agent/reaction.js" type="module"></script>
 </body>
 </html>

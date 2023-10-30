@@ -24,10 +24,13 @@ export default class DiscordAPI {
         })
 
         if(request.ok) {
-            const response = await request.json()
-            return response
+            if(headers && headers['Content-Type'] === 'application/json') {
+                const response = await request.json()
+                return response
+            } else {
+                return 'ok'
+            }
         } else {
-            console.log(request)
             return false
         }
     }
@@ -114,11 +117,14 @@ export default class DiscordAPI {
     }
 
     async getCurrentUser() {
-        const user = await this.send('GET', '/users/@me')
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+        const user = await this.send('GET', '/users/@me', headers)
         user.isBSFR = false
         user.isAdmin = false
         user.avatarURL = members.getAvatar(user)
-        const member = await this.send('GET', `/guilds/${config.discord.guild_id}/members/${user.id}`, null, null, true)
+        const member = await this.send('GET', `/guilds/${config.discord.guild_id}/members/${user.id}`, headers, null, true)
         if(!member) return user
         if(member) {
             user.isBSFR = true
@@ -188,7 +194,10 @@ export default class DiscordAPI {
         let after = null
         let members = []
         do {
-            const data = await this.send('GET', `/guilds/${config.discord.guild_id}/members?limit=${limit}${after ? `&after=${after}` : ''}`, null, null, true)
+            const headers = {
+                'Content-Type': 'application/json'
+            }
+            const data = await this.send('GET', `/guilds/${config.discord.guild_id}/members?limit=${limit}${after ? `&after=${after}` : ''}`, headers, null, true)
             after = data.length === limit ? data.length > 0 ? ([...data].pop()).user.id : null : null
             members = [ ...members, ...data ]
         } while(after !== null)
@@ -196,17 +205,26 @@ export default class DiscordAPI {
     }
 
     async getUserById(memberId) {
-        const data = await this.send('GET', `/users/${memberId}`, null, null, true)
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+        const data = await this.send('GET', `/users/${memberId}`, headers, null, true)
         return data
     }
 
     async getGuildPreview() {
-        const data = await this.send('GET', `/guilds/${config.discord.guild_id}/preview`, null, null, true)
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+        const data = await this.send('GET', `/guilds/${config.discord.guild_id}/preview`, headers, null, true)
         return data
     }
 
     async getGuildEmojis() {
-        const data = await this.send('GET', `/guilds/${config.discord.guild_id}/emojis`, null, null, true)
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+        const data = await this.send('GET', `/guilds/${config.discord.guild_id}/emojis`, headers, null, true)
         const emojis = []
         for(const emoji of data) {
             const emojiUrl = `https://cdn.discordapp.com/emojis/${emoji.id}.${emoji.animated ? 'gif' : 'webp'}?size=48&quality=lossless`
@@ -221,7 +239,10 @@ export default class DiscordAPI {
     }
 
     async getGuildChannels() {
-        const data = await this.send('GET', `/guilds/${config.discord.guild_id}/channels`, null, null, true)
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+        const data = await this.send('GET', `/guilds/${config.discord.guild_id}/channels`, headers, null, true)
         const channels = []
         for(const channel of data) {
             if(channel.type === 0 && !channel.parent_id) {
@@ -250,13 +271,20 @@ export default class DiscordAPI {
         const headers = {
             'Content-Type': 'application/json'
         }
-
         const res = await this.send('POST', `/channels/${channelId}/messages`, headers, payload, true)
+        return res
+    }
+    
+    async sendReaction(channelId, messageId, emoji) {
+        const res = await this.send('PUT', `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}/@me`, null, null, true)
         return res
     }
 
     async getBotMessage(channelId, messageId) {
-        const message = await this.send('GET', `/channels/${channelId}/messages/${messageId}`, null, null, true)
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+        const message = await this.send('GET', `/channels/${channelId}/messages/${messageId}`, headers, null, true)
         if(message) {
             if(message.author.id === config.discord.client_id) {
                 return message
