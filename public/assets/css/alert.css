@@ -1,5 +1,5 @@
 .alert-login .alert {
-    position: absolute;
-    top: 66px;
+    position: fixed;
+    bottom: 10px;
     z-index: 1021;
 }

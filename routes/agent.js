@@ -1,6 +1,7 @@
 import express from 'express'
-import discord from '../controllers/discord.js'
+import DiscordAPI from '../controllers/discord.js'
 import channels from '../controllers/channels.js'
+import emojis from '../controllers/emojis.js'
 import { requireAdmin } from './middlewares.js'
 
 const app = express()
@@ -19,8 +20,9 @@ app.get('/message/send', requireAdmin, async (req, res) => {
 })
 
 app.post('/message/send', requireAdmin, async (req, res) => {
-    const { channel, payload } = req.body
-    const response = await discord.sendMessage(req.session.discord, channel, payload)
+    const { channelId, payload } = req.body
+    const discord = new DiscordAPI(req.session)
+    const response = await discord.sendMessage(channelId, payload)
     res.status(response ? 200 : 500).end()
 })
 
@@ -44,10 +46,24 @@ app.get('/message/get', requireAdmin, async (req, res) => {
 })
 
 app.get('/reaction/add', requireAdmin, async (req, res) => {
+    const channelList = await channels.getGuildChannels(req.session)
     res.render('agent/reaction/add', {
         page: 'reaction_add',
-        user: req.session.user
+        user: req.session.user,
+        channels: channelList
     })
+})
+
+app.post('/reaction/send', requireAdmin, async (req, res) => {
+    const { channelId, messageId, emoji } = req.body
+    const discord = new DiscordAPI(req.session)
+    const response = await discord.sendReaction(channelId, messageId, emoji)
+    res.status(response ? 200 : 500).end()
+})
+
+app.get('/guildEmojis', requireAdmin, async (req, res) => {
+    const guildEmojis = await emojis.getGuildEmojis(req.session)
+    res.json(guildEmojis)
 })
 
 export default app

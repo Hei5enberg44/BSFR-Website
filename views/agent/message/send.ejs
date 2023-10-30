@@ -7,7 +7,6 @@
     <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
     <link rel="stylesheet" href="/static/assets/libs/tabler/vendors.min.css">
-    <link rel="stylesheet" href="/static/assets/css/discord.min.css">
     <link rel="stylesheet" href="/static/assets/css/alert.css">
     <link rel="stylesheet" href="/static/assets/css/background.css">
     <link rel="stylesheet" href="/static/assets/libs/animate/animate.min.css">
@@ -35,7 +34,7 @@
             <div class="page-body">
                 <div class="container-xl">
                     <div class="row">
-                        <div class="col-12 col-lg-6 mb-3">
+                        <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
@@ -79,66 +78,11 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-12">
-                                            <h3>Embed</h3>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12 mb-2">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Titre</span>
-                                                <input type="text" class="form-control" id="embed_title">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12 mb-2">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Description</span>
-                                                <input type="text" class="form-control" id="embed_description">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12 mb-2">
-                                            <div class="input-group">
-                                                <span class="input-group-text">URL</span>
-                                                <input type="text" class="form-control" id="embed_url">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12 mb-2">
-                                            <div class="input-group">
-                                                <span class="input-group-text">Couleur</span>
-                                                <input type="color" class="form-control form-control-color" id="embed_color" value="#3498db" title="Choisissez une couleur">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12 mb-2">
-                                            <label class="form-label">Champs</label>
-                                            <div id="fields"></div>
-                                            <div class="row mt-1">
-                                                <div class="col-auto ms-auto">
-                                                    <button class="btn btn-icon btn-success" id="add_field">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path></svg>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-auto ms-auto">
                                             <button class="btn btn-primary" id="send">Envoyer</button>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6">
-                            <div class="card theme-light">
-                                <div class="card-body" id="message_preview"></div>
                             </div>
                         </div>
                     </div>
@@ -149,7 +93,7 @@
 
     <script src="/static/assets/libs/tabler/script.min.js"></script>
     <script src="/static/assets/libs/autosize/autosize.min.js"></script>
-    <script src="/static/assets/js/agent/preview.js"></script>
+    <script src="/static/assets/js/app.js"></script>
     <script src="/static/assets/js/agent/message.js"></script>
 </body>
 </html>
