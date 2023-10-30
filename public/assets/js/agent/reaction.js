@@ -1,4 +1,4 @@
-import twitter from '/static/assets/libs/emoji-mart/twitter.json' assert { type: 'json' }
+const twitter = await (await fetch('/static/assets/libs/emoji-mart/twitter.json')).json()
 
 /** @type {HTMLButtonElement} */
 const $btnSend = document.querySelector('#send')
