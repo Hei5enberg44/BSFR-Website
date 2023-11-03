@@ -97,7 +97,7 @@
                                                             </div>
 
                                                             <div class="row mb-3 d-flex justify-content-center">
-                                                                <div class="col-3">
+                                                                <div class="col-8 col-lg-3">
                                                                     <div class="row row-sm">
                                                                         <div class="col-auto">
                                                                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8a5 5 0 0 1 0 8" /><path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" /></svg>
@@ -148,9 +148,7 @@
                                                                     <button type="button" class="btn btn-success d-none" id="end">TERMINER</button>
                                                                 </div>
                                                             </div>
-
                                                             <% } else { %>
-
                                                             <a class="card mb-3" href="https://beatsaver.com/maps/<%= result.map.id %>" target="_blank">
                                                                 <div class="card-status-start bg-<%= result.won ? 'success' : 'danger' %>"></div>
                                                                 <div class="card-body">
@@ -171,13 +169,9 @@
                                                                 <img width="500px" src="<%= result.message.image %>">
                                                                 <% } %>
 
-                                                                <h2>
-                                                                    <%= result.message.content %>
-                                                                </h2>
+                                                                <h2> <%= result.message.content %></h2>
 
-                                                                <div class="mt-1">
-                                                                    <%= result.score %>
-                                                                </div>
+                                                                <div class="mt-1"><%= result.score %></div>
 
                                                                 <div class="my-4">
                                                                     <button type="button" class="btn btn-primary" id="share">
@@ -192,7 +186,7 @@
                                                             </div>
 
                                                             <div class="row mb-3 d-flex justify-content-center">
-                                                                <div class="col-3">
+                                                                <div class="col-8 col-lg-3">
                                                                     <div class="row row-sm">
                                                                         <div class="col-auto">
                                                                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8a5 5 0 0 1 0 8" /><path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" /></svg>
@@ -229,7 +223,6 @@
                                                                 </div>
                                                                 <div class="time text-end">00:30</div>
                                                             </div>
-
                                                             <% } %>
                                                         <% } else { %>
                                                         <div class="alert alert-danger bg-white" role="alert">

@@ -12,7 +12,7 @@ app.get('/', requireLogin, async (req, res) => {
     const result = await rankedle.getResult(currentRankedle, user.id)
     res.render('rankedle.ejs', {
         page: 'rankedle',
-        user: req.session.user,
+        user,
         rankedle: currentRankedle,
         ranking,
         result,
