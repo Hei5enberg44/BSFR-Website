@@ -23,8 +23,9 @@
                         <% if(user.isAdmin) { %>
                         <a href="/agent/" class="dropdown-item">Agent</a>
                         <a href="/admin/" class="dropdown-item">Administration</a>
-                        <div class="dropdown-divider"></div>
                         <% } %>
+                        <!-- <a href="/settings" class="dropdown-item<%= page === 'settings' ? ' active' : '' %>">Paramètres</a> -->
+                        <div class="dropdown-divider"></div>
                         <a href="/discord/logout" class="dropdown-item">Déconnexion</a>
                     </div>
                 </div>

@@ -6,8 +6,8 @@ import config from '../config.json' assert { type: 'json' }
 const app = express()
 
 app.get('/', requireLogin, async (req, res) => {
-    const attackers = await feur.getAttackers(req.session)
-    const victims = await feur.getVictims(req.session)
+    const attackers = await feur.getAttackers()
+    const victims = await feur.getVictims()
 
     res.render('feurboard.ejs', {
         page: 'feurboard',
@@ -21,7 +21,7 @@ app.get('/', requireLogin, async (req, res) => {
 app.get('/messages/attacker/:id', async (req, res) => {
     if(req.xhr) {
         if(req.session.token) {
-            const messages = await feur.getAttackerMessages(req.session, req.params.id)
+            const messages = await feur.getAttackerMessages(req.params.id)
             res.json(messages)
             return
         }
@@ -32,7 +32,7 @@ app.get('/messages/attacker/:id', async (req, res) => {
 app.get('/messages/victim/:id', async (req, res) => {
     if(req.xhr) {
         if(req.session.token) {
-            const messages = await feur.getVictimMessages(req.session, req.params.id)
+            const messages = await feur.getVictimMessages(req.params.id)
             res.json(messages)
             return
         }

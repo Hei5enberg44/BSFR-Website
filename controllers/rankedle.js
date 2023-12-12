@@ -556,7 +556,7 @@ export default class Rankedle {
         return message
     }
 
-    static async getRanking(session) {
+    static async getRanking() {
         const rankingList = await RankedleStats.findAll({
             attributes: [
                 'memberId',
@@ -568,10 +568,11 @@ export default class Rankedle {
             ],
             order: [
                 [ 'score', 'desc' ]
-            ]
+            ],
+            raw: true
         })
 
-        const memberList = await members.getGuildMembers(session)
+        const memberList = await members.getGuildMembers()
         const ranking = rankingList.map((r, i) => {
             const member = memberList.find(m => m.user.id === r.memberId)
             r.avatar = member ? `${members.getAvatar(member.user)}?size=80` : ''

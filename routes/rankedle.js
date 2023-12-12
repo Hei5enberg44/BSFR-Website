@@ -8,11 +8,11 @@ const app = express()
 app.get('/', requireLogin, async (req, res) => {
     const user = req.session.user
     const currentRankedle = await rankedle.getCurrentRankedle()
-    const ranking = await rankedle.getRanking(req.session)
+    const ranking = await rankedle.getRanking()
     const result = await rankedle.getResult(currentRankedle, user.id)
     res.render('rankedle.ejs', {
         page: 'rankedle',
-        user: req.session.user,
+        user,
         rankedle: currentRankedle,
         ranking,
         result,
@@ -34,7 +34,6 @@ app.get('/songs', async (req, res) => {
         const songs = await rankedle.getSongList(user.id, req.query.q)
         res.json(songs)
     } catch(e) {
-        console.log(e)
         res.status(404).end()
     }
 })

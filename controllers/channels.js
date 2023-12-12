@@ -7,7 +7,7 @@ export default {
     async getGuildChannels(session) {
         if(!cache.has('guildChannels')) {
             const discord = new DiscordAPI(session)
-            const channels = await discord.getGuildChannels(session.discord)
+            const channels = await discord.getGuildChannels()
 
             cache.set('guildChannels', channels)
             return channels

@@ -1,4 +1,4 @@
-function showAlert(success, message) {
+function showAlert(success, message, timeout = 2000) {
     const $row = document.createElement('div')
     $row.classList.add('row', 'alert-login')
     const $col = document.createElement('div')
@@ -22,5 +22,5 @@ function showAlert(success, message) {
         setTimeout(function() {
             $row.remove()
         }, 1000)
-    }, 2000)
+    }, timeout)
 }

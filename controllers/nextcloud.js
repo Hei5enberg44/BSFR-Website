@@ -1,5 +1,4 @@
 import config from '../config.json' assert { type: 'json' }
-import fetch, { FormData } from 'node-fetch'
 import { JSDOM } from 'jsdom'
 
 export default {

@@ -10,7 +10,7 @@ app.get('/', requireAdmin, async (req, res) => {
 })
 
 app.get('/birthdays', requireAdmin, async (req, res) => {
-    const memberList = await members.getGuildMembers(req.session)
+    const memberList = await members.getGuildMembers()
     const birthdays = await agent.getBirthdays()
     const membersBirthday = birthdays.map(b => {
         const member = memberList.find(ml => ml.user.id === b.memberId)
@@ -32,11 +32,11 @@ app.get('/birthdays', requireAdmin, async (req, res) => {
 })
 
 app.get('/mutes', requireAdmin, async (req, res) => {
-    const memberList = await members.getGuildMembers(req.session)
+    const memberList = await members.getGuildMembers()
     const mutes = await agent.getMutes()
     const mutedMembers = await Promise.all(mutes.map(async (m) => {
-        const member = memberList.find(ml => ml.user.id === m.memberId) ?? await members.getUser(req.session, m.memberId)
-        const author = memberList.find(ml => ml.user.id === m.mutedBy) ?? await members.getUser(req.session, m.mutedBy)
+        const member = memberList.find(ml => ml.user.id === m.memberId) ?? await members.getUser(m.memberId)
+        const author = memberList.find(ml => ml.user.id === m.mutedBy) ?? await members.getUser(m.mutedBy)
         const muteDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(m.muteDate)
         const unmuteDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(m.unmuteDate)
         return {
@@ -65,11 +65,11 @@ app.get('/mutes', requireAdmin, async (req, res) => {
 })
 
 app.get('/bans', requireAdmin, async (req, res) => {
-    const memberList = await members.getGuildMembers(req.session)
+    const memberList = await members.getGuildMembers()
     const bans = await agent.getBans()
     const bannedMembers = await Promise.all(bans.map(async (b) => {
-        const member = memberList.find(ml => ml.user.id === b.memberId) ?? await members.getUser(req.session, b.memberId)
-        const author = memberList.find(ml => ml.user.id === b.bannedBy) ?? await members.getUser(req.session, b.bannedBy)
+        const member = memberList.find(ml => ml.user.id === b.memberId) ?? await members.getUser(b.memberId)
+        const author = memberList.find(ml => ml.user.id === b.bannedBy) ?? await members.getUser(b.bannedBy)
         const banDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(b.banDate)
         const unbanDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(b.unbanDate)
         return {
@@ -98,10 +98,10 @@ app.get('/bans', requireAdmin, async (req, res) => {
 })
 
 app.get('/birthdayMessages', requireAdmin, async (req, res) => {
-    const memberList = await members.getGuildMembers(req.session)
+    const memberList = await members.getGuildMembers()
     const messageList = await agent.getBirthdayMessages()
     const birthdayMessages = await Promise.all(messageList.map(async (m) => {
-        const author = memberList.find(ml => ml.user.id === m.memberId) ?? await members.getUser(req.session, m.memberId)
+        const author = memberList.find(ml => ml.user.id === m.memberId) ?? await members.getUser(m.memberId)
         const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(m.date)
         return {
             id: m.id,
@@ -166,7 +166,7 @@ app.delete('/birthdayMessage/:id([0-9]+)', requireAdmin, async (req, res) => {
 })
 
 app.get('/twitchChannels', requireAdmin, async (req, res) => {
-    const memberList = await members.getGuildMembers(req.session)
+    const memberList = await members.getGuildMembers()
     const channelList = await agent.getTwitchChannels()
     const twitchChannels = await Promise.all(channelList.map(async (c) => {
         const member = memberList.find(ml => ml.user.id === c.memberId)

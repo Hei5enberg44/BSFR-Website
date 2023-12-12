@@ -3,8 +3,8 @@ import { Feur } from './database.js'
 import { Sequelize } from 'sequelize'
 
 export default {
-    async getAttackers(session) {
-        const memberList = await members.getGuildMembers(session)
+    async getAttackers() {
+        const memberList = await members.getGuildMembers()
         
         const attackerList = await Feur.findAll({
             group: 'attackerId',
@@ -29,8 +29,8 @@ export default {
         return attackers
     },
 
-    async getVictims(session) {
-        const memberList = await members.getGuildMembers(session)
+    async getVictims() {
+        const memberList = await members.getGuildMembers()
 
         const victimList = await Feur.findAll({
             group: 'victimId',
@@ -55,8 +55,8 @@ export default {
         return victims
     },
 
-    async getAttackerMessages(session, attackerId) {
-        const memberList = await members.getGuildMembers(session)
+    async getAttackerMessages(attackerId) {
+        const memberList = await members.getGuildMembers()
 
         const messageList = await Feur.findAll({
             where: {
@@ -79,8 +79,8 @@ export default {
         return messages
     },
 
-    async getVictimMessages(session, victimId) {
-        const memberList = await members.getGuildMembers(session)
+    async getVictimMessages(victimId) {
+        const memberList = await members.getGuildMembers()
 
         const messageList = await Feur.findAll({
             where: {

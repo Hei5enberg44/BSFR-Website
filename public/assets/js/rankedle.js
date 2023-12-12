@@ -236,7 +236,7 @@ if($btnSkip) {
                     callback()
                 })
         },
-        render:{
+        render: {
             item: function(data, escape) {
                 if(data.customProperties) {
                     return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.name) + '</div>'
@@ -404,6 +404,7 @@ if($modalHistory) {
             for(const historyEntrie of history) {
                 const $tr = document.createElement('tr')
                 const $tdN = document.createElement('td')
+                $tdN.style.width = '1px'
                 $tdN.textContent = `#${historyEntrie.id}`
                 const $avatar = document.createElement('div')
                 $avatar.classList.add('avatar', 'avatar-lg')
@@ -422,6 +423,7 @@ if($modalHistory) {
                 const $tdMapper = document.createElement('td')
                 $tdMapper.textContent = historyEntrie.levelAuthorName
                 const $tdScore = document.createElement('td')
+                $tdScore.style.minWidth = '175px'
                 if(historyEntrie.score) {
                     $tdScore.textContent = historyEntrie.score
                 }
