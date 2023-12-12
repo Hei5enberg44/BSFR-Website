@@ -11,8 +11,11 @@ import formsRoutes from './routes/forms.js'
 import mapRoutes from './routes/map.js'
 import feurboardRoutes from './routes/feurboard.js'
 import rankedleRoutes from './routes/rankedle.js'
+import settingsRoutes from './routes/settings.js'
 import adminRoutes from './routes/admin.js'
 import agentRoutes from './routes/agent.js'
+import cubestalkerRoutes from './routes/cubestalker.js'
+import { requireLogin } from './routes/middlewares.js'
 import config from './config.json' assert { type: 'json' }
 
 const app = express()
@@ -73,26 +76,14 @@ app.get('/offres-internet', (req, res) => {
     res.redirect('/static/rick.webm')
 })
 
-app.get('/cities', async (req, res) => {
-    if(req.xhr) {
-        if(req.session.token) {
-            const cities = await city.get()
-            res.json(cities)
-            return
-        }
-    }
-    res.status(403).send('Unauthorized')
+app.get('/cities', requireLogin, async (req, res) => {
+    const cities = await city.get()
+    res.json(cities)
 })
 
-app.get('/guildMembers', async (req, res) => {
-    if(req.xhr) {
-        if(req.session.token) {
-            const memberList = await members.getGuildMembers(req.session)
-            res.json(memberList)
-            return
-        }
-    }
-    res.status(403).send('Unauthorized')
+app.get('/guildMembers', requireLogin, async (req, res) => {
+    const memberList = await members.getGuildMembers()
+    res.json(memberList)
 })
 
 app.use('/discord', discordRoutes)
@@ -100,14 +91,16 @@ app.use('/forms', formsRoutes)
 app.use('/interactive-map', mapRoutes)
 app.use('/feurboard', feurboardRoutes)
 app.use('/rankedle', rankedleRoutes)
+// app.use('/settings', settingsRoutes)
 app.use('/admin', adminRoutes)
 app.use('/agent', agentRoutes)
+// app.use('/cubestalker', cubestalkerRoutes)
 
 app.get('/google/redirect', (req, res) => {
     console.log(req)
 })
 
-app.use(function(req, res) {
+app.use((req, res) => {
     res.status(404).render('errors/404')
 })
 

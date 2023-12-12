@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import members from './members.js'
+import roles from './roles.js'
 import config from '../config.json' assert { type: 'json' }
 
 const DISCORD_API_URL = 'https://discord.com/api'
@@ -7,7 +8,7 @@ const DISCORD_API_URL = 'https://discord.com/api'
 export default class DiscordAPI {
     session
 
-    constructor(session) {
+    constructor(session = null) {
         this.session = session
     }
 
@@ -20,11 +21,11 @@ export default class DiscordAPI {
                 'Authorization': `${bot ? `Bot ${config.discord.bot_token}` : `${token.token_type} ${token.access_token}`}`,
                 ...headers ? headers : {}
             },
-            ...(method === 'POST' && body) ? { body: JSON.stringify(body) } : {}
+            ...((method === 'POST' || method === 'PATCH') && body) ? { body: JSON.stringify(body) } : {}
         })
 
         if(request.ok) {
-            if(headers && headers['Content-Type'] === 'application/json') {
+            if(headers && headers['Content-Type'] === 'application/json' && request.body !== null) {
                 const response = await request.json()
                 return response
             } else {
@@ -120,17 +121,27 @@ export default class DiscordAPI {
         const headers = {
             'Content-Type': 'application/json'
         }
-        const user = await this.send('GET', '/users/@me', headers)
-        user.isBSFR = false
-        user.isAdmin = false
-        user.avatarURL = members.getAvatar(user)
+        let user = await this.send('GET', '/users/@me', headers)
+        user = {
+            ...user,
+            isBSFR: false,
+            isAdmin: false,
+            isNitroBooster: true, // à passer à false
+            avatarURL: members.getAvatar(user),
+            roles: []
+        }
         const member = await this.send('GET', `/guilds/${config.discord.guild_id}/members/${user.id}`, headers, null, true)
         if(!member) return user
         if(member) {
             user.isBSFR = true
-            if(member.roles.find(r => r === config.discord.roles['Admin'] || r === config.discord.roles['Modérateur'])) {
+            // On vérifie si le membre a le rôle "Administrateur" ou "Modérateur"
+            if(member.roles.find(r => r === config.discord.roles['Admin'] || r === config.discord.roles['Modérateur']))
                 user.isAdmin = true
-            }
+            // On vérifie si le membre boost le serveur
+            if(member.premium_since !== null) user.isNitroBooster = true
+            // On récupère les rôles que le membre possède sur le serveur
+            const guildRoles = await roles.getGuildRoles()
+            user.roles = member.roles.map(mr => guildRoles.find(gr => gr.id === mr))
         }
         return user
     }
@@ -265,6 +276,23 @@ export default class DiscordAPI {
         }
         channels.sort((a, b) => a.position - b.position)
         return channels
+    }
+
+    async getGuildRoles() {
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+        const data = await this.send('GET', `/guilds/${config.discord.guild_id}/roles`, headers, null, true)
+        return data
+    }
+
+    async updateMemberRoles(memberId, roles) {
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+        const payload = { roles }
+        const res = await this.send('PATCH', `/guilds/${config.discord.guild_id}/members/${memberId}`, headers, payload, true)
+        return res
     }
 
     async sendMessage(channelId, payload) {

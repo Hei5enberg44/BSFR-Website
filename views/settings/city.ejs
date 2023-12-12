@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
+    <link rel="stylesheet" href="/static/assets/libs/tabler/vendors.min.css">
+    <link rel="stylesheet" href="/static/assets/css/alert.css">
+    <link rel="stylesheet" href="/static/assets/css/background.css">
+    <link rel="stylesheet" href="/static/assets/libs/animate/animate.min.css">
+    <title>Beat Saber FR - Paramètres</title>
+</head>
+<body class="">
+    <div class="background"><div class="blur"></div></div>
+
+    <div class="page">
+        <%- include('../includes/header.ejs') %>
+        
+        <div class="page-wrapper">
+            <div class="container-xl">
+                <!-- Page title -->
+                <div class="page-header d-print-none">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <h2 class="page-title text-white">
+                                Paramètres
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-body">
+                <div class="container-xl">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="row g-0">
+                                    <div class="col-12 col-md-3 border-end">
+                                        <div class="card-body">
+                                            <div class="list-group list-group-transparent" role="tablist">
+                                                <h4 class="subheader ms-3">Paramètres généraux</h4>
+                                                <a href="/settings/birthday" class="list-group-item list-group-item-action d-flex align-items-center">Anniversaire</a>
+                                                <a href="/settings/roles" class="list-group-item list-group-item-action d-flex align-items-center">Rôles</a>
+                                                <a href="/settings/city" class="list-group-item list-group-item-action d-flex align-items-center active">Ville</a>
+                                                <a href="/settings/twitch" class="list-group-item list-group-item-action d-flex align-items-center">Twitch</a>
+                                                <% if(user.isNitroBooster) { %>
+                                                <h4 class="subheader ms-3 mt-4">Avantages Nitro Booster</h4>
+                                                <a href="/settings/card" class="list-group-item list-group-item-action">Image de carte Cube-Stalker</a>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-9 d-flex flex-column">
+                                        <div class="card-body">
+                                            <h2 class="mb-4">Ville</h2>
+
+                                            <div class="alert alert-important alert-info" role="alert">
+                                                <div class="d-flex">
+                                                    <div>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path><path d="M12 9h.01"></path><path d="M11 12h1v4h1"></path></svg>
+                                                    </div>
+                                                    <div>
+                                                        Indiquer votre ville afin de pouvoir apparaître sur la <a href="/interactive-map" target="_blank" class="text-white text-decoration-underline">carte interactive</a>.
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-12 col-lg-8">
+                                                    <label class="form-label">Votre ville</label>
+                                                    <div class="row row-sm">
+                                                        <div class="col">
+                                                            <select type="text" class="form-select" id="city">
+                                                                <% if(city) { %>
+                                                                <option value="<%= city.id %>"><%= `${city.nom_de_la_commune} (${city.code_postal})` %></option>
+                                                                <% } %>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <button class="btn btn-outline-danger" id="remove-city">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
+                                                                Supprimer
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="row">
+                                        <div class="col-auto ms-auto">
+                                            <button type="button" class="btn btn-success" id="save">Sauvegarder</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/assets/libs/tabler/script.min.js"></script>
+    <script src="/static/assets/libs/tom-select/tom-select.base.min.js"></script>
+    <script src="/static/assets/js/app.js"></script>
+    <script>
+        const cityChoice = new TomSelect('#city', {
+            copyClassesToDropdown: false,
+            dropdownParent: 'body',
+            controlInput: '<input>',
+            placeholder: 'Sélectionnez votre ville',
+            valueField: 'id',
+            labelField: 'name',
+            searchField: 'name',
+            openOnFocus: false,
+            load: (query, callback) => {
+                fetch('/settings/cities?q=' + encodeURIComponent(query))
+                    .then(response => response.json())
+                    .then(json => {
+                        callback(json)
+                    }).catch(() => {
+                        callback()
+                    })
+            },
+            render: {
+                item: function(data, escape) {
+                    if(data.customProperties) {
+                        return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.name) + '</div>'
+                    }
+                    return '<div>' + escape(data.name) + '</div>'
+                },
+                option: function(data, escape) {
+                    if(data.customProperties) {
+                        return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.name) + '</div>'
+                    }
+                    return '<div>' + escape(data.name) + '</div>'
+                }
+            }
+        })
+
+        cityChoice.setValue(2)
+
+        const $btnRemoveCity = document.querySelector('#remove-city')
+        $btnRemoveCity.addEventListener('click', (e) => {
+            cityChoice.clear()
+        })
+
+        const $btnSave = document.querySelector('#save')
+        $btnSave.addEventListener('click', async (e) => {
+            $btnSave.classList.add('btn-loading')
+
+            const cityId = cityChoice.getValue() !== '' ? parseInt(cityChoice.getValue()) : null
+            
+            const saveRequest = await fetch('/settings/city', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cityId
+                })
+            })
+
+            if(saveRequest.ok) {
+                showAlert(true, 'Les paramètres ont bien été enregistrés.', 5000)
+            } else {
+                showAlert(false, saveRequest.statusText, 5000)
+            }
+
+            $btnSave.classList.remove('btn-loading')
+        })
+    </script>
+</body>
+</html>

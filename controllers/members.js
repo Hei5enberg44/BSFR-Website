@@ -4,10 +4,10 @@ import DiscordAPI from './discord.js'
 const cache = new NodeCache({ stdTTL: 60 * 60 * 24 })
 
 export default {
-    async getGuildMembers(session) {
+    async getGuildMembers() {
         if(!cache.has('guildMembers')) {
-            const discord = new DiscordAPI(session)
-            const members = await discord.getGuildMembers(session.discord)
+            const discord = new DiscordAPI()
+            const members = await discord.getGuildMembers()
 
             cache.set('guildMembers', members)
             return members
@@ -17,8 +17,8 @@ export default {
         }
     },
 
-    async getUser(session, userId) {
-        const members = await this.getGuildMembers(session)
+    async getUser(userId) {
+        const members = await this.getGuildMembers()
         const user = members.find(m => m.user.id === userId)
         return user
     },

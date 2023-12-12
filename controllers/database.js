@@ -177,6 +177,17 @@ const Cities = sequelizeAgent.define('cities', {
     coordonnees_gps: DataTypes.STRING(255)
 })
 
+const FranceCities = sequelizeAgent.define('france_cities', {
+    id: {
+        type: DataTypes.INTEGER(),
+        autoIncrement: true,
+        primaryKey: true
+    },
+    nom_de_la_commune: DataTypes.STRING(255),
+    code_postal: DataTypes.INTEGER(),
+    coordonnees_gps: DataTypes.STRING(255)
+})
+
 const MPOV = sequelizeAgent.define('multi_pov', {
     id: {
         type: DataTypes.INTEGER(),
@@ -216,7 +227,82 @@ const Feur = sequelizeAgent.define('feur', {
     responseDate: DataTypes.DATE()
 })
 
+const Roles = sequelizeAgent.define('roles', {
+    id: {
+        type: DataTypes.INTEGER(),
+        autoIncrement: true,
+        primaryKey: true
+    },
+    categoryId: DataTypes.INTEGER(),
+    name: DataTypes.STRING(255),
+    multiple: DataTypes.BOOLEAN()
+})
+
+const RolesCategories = sequelizeAgent.define('roles_categories', {
+    id: {
+        type: DataTypes.INTEGER(),
+        autoIncrement: true,
+        primaryKey: true
+    },
+    name: DataTypes.STRING(255)
+})
+
+Roles.hasOne(RolesCategories, {
+    sourceKey: 'categoryId',
+    foreignKey: 'id'
+})
+
+const sequelizeCubeStalker = new Sequelize(config.databases.cubestalker.name, config.databases.cubestalker.username, config.databases.cubestalker.password, {
+    host: config.databases.agent.host,
+    port: config.databases.agent.port,
+    dialect: 'mariadb',
+    logging: false,
+    define: {
+        timestamps: false,
+        freezeTableName: true
+    },
+    timezone: 'Europe/Paris'
+})
+
+const Leaderboard = sequelizeCubeStalker.define('leaderboard', {
+    id: {
+        type: DataTypes.INTEGER(),
+        autoIncrement: true,
+        primaryKey: true
+    },
+    leaderboard: DataTypes.STRING(255),
+    memberId: DataTypes.STRING(255),
+    playerId: DataTypes.STRING(255),
+    playerName: DataTypes.STRING(255),
+    playerCountry: DataTypes.STRING(255),
+    pp: DataTypes.INTEGER(),
+    countryRank: DataTypes.INTEGER(),
+    averageRankedAccuracy: DataTypes.DOUBLE(),
+    serverRankAcc: DataTypes.INTEGER(),
+    serverRankPP: DataTypes.INTEGER()
+})
+
+const Players = sequelizeCubeStalker.define('players', {
+    id: {
+        type: DataTypes.INTEGER(),
+        autoIncrement: true,
+        primaryKey: true
+    },
+    leaderboard: DataTypes.STRING(255),
+    memberId: DataTypes.STRING(255),
+    playerId: DataTypes.STRING(255),
+    playerName: DataTypes.STRING(255),
+    playerCountry: DataTypes.STRING(255),
+    pp: DataTypes.INTEGER(),
+    countryRank: DataTypes.INTEGER(),
+    averageRankedAccuracy: DataTypes.DOUBLE(),
+    serverRankAcc: DataTypes.INTEGER(),
+    serverRankPP: DataTypes.INTEGER(),
+    top1: DataTypes.BOOLEAN()
+})
+
 export {
     Rankedles, RankedleMaps, RankedleScores, RankedleStats, RankedleMessages,
-    Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, Cities, MPOV, YoutubeVideos, Feur
+    Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, FranceCities, Cities, MPOV, YoutubeVideos, Feur, Roles, RolesCategories,
+    Leaderboard, Players
 }
