@@ -40,6 +40,8 @@ const RankedleScores = sequelizeWebsite.define('rankedle_scores', {
     },
     rankedleId: DataTypes.INTEGER(),
     memberId: DataTypes.STRING(255),
+    dateStart: DataTypes.DATE(),
+    dateEnd: DataTypes.DATE(),
     skips: DataTypes.INTEGER(),
     details: DataTypes.JSON(),
     success: DataTypes.BOOLEAN(),

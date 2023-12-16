@@ -78,10 +78,28 @@ app.get('/stats', async (req, res) => {
     }
 })
 
+app.get('/ranking', async (req, res) => {
+    try {
+        const ranking = await rankedle.getRanking()
+        res.json(ranking)
+    } catch(e) {
+        res.status(404).end()
+    }
+})
+
 app.get('/history', async (req, res) => {
     try {
         const page = req.query.page ? parseInt(req.query.page) : 0
         await rankedle.getRankedleHistory(req, res, page)
+    } catch(e) {
+        res.status(404).end()
+    }
+})
+
+app.get('/list', async (req, res) => {
+    try {
+        const rankedleList = await rankedle.getRankedleList()
+        res.json(rankedleList)
     } catch(e) {
         res.status(404).end()
     }

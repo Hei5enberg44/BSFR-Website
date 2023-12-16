@@ -26,6 +26,9 @@ app.use('/static', express.static('public'))
 app.use(express.json({
     type: ['application/json', 'text/plain']
 }))
+app.use(express.urlencoded({
+    extended: true
+}))
 
 const mysqlStore = MySQLStore(session)
 const sessionStore = new mysqlStore({

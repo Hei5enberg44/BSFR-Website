@@ -224,6 +224,16 @@ export default class Rankedle {
         return rankedle
     }
 
+    static async getRankedleList() {
+        const rankedleList = await Rankedles.findAll({
+            order: [
+                [ 'id', 'desc' ]
+            ],
+            raw: true
+        })
+        return rankedleList
+    }
+
     static async getUserScore(rankedleId, memberId) {
         const score = await RankedleScores.findOne({
             where: { rankedleId,  memberId }
@@ -246,6 +256,7 @@ export default class Rankedle {
         if(!rankedle) throw new Error('No rankedle found')
 
         const rankedleScore = await this.getUserScore(rankedle.id, user.id)
+        await this.setDateStart(rankedle.id, user.id, rankedleScore)
 
         const skips = rankedleScore ? rankedleScore.skips : 0
         const preview = path.join(RANKEDLE_PATH, `preview_${skips < 6 && !rankedleScore?.success ? skips : 'full'}.ogg`)
@@ -292,6 +303,24 @@ export default class Rankedle {
         }
     }
 
+    static async setDateStart(rankedleId, userId, score) {
+        if(!score) {
+            await RankedleScores.create({
+                rankedleId: rankedleId,
+                memberId: userId,
+                dateStart: new Date(),
+                skips: 0
+            })
+        }
+    }
+
+    static async setDateEnd(score) {
+        if(!score.dateEnd) {
+            score.dateEnd = new Date()
+            score.save()
+        }
+    }
+
     static async scoreRequest(req, res) {
         if(!req.session.user) throw new Error('User not connected')
         const user = req.session.user
@@ -318,28 +347,34 @@ export default class Rankedle {
             }
         })
 
+        const date = new Date()
+
         if(score) {
             if(score.success === null) {
+                if(!score.dateStart) score.dateStart = date
+
                 if(score.skips === 6) {
                     score.success = false
                     score.messageId = await this.getRandomMessage('lose')
                 } else {
                     score.skips++
                     const details = [
-                        ...score.details,
-                        { status: 'skip', text: `SKIP (${6 - score.skips + 1})` }
+                        ...(score.details ?? []),
+                        { status: 'skip', text: `SKIP (${6 - score.skips + 1})`, date: Math.round(date.getTime() / 1000) }
                     ]
                     score.details = details
                 }
+
                 await score.save()
             }
         } else {
             score = await RankedleScores.create({
                 rankedleId: rankedle.id,
                 memberId: user.id,
+                dateStart: date,
                 skips: 1,
                 details: [
-                    { status: 'skip', text: 'SKIP (6)' }
+                    { status: 'skip', text: 'SKIP (6)', date: Math.round(date.getTime() / 1000) }
                 ],
                 success: null
             })
@@ -381,8 +416,12 @@ export default class Rankedle {
 
         const success = mapData.map.metadata.songAuthorName === validMapData.map.metadata.songAuthorName && mapData.map.metadata.songName === validMapData.map.metadata.songName
 
+        const date = new Date()
+
         if(score) {
             if(score.success === null) {
+                if(!score.dateStart) score.dateStart = date
+
                 if(success && score.skips < 6) {
                     score.success = true
                     score.messageId = await this.getRandomMessage('won')
@@ -393,8 +432,8 @@ export default class Rankedle {
                     } else {
                         score.skips++
                         const details = [
-                            ...score.details,
-                            { status: 'fail', text: songName, mapId: mapData.id }
+                            ...(score.details ?? []),
+                            { status: 'fail', text: songName, mapId: mapData.id, date: Math.round(date.getTime() / 1000) }
                         ]
                         score.details = details
                     }
@@ -406,11 +445,12 @@ export default class Rankedle {
             const scoreData = {
                 rankedleId: rankedle.id,
                 memberId: user.id,
+                dateStart: date,
                 skips: success ? 0 : 1,
                 success: success ? true : null,
                 messageId: success ? await this.getRandomMessage('first_try') : null
             }
-            if(!success) scoreData.details = [{ status: 'fail', text: songName, mapId: mapData.id }]
+            if(!success) scoreData.details = [{ status: 'fail', text: songName, mapId: mapData.id, date: Math.round(date.getTime() / 1000) }]
             score = await RankedleScores.create(scoreData)
         }
 
@@ -422,6 +462,8 @@ export default class Rankedle {
     }
 
     static async updatePlayerStats(score) {
+        await this.setDateEnd(score)
+
         const stats = await RankedleStats.findOne({
             where: { memberId: score.memberId }
         })
@@ -589,7 +631,7 @@ export default class Rankedle {
         
         if(rankedle) {
             const scores = await this.getRankedleScores(rankedle.id)
-            const unfinishedScores = scores.filter(s => s.success === null)
+            const unfinishedScores = scores.filter(s => s.success === null && s.skips > 0)
 
             for(const score of unfinishedScores) {
                 score.success = false
