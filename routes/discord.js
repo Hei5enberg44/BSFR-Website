@@ -2,6 +2,7 @@ import express from 'express'
 import crypto from 'crypto'
 import DiscordAPI from '../controllers/discord.js'
 import config from '../config.json' assert { type: 'json' }
+import Logger from '../utils/logger.js'
 
 const app = express()
 
@@ -52,6 +53,8 @@ app.get('/login', async (req, res) => {
 
             const user = await discord.getCurrentUser()
             req.session.user = user
+
+            Logger.log('User', 'INFO', `L'utilisateur ${user.username} s'est connecté`)
         } else {
             error = true
         }
@@ -70,8 +73,10 @@ app.get('/login', async (req, res) => {
 
 app.get('/logout', async (req, res) => {
     if(req.session.token) {
+        const user = req.session.user
         const discord = new DiscordAPI(req.session)
         await discord.revokeToken()
+        Logger.log('User', 'INFO', `L'utilisateur ${user.username} s'est déconnecté`)
     }
     res.redirect('/')
 })
