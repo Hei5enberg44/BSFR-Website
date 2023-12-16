@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
+    <link rel="stylesheet" href="/static/assets/css/alert.css">
+    <link rel="stylesheet" href="/static/assets/css/background.css">
+    <link rel="stylesheet" href="/static/assets/libs/animate/animate.min.css">
+    <title>Beat Saber FR - Admin - Logs Rankedle</title>
+</head>
+<body class="">
+    <div class="background"><div class="blur"></div></div>
+
+    <div class="page">
+        <%- include('../includes/header.ejs') %>
+        
+        <div class="page-wrapper">
+            <div class="container-xl">
+                <!-- Page title -->
+                <div class="page-header d-print-none">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <h2 class="page-title text-white">
+                                Logs Rankedle
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-body">
+                <div class="container-xl">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Log du Rankedle #<%= rankedleId %> pour le joueur <%= player %></h3>
+                                </div>
+                                <div class="card-body">
+                                    <% if(!score) { %>
+                                    Ce joueur n'a pas de score pour ce Rankedle.
+                                    <% } else {
+                                        const start = score.dateStart ? new Intl.DateTimeFormat('FR-fr', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(score.dateStart)) : null
+                                        const end = score.dateEnd ? new Intl.DateTimeFormat('FR-fr', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(score.dateEnd)) : null
+                                    %>
+                                    <ul class="timeline">
+                                        <li class="timeline-event">
+                                            <div class="timeline-event-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" stroke-width="0" fill="currentColor" /></svg>
+                                            </div>
+                                            <div class="card timeline-event-card">
+                                                <div class="card-body">
+                                                    <div class="text-secondary float-end"><%= start ?? '' %></div>
+                                                    <h4>Démarrage du Rankedle</h4>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <% if(score.details) { %>
+                                            <% for(const detail of score.details) {
+                                                let icon = '', title = '', message = ''
+                                                if(detail.status === 'skip') {
+                                                    icon = '<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5v14a1 1 0 0 0 1.504 .864l12 -7a1 1 0 0 0 0 -1.728l-12 -7a1 1 0 0 0 -1.504 .864z" stroke-width="0" fill="currentColor" /><path d="M20 4a1 1 0 0 1 .993 .883l.007 .117v14a1 1 0 0 1 -1.993 .117l-.007 -.117v-14a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor" /></svg>'
+                                                    title = 'Passé'
+                                                } else if(detail.status === 'fail') {
+                                                    icon = '<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>'
+                                                    title = 'Échoué'
+                                                    message = detail.text
+                                                }
+                                                const date = detail.date ? new Intl.DateTimeFormat('FR-fr', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date(detail.date * 1000)) : ''
+                                            %>
+                                            <li class="timeline-event">
+                                                <div class="timeline-event-icon">
+                                                    <%- icon %>
+                                                </div>
+                                                <div class="card timeline-event-card">
+                                                    <div class="card-body">
+                                                        <div class="text-secondary float-end"><%= date %></div>
+                                                        <h4><%= title %></h4>
+                                                        <% if(message !== '') { %><p class="text-secondary"><%= message %></p><% } %>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <% } %>
+                                            <% if(score.success !== null) { %>
+                                            <li class="timeline-event">
+                                                <div class="timeline-event-icon">
+                                                    <% if(score.success) { %>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 21l8 0" /><path d="M12 17l0 4" /><path d="M7 4l10 0" /><path d="M17 4v8a5 5 0 0 1 -10 0v-8" /><path d="M5 9m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M19 9m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /></svg>
+                                                    <% } else { %>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 21h8" /><path d="M12 17v4" /><path d="M8 4h9" /><path d="M17 4v8c0 .31 -.028 .612 -.082 .905m-1.384 2.632a5 5 0 0 1 -8.534 -3.537v-5" /><path d="M5 9m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M19 9m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M3 3l18 18" /></svg>
+                                                    <% } %>
+                                                </div>
+                                                <div class="card timeline-event-card">
+                                                    <div class="card-body">
+                                                        <div class="text-secondary float-end"><%= end ?? '' %></div>
+                                                        <h4>Fin du Rankedle</h4>
+                                                        <p class="text-secondary"><%= score.success ? 'Victoire !' : 'Défaite :(' %></p>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <% } %>
+                                        <% } %>
+                                    </ul>
+                                    <% } %>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="/admin/rankedleLogs" class="btn btn-primary">Retour</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/assets/libs/tabler/script.min.js"></script>
+    <script src="/static/assets/js/app.js"></script>
+</body>
+</html>

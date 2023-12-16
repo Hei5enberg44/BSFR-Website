@@ -180,7 +180,7 @@ if($btnSkip) {
     const update = (score) => {
         const $steps = [...document.querySelectorAll('#rankedle .step')]
     
-        if(score) {
+        if(score && score.skips > 0) {
             songChoice.clear()
 
             if(score.success === null) {

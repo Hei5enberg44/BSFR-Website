@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
+    <link rel="stylesheet" href="/static/assets/libs/tabler/vendors.min.css">
+    <link rel="stylesheet" href="/static/assets/css/alert.css">
+    <link rel="stylesheet" href="/static/assets/css/background.css">
+    <link rel="stylesheet" href="/static/assets/libs/animate/animate.min.css">
+    <title>Beat Saber FR - Admin - Logs Rankedle</title>
+</head>
+<body class="">
+    <div class="background"><div class="blur"></div></div>
+
+    <div class="page">
+        <%- include('../includes/header.ejs') %>
+        
+        <div class="page-wrapper">
+            <div class="container-xl">
+                <!-- Page title -->
+                <div class="page-header d-print-none">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <h2 class="page-title text-white">
+                                Logs Rankedle
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-body">
+                <div class="container-xl">
+                    <div class="row">
+                        <div class="col-12">
+                            <form method="POST" class="card" id="form">
+                                <div class="card-header">
+                                    <h3 class="card-title">Sélection d'un log pour un joueur</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <select type="text" class="form-select" id="player" name="player"></select>
+                                        </div>
+                                        <div class="col-6">
+                                            <select type="text" class="form-select" id="rankedle" name="rankedle"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="row">
+                                        <div class="col-auto ms-auto">
+                                            <button type="submit" class="btn btn-primary">Voir le log</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/assets/libs/tabler/script.min.js"></script>
+    <script src="/static/assets/libs/tom-select/tom-select.base.min.js"></script>
+    <script src="/static/assets/js/app.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', async () => {
+            const playersRequest = await fetch('/rankedle/ranking')
+            const players = await playersRequest.json()
+
+            const playerChoice = new TomSelect('#player', {
+                copyClassesToDropdown: false,
+                dropdownParent: 'body',
+                controlInput: '<input>',
+                placeholder: 'Sélectionnez un joueur',
+                valueField: 'memberId',
+                labelField: 'name',
+                searchField: 'name',
+                maxOptions: 15,
+                openOnFocus: true,
+                options: players,
+                render: {
+                    item: function(data, escape) {
+                        return `<div>${escape(data.name)}</div>`
+                    },
+                    option: function(data, escape) {
+                        return `<div class="d-flex align-items-center"><span class="avatar avatar-sm me-2" style="background-image: url(${data.avatar});"></span><span>${escape(data.name)}</span></div>`
+                    }
+                }
+            })
+
+            const rankedlesRequest = await fetch('/rankedle/list')
+            const rankedles = await rankedlesRequest.json()
+
+            const rankedleChoice = new TomSelect('#rankedle', {
+                copyClassesToDropdown: false,
+                dropdownParent: 'body',
+                controlInput: '<input>',
+                placeholder: 'Sélectionnez un Rankedle',
+                valueField: 'id',
+                labelField: 'name',
+                searchField: 'name',
+                maxOptions: 15,
+                openOnFocus: true,
+                options: rankedles.map(r => {
+                    return {
+                        id: r.id,
+                        name: `#${r.id} (${new Intl.DateTimeFormat('FR-fr').format(new Date(r.date))})`
+                    }
+                }),
+                render: {
+                    item: function(data, escape) {
+                        return `<div>${escape(data.name)}</div>`
+                    },
+                    option: function(data, escape) {
+                        return `<div>${escape(data.name)}</div>`
+                    }
+                }
+            })
+
+            const $form = document.querySelector('#form')
+            $form.addEventListener('submit', (e) => {
+                const memberId = playerChoice.getValue()
+                const rankedleId = rankedleChoice.getValue()
+
+                if(memberId === '' || rankedleId === '') {
+                    e.preventDefault()
+                }
+            })
+        })
+    </script>
+</body>
+</html>

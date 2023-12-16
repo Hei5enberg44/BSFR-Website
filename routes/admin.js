@@ -1,6 +1,7 @@
 import express from 'express'
 import agent from '../controllers/agent.js'
 import members from '../controllers/members.js'
+import rankedle from '../controllers/rankedle.js'
 import { requireAdmin } from './middlewares.js'
 
 const app = express()
@@ -184,6 +185,37 @@ app.get('/twitchChannels', requireAdmin, async (req, res) => {
         user: req.session.user,
         twitchChannels
     })
+})
+
+app.get('/rankedleLogs', requireAdmin, async (req, res) => {
+    const ranking = await rankedle.getRanking()
+    res.render('admin/rankedle/players', {
+        page: 'rankedleLogs',
+        user: req.session.user,
+        ranking
+    })
+})
+
+app.post('/rankedleLogs', requireAdmin, async (req, res) => {
+    const body = req.body
+
+    if(!body?.player || !body?.rankedle) {
+        res.redirect('/admin/rankedleLogs')
+    } else {
+        const memberId = body.player
+        const rankedleId = parseInt(body.rankedle)
+    
+        const member = await members.getUser(memberId)
+        const score = await rankedle.getUserScore(rankedleId, memberId)
+    
+        res.render('admin/rankedle/player', {
+            page: 'rankedleLogs',
+            user: req.session.user,
+            rankedleId,
+            player: member?.user?.username ?? '',
+            score,
+        })
+    }
 })
 
 export default app
