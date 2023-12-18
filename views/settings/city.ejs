@@ -143,11 +143,14 @@
             }
         })
 
-        cityChoice.setValue(2)
-
         const $btnRemoveCity = document.querySelector('#remove-city')
         $btnRemoveCity.addEventListener('click', (e) => {
             cityChoice.clear()
+            cityChoice.clearOptions()
+        })
+
+        cityChoice.on('item_remove', (value, $item) => {
+            cityChoice.removeOption(value)
         })
 
         const $btnSave = document.querySelector('#save')
