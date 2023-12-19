@@ -180,35 +180,37 @@ if($btnSkip) {
     const update = (score) => {
         const $steps = [...document.querySelectorAll('#rankedle .step')]
     
-        if(score && score.skips > 0) {
+        if(score) {
             songChoice.clear()
 
             if(score.success === null) {
-                for(let i = 0; i < $steps.length; i++) {
-                    const detail = score.details[i] ?? null
-    
-                    $steps[i].classList.remove('step-active', 'text-red')
-    
-                    if(detail) {
-                        let icon = ''
-                        if(detail.status === 'skip') icon = skipIcon
-                        if(detail.status === 'fail') {
-                            icon = failIcon
-                            $steps[i].classList.add('text-red')
+                if(score.details) {
+                    for(let i = 0; i < $steps.length; i++) {
+                        const detail = score.details[i] ?? null
+        
+                        $steps[i].classList.remove('step-active', 'text-red')
+        
+                        if(detail) {
+                            let icon = ''
+                            if(detail.status === 'skip') icon = skipIcon
+                            if(detail.status === 'fail') {
+                                icon = failIcon
+                                $steps[i].classList.add('text-red')
+                            }
+                            $steps[i].innerHTML = icon + detail.text
                         }
-                        $steps[i].innerHTML = icon + detail.text
+                        if(i === score.skips && score.skips < 6) $steps[i].classList.add('step-active')
+                        if(score.skips === 6) {
+                            $btnSkip.classList.add('disabled')
+                            $btnSubmit.classList.add('d-none')
+                            $btnEnd.classList.remove('d-none')
+                            songChoice.disable()
+                        }
                     }
-                    if(i === score.skips && score.skips < 6) $steps[i].classList.add('step-active')
-                    if(score.skips === 6) {
-                        $btnSkip.classList.add('disabled')
-                        $btnSubmit.classList.add('d-none')
-                        $btnEnd.classList.remove('d-none')
-                        songChoice.disable()
-                    }
+                    $skipSeconds.textContent = SKIPS[score.skips]
+                    const currentDuration = [...SKIPS.slice(0, score.skips)].reduce((p, c) => p + c) + 1
+                    $seekBarPlaceholder.style.width = `${currentDuration * 100 / 30}%`
                 }
-                $skipSeconds.textContent = SKIPS[score.skips]
-                const currentDuration = [...SKIPS.slice(0, score.skips)].reduce((p, c) => p + c) + 1
-                $seekBarPlaceholder.style.width = `${currentDuration * 100 / 30}%`
 
                 toggleButtons(true)
             } else {

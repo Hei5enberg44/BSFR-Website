@@ -25,7 +25,7 @@ app.post('/birthday', requireLogin, async (req, res) => {
         const user = req.session.user
 
         const birthdayDate = req.body.date
-        if(!birthdayDate) throw new Error('Paramètre "date" introuvable.')
+        if(typeof birthdayDate === 'undefined') throw new Error('Paramètre "date" introuvable.')
 
         const date = new Date(birthdayDate)
         const todayDate = new Date()
@@ -119,7 +119,7 @@ app.post('/twitch', requireLogin, async (req, res) => {
         const user = req.session.user
 
         const channelName = req.body.channelName
-        if(!channelName) throw new Error('Paramètre "channelName" introuvable.')
+        if(typeof channelName === 'undefined') throw new Error('Paramètre "channelName" introuvable.')
 
         await agent.updateMemberTwitch(user.id, channelName)
         
