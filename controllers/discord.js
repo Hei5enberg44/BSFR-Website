@@ -128,7 +128,8 @@ export default class DiscordAPI {
             isAdmin: false,
             isNitroBooster: true, // à passer à false
             avatarURL: members.getAvatar(user),
-            roles: []
+            roles: [],
+            expires: Date.now() + (24 * 3600 * 1000)
         }
         const member = await this.send('GET', `/guilds/${config.discord.guild_id}/members/${user.id}`, headers, null, true)
         if(!member) return user
@@ -301,6 +302,21 @@ export default class DiscordAPI {
         }
         const res = await this.send('POST', `/channels/${channelId}/messages`, headers, payload, true)
         return res
+    }
+
+    async createDM(memberId) {
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+        const payload = { recipient_id: memberId }
+        const res = await this.send('POST', `/users/@me/channels`, headers, payload, true)
+        return res?.id
+    }
+
+    async sendDM(memberId, payload) {
+        const channelId = await this.createDM(memberId)
+        const message = await this.sendMessage(channelId, payload)
+        return message
     }
     
     async sendReaction(channelId, messageId, emoji) {

@@ -2,6 +2,7 @@ import express from 'express'
 import agent from '../controllers/agent.js'
 import members from '../controllers/members.js'
 import rankedle from '../controllers/rankedle.js'
+import cubestalker from '../controllers/cubestalker.js'
 import { requireAdmin } from './middlewares.js'
 
 const app = express()
@@ -215,6 +216,52 @@ app.post('/rankedleLogs', requireAdmin, async (req, res) => {
             player: member?.user?.username ?? '',
             score,
         })
+    }
+})
+
+app.get('/card/request/:id([0-9]+)', requireAdmin, async (req, res) => {
+    const requestId = req.params.id
+    const memberCard = await cubestalker.getCardById(requestId)
+    if(memberCard) {
+        const member = await members.getUser(memberCard.memberId)
+        memberCard.user = {
+            name: member ? member.user.username : '',
+            avatar: member ? `${members.getAvatar(member.user)}?size=80` : ''
+        }
+        const card = await cubestalker.getCard(memberCard.image)
+        const base64image = card.toString('base64')
+        memberCard.image = base64image
+    }
+    res.render('admin/cardRequest.ejs', {
+        page: 'cardRequest',
+        user: req.session.user,
+        card: memberCard
+    })
+})
+
+app.post('/card/request/approve', requireAdmin, async (req, res) => {
+    try {
+        const user = req.session.user
+        const cardId = req.body.cardId
+        const card = await cubestalker.approveMemberCard(cardId)
+        if(card) await cubestalker.sendCardApprovalNotification(card.memberId, user.id, true)
+        res.end()
+    } catch(e) {
+        res.statusMessage = e.message
+        res.status(400).end()
+    }
+})
+
+app.post('/card/request/deny', requireAdmin, async (req, res) => {
+    try {
+        const user = req.session.user
+        const cardId = req.body.cardId
+        const card = await cubestalker.denyMemberCard(cardId)
+        if(card) await cubestalker.sendCardApprovalNotification(card.memberId, user.id, true)
+        res.end()
+    } catch(e) {
+        res.statusMessage = e.message
+        res.status(400).end()
     }
 })
 

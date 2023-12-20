@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/assets/libs/tabler/style.min.css">
+    <link rel="stylesheet" href="/static/assets/css/alert.css">
+    <link rel="stylesheet" href="/static/assets/css/background.css">
+    <link rel="stylesheet" href="/static/assets/libs/animate/animate.min.css">
+    <title>Beat Saber FR - Admin - Image de carte Cube-Stalker</title>
+</head>
+<body class="">
+    <div class="background"><div class="blur"></div></div>
+
+    <div class="page">
+        <%- include('./includes/header.ejs') %>
+        
+        <div class="page-wrapper">
+            <div class="container-xl">
+                <!-- Page title -->
+                <div class="page-header d-print-none">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <h2 class="page-title text-white">
+                                Image de carte Cube-Stalker
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-body">
+                <div class="container-xl">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div id="table-mutes" class="card">
+                                    <div class="card-header">
+                                        <div class="card-title">Approbation d'une demande d'image de carte Cube-Stalker</div>
+                                    </div>
+                                    <% if(card) { %>
+                                    <div class="card-body">
+                                        <% if(card.status === 1) { %>
+                                        <div class="alert alert-info" id="card-alert" role="alert">
+                                            <h4 class="alert-title">Information</h4>
+                                            <div class="text-secondary">
+                                                Cette demande d'approbation a été approuvée.
+                                            </div>
+                                        </div>
+                                        <% } else if(card.status === 2) { %>
+                                        <div class="alert alert-info" id="card-alert" role="alert">
+                                            <h4 class="alert-title">Information</h4>
+                                            <div class="text-secondary">
+                                                Cette demande d'approbation a été refusée.
+                                            </div>
+                                        </div>
+                                        <% } %>
+                                        <div class="row">
+                                            <div class="col-12 mb-3">
+                                                <label class="form-label">Auteur·rice de la demande</label>
+                                                <div class="d-flex align-items-center">
+                                                    <span class="avatar me-2" style="background-image: url(<%= card.user.avatar %>);"></span>
+                                                    <span><%= card.user.name %></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Aperçu</label>
+                                                <img src="data:image/png;base64,<%= card.image %>" width="800" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% if(card.status === 0) { %>
+                                    <div class="card-footer" id="approbation-form">
+                                        <div class="row">
+                                            <div class="col">
+                                                <button class="btn btn-danger" id="deny">Refuser</button>
+                                            </div>
+                                            <div class="col-auto ms-auto">
+                                                <button class="btn btn-success" id="accept">Approuver</button>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="card-id" value="<%= card.id %>">
+                                    </div>
+                                    <% } %>
+                                    <% } else { %>
+                                    <div class="card-body">
+                                        <div class="alert alert-danger" id="card-alert" role="alert">
+                                            <h4 class="alert-title">Erreur</h4>
+                                            <div class="text-secondary">
+                                                Demande d'approbation introuvable.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/assets/libs/tabler/script.min.js"></script>
+    <script src="/static/assets/js/app.js"></script>
+    <script>
+        const $approbationForm = document.querySelector('#approbation-form')
+        const $cardId = $approbationForm.querySelector('#card-id')
+        const $btnDeny = document.querySelector('#deny')
+        const $btnAccept = document.querySelector('#accept')
+
+        const cardId = parseInt($cardId.value)
+
+        $btnAccept.addEventListener('click', async (e) => {
+            $btnAccept.classList.add('btn-loading')
+
+            const request = await fetch('/admin/card/request/approve', {
+                method: 'POST',
+                body: JSON.stringify({
+                    cardId
+                })
+            })
+
+            if(request.ok) {
+                $approbationForm.remove()
+                showAlert(true, 'La demande d\'image de carte Cube-Stalker a été acceptée', 5000)
+            } else {
+                $btnAccept.classList.remove('btn-loading')
+                showAlert(false, request.statusText, 5000)
+            }
+        })
+
+        $btnDeny.addEventListener('click', async (e) => {
+            $btnDeny.classList.add('btn-loading')
+
+            const request = await fetch('/admin/card/request/deny', {
+                method: 'POST',
+                body: JSON.stringify({
+                    cardId
+                })
+            })
+
+            if(request.ok) {
+                $approbationForm.remove()
+                showAlert(true, 'La demande d\'image de carte Cube-Stalker a été refusée', 5000)
+            } else {
+                $btnDeny.classList.remove('btn-loading')
+                showAlert(false, request.statusText, 5000)
+            }
+        })
+    </script>
+</body>
+</html>

@@ -266,45 +266,19 @@ const sequelizeCubeStalker = new Sequelize(config.databases.cubestalker.name, co
     timezone: 'Europe/Paris'
 })
 
-const Leaderboard = sequelizeCubeStalker.define('leaderboard', {
+const Cards = sequelizeCubeStalker.define('cards', {
     id: {
         type: DataTypes.INTEGER(),
         autoIncrement: true,
         primaryKey: true
     },
-    leaderboard: DataTypes.STRING(255),
     memberId: DataTypes.STRING(255),
-    playerId: DataTypes.STRING(255),
-    playerName: DataTypes.STRING(255),
-    playerCountry: DataTypes.STRING(255),
-    pp: DataTypes.INTEGER(),
-    countryRank: DataTypes.INTEGER(),
-    averageRankedAccuracy: DataTypes.DOUBLE(),
-    serverRankAcc: DataTypes.INTEGER(),
-    serverRankPP: DataTypes.INTEGER()
-})
-
-const Players = sequelizeCubeStalker.define('players', {
-    id: {
-        type: DataTypes.INTEGER(),
-        autoIncrement: true,
-        primaryKey: true
-    },
-    leaderboard: DataTypes.STRING(255),
-    memberId: DataTypes.STRING(255),
-    playerId: DataTypes.STRING(255),
-    playerName: DataTypes.STRING(255),
-    playerCountry: DataTypes.STRING(255),
-    pp: DataTypes.INTEGER(),
-    countryRank: DataTypes.INTEGER(),
-    averageRankedAccuracy: DataTypes.DOUBLE(),
-    serverRankAcc: DataTypes.INTEGER(),
-    serverRankPP: DataTypes.INTEGER(),
-    top1: DataTypes.BOOLEAN()
+    image: DataTypes.BLOB(),
+    status: DataTypes.INTEGER()
 })
 
 export {
     Rankedles, RankedleMaps, RankedleScores, RankedleStats, RankedleMessages,
     Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, FranceCities, Cities, MPOV, YoutubeVideos, Feur, Roles, RolesCategories,
-    Leaderboard, Players
+    Cards
 }
