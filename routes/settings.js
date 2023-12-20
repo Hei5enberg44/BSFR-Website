@@ -205,7 +205,7 @@ app.post('/card', requireNitro, async (req, res) => {
         const image = await fs.readFile(filePath)
 
         const cardId = await cubestalker.updateMemberCard(user.id, image, user.isAdmin ? cubestalker.APPROVED : cubestalker.PENDING)
-        if(!user.isAdmin) await cubestalker.sendCardRequest(req, user.id, cardId)
+        if(!user.isAdmin) await cubestalker.sendCardRequest(user.id, cardId)
 
         Logger.log('SettingsCardImage', 'INFO', `L'utilisateur ${user.username} a mis à jour l'image de sa carte Cube-Stalker`)
         

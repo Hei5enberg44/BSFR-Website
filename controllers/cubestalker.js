@@ -456,10 +456,10 @@ export default {
         return card
     },
 
-    async sendCardRequest(req, memberId, cardId) {
+    async sendCardRequest(memberId, cardId) {
         const discord = new DiscordAPI()
 
-        const url = `${req.protocol}://${req.hostname}/admin/card/request/${cardId}`
+        const url = `https://bsaber.fr/admin/card/request/${cardId}`
         const embed = {
             title: '🖼️ Image de carte Cube-Stalker',
             color: 3447003,
