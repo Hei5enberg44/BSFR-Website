@@ -278,10 +278,10 @@ export default class Agent {
         const check = []
         for(const role of newUserRoles) {
             const _role = roleList.find(r => r.name === role.name)
-            if(!check.find(c => c.multiple === _role.multiple && c.categoryId === _role.categoryId)) {
-                check.push(_role)
-            } else {
+            if(_role.multiple === 0 && check.find(c => c.multiple === _role.multiple && c.categoryId === _role.categoryId)) {
                 throw new Error('Impossible de mettre à jour les rôles.')
+            } else {
+                check.push(_role)
             }
         }
         
