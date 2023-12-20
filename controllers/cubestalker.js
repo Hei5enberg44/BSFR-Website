@@ -1,5 +1,6 @@
 import { createCanvas, loadImage, registerFont } from 'canvas'
 import * as fs from 'node:fs'
+import sharp from 'sharp'
 import { Cards } from './database.js'
 import DiscordAPI from './discord.js'
 import config from '../config.json' assert { type: 'json' }
@@ -372,9 +373,9 @@ export default {
             ctx.stroke()
         }
 
-        // Enregistrement de l'image dans un fichier temporaire
-        const base64Image = canvas.toDataURL().split(';base64,').pop()
-        return base64Image
+        // Convertion de l'image au format webp
+        const card = await sharp(canvas.toBuffer()).webp({ quality: 80 }).toBuffer()
+        return card.toString('base64')
     },
 
     PENDING: 0,

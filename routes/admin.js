@@ -229,8 +229,7 @@ app.get('/card/request/:id([0-9]+)', requireAdmin, async (req, res) => {
             avatar: member ? `${members.getAvatar(member.user)}?size=80` : ''
         }
         const card = await cubestalker.getCard(memberCard.image)
-        const base64image = card.toString('base64')
-        memberCard.image = base64image
+        memberCard.image = card
     }
     res.render('admin/cardRequest.ejs', {
         page: 'cardRequest',
