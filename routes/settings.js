@@ -160,7 +160,7 @@ app.get('/card/preview', requireNitro, async (req, res) => {
     const user = req.session.user
     const memberCard = await cubestalker.getMemberCard(user.id)
     const card = await cubestalker.getCard(memberCard && memberCard.status !== 2 ? memberCard.image : null)
-    res.setHeader('Content-Type', 'image/png')
+    res.setHeader('Content-Type', 'image/webp')
     res.send(Buffer.from(card, 'base64'))
 })
 
@@ -183,10 +183,9 @@ app.post('/card/upload', requireNitro, async (req, res) => {
 
             const buffer = await fs.readFile(filePath)
             const card = await cubestalker.getCard(buffer)
-            const base64image = card.toString('base64')
 
             Logger.log('SettingsCardImage', 'INFO', `L'image de carte Cube-Stalker de ${user.username} a bien été uploadée`)
-            res.send({ success: true, data: `data:image/png;base64,${base64image}` })
+            res.send({ success: true, data: `data:image/webp;base64,${card}` })
         } catch(error) {
             res.send({ success: false, message: error.message })
         }
