@@ -45,7 +45,7 @@
                                                 <a href="/settings/roles" class="list-group-item list-group-item-action d-flex align-items-center">Rôles</a>
                                                 <a href="/settings/city" class="list-group-item list-group-item-action d-flex align-items-center active">Ville</a>
                                                 <a href="/settings/twitch" class="list-group-item list-group-item-action d-flex align-items-center">Twitch</a>
-                                                <% if(user.isNitroBooster) { %>
+                                                <% if(user.isNitroBooster || user.isAdmin) { %>
                                                 <h4 class="subheader ms-3 mt-4">Avantages Nitro Booster</h4>
                                                 <a href="/settings/card" class="list-group-item list-group-item-action">Image de carte Cube-Stalker</a>
                                                 <% } %>

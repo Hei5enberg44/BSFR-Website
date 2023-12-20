@@ -509,8 +509,10 @@ export default class Rankedle {
         const rankedleScore = await this.getUserScore(rankedle.id, memberId)
         if(!rankedleScore || rankedleScore.success === null) return null
 
+        const mapId = memberId === '1125101235087872010' && rankedle.id === 82 ? 1553 : rankedle.mapId
+
         const mapData = await RankedleMaps.findOne({
-            where: { id: rankedle.mapId },
+            where: { id: mapId },
             raw: true
         })
 
@@ -592,7 +594,7 @@ export default class Rankedle {
         })
         if(message?.image) {
             const imageBuffer = Buffer.from(message.image)
-            const imageMimeType = message.image ? mime.getImageMimeType(imageBuffer) : null
+            const imageMimeType = message.image ? await mime.getMimeType(imageBuffer) : null
             message.image = imageMimeType ? `data:${imageMimeType};base64,${imageBuffer.toString('base64')}` : null
         }
         return message

@@ -14,7 +14,6 @@ import rankedleRoutes from './routes/rankedle.js'
 import settingsRoutes from './routes/settings.js'
 import adminRoutes from './routes/admin.js'
 import agentRoutes from './routes/agent.js'
-import cubestalkerRoutes from './routes/cubestalker.js'
 import { requireLogin } from './routes/middlewares.js'
 import config from './config.json' assert { type: 'json' }
 
@@ -94,10 +93,9 @@ app.use('/forms', formsRoutes)
 app.use('/interactive-map', mapRoutes)
 app.use('/feurboard', feurboardRoutes)
 app.use('/rankedle', rankedleRoutes)
-// app.use('/settings', settingsRoutes)
+app.use('/settings', settingsRoutes)
 app.use('/admin', adminRoutes)
 app.use('/agent', agentRoutes)
-// app.use('/cubestalker', cubestalkerRoutes)
 
 app.get('/google/redirect', (req, res) => {
     console.log(req)
