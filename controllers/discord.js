@@ -126,7 +126,7 @@ export default class DiscordAPI {
             ...user,
             isBSFR: false,
             isAdmin: false,
-            isNitroBooster: true, // à passer à false
+            isNitroBooster: false,
             avatarURL: members.getAvatar(user),
             roles: [],
             expires: Date.now() + (24 * 3600 * 1000)
