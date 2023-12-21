@@ -127,7 +127,7 @@
                 showAlert(true, 'La demande d\'image de carte Cube-Stalker a été acceptée', 5000)
             } else {
                 $btnAccept.classList.remove('btn-loading')
-                showAlert(false, request.statusText, 5000)
+                showAlert(false, request.headers.get('X-Status-Message') ?? '', 5000)
             }
         })
 
@@ -146,7 +146,7 @@
                 showAlert(true, 'La demande d\'image de carte Cube-Stalker a été refusée', 5000)
             } else {
                 $btnDeny.classList.remove('btn-loading')
-                showAlert(false, request.statusText, 5000)
+                showAlert(false, request.headers.get('X-Status-Message') ?? '', 5000)
             }
         })
     </script>

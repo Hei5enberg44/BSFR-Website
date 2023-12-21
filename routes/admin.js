@@ -246,7 +246,7 @@ app.post('/card/request/approve', requireAdmin, async (req, res) => {
         if(card) await cubestalker.sendCardApprovalNotification(card.memberId, user.id, true)
         res.end()
     } catch(e) {
-        res.statusMessage = e.message
+        res.header('X-Status-Message', e.message)
         res.status(400).end()
     }
 })
@@ -259,7 +259,7 @@ app.post('/card/request/deny', requireAdmin, async (req, res) => {
         if(card) await cubestalker.sendCardApprovalNotification(card.memberId, user.id, true)
         res.end()
     } catch(e) {
-        res.statusMessage = e.message
+        res.header('X-Status-Message', e.message)
         res.status(400).end()
     }
 })

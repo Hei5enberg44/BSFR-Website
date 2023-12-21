@@ -115,7 +115,7 @@
             if(saveRequest.ok) {
                 showAlert(true, 'Les paramètres ont bien été enregistrés.', 5000)
             } else {
-                showAlert(false, saveRequest.statusText, 5000)
+                showAlert(false, saveRequest.headers.get('X-Status-Message') ?? '', 5000)
             }
 
             $btnSave.classList.remove('btn-loading')
