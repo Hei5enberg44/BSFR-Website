@@ -183,7 +183,7 @@
 
                                                                 <h2> <%= result.message.content %></h2>
 
-                                                                <div class="mt-1"><%= result.score %></div>
+                                                                <div class="mt-1" style="font-size: 1.15rem;"><%- result.score.map(s => `<em-emoji native="${s}" set="twitter"></em-emoji>`).join(' ') %></div>
 
                                                                 <div class="my-4">
                                                                     <button type="button" class="btn btn-primary" id="share">
@@ -511,6 +511,7 @@
     <script src="/static/assets/libs/tabler/script.min.js"></script>
     <script src="/static/assets/libs/tom-select/tom-select.base.min.js"></script>
     <script src="/static/assets/libs/nouislider/nouislider.min.js"></script>
+    <script src="/static/assets/libs/emoji-mart/browser.js"></script>
     <script src="/static/assets/js/app.js"></script>
     <% if(user.isBSFR) { %>
     <script src="/static/assets/js/rankedle.js"></script>
