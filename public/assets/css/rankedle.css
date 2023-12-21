@@ -38,8 +38,9 @@
 
 #rankedle #progress {
     position: relative;
-    background: #f1f5f9;
-    height: 24px;
+    background: var(--tblr-border-color);
+    height: 12px;
+    border-radius: 12px;
 }
 
 #rankedle #progress #seek-bar {
@@ -48,14 +49,16 @@
 
 #rankedle #progress #seek-bar-placeholder {
     position: absolute;
-    background: #c8d3e1;
+    background: var(--tblr-primary);
+    opacity: 0.3;
 }
 
 #rankedle #progress .progress-step {
     position: absolute;
     width: 1px;
     height: 100%;
-    background: #9ba9be;
+    background: var(--tblr-primary);
+    opacity: 0.5;
 }
 
 #rankedle .time {
