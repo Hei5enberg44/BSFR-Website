@@ -3,24 +3,34 @@
 }
 
 #rankedle .step {
-    min-height: 38px;
-    border: 1px solid var(--tblr-border-color);
+    min-height: 46px;
+    border: var(--tblr-border-width) var(--tblr-border-style) var(--tblr-border-color-translucent);
 }
 
 #rankedle .step.step-active {
-    border-color: var(--tblr-primary);
+    border-color: var(--tblr-info);
+}
+
+#rankedle .step.step-skip {
+    border-color: var(--tblr-gray-400);
+    color: var(--tblr-gray-400);
+}
+
+#rankedle .step.step-fail {
+    border-color: var(--tblr-danger);
+    color: var(--tblr-danger);
 }
 
 #rankedle .step .icon {
-    min-width: 32px;
+    color: inherit;
 }
 
 #rankedle #play-btn {
     width: 56px;
     height: 56px;
-    padding: 10px;
-    color: var(--tblr-body-color);
-    border: 2px solid var(--tblr-body-color);
+    padding: 11px;
+    color: var(--tblr-primary);
+    border: 1px solid var(--tblr-primary);
     border-radius: 50%;
     cursor: pointer;
     margin: 0 auto;

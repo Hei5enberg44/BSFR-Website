@@ -1,8 +1,8 @@
 const SKIPS = [ 1, 2, 3, 4, 5, 14, 0 ]
 const playIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" /></svg>'
 const stopIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 4h-10a3 3 0 0 0 -3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3 -3v-10a3 3 0 0 0 -3 -3z" /></svg>'
-const skipIcon = '<svg xmlns="http://www.w3.org/2000/svg" class="icon me-2" width="64" height="64" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 3m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" /></svg>'
-const failIcon = '<svg xmlns="http://www.w3.org/2000/svg" class="icon me-2" width="64" height="64" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>'
+const skipIcon = '<svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5v14l12 -7z" /><path d="M20 5l0 14" /></svg>'
+const failIcon = '<svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>'
 
 /** @type {HTMLAudioElement} */
 const $playBtn = document.querySelector('#play-btn')
@@ -186,18 +186,24 @@ if($btnSkip) {
             if(score.success === null) {
                 if(score.details) {
                     for(let i = 0; i < $steps.length; i++) {
+                        const $stepIcon = $steps[i].querySelector('.step-icon')
+                        const $stepText = $steps[i].querySelector('.step-text')
                         const detail = score.details[i] ?? null
         
-                        $steps[i].classList.remove('step-active', 'text-red')
+                        $steps[i].classList.remove('step-active')
         
                         if(detail) {
                             let icon = ''
-                            if(detail.status === 'skip') icon = skipIcon
+                            if(detail.status === 'skip') {
+                                icon = skipIcon
+                                $steps[i].classList.add('step-skip')
+                            }
                             if(detail.status === 'fail') {
                                 icon = failIcon
-                                $steps[i].classList.add('text-red')
+                                $steps[i].classList.add('step-fail')
                             }
-                            $steps[i].innerHTML = icon + detail.text
+                            $stepIcon.innerHTML = icon
+                            $stepText.textContent = detail.text
                         }
                         if(i === score.skips && score.skips < 6) $steps[i].classList.add('step-active')
                         if(score.skips === 6) {
