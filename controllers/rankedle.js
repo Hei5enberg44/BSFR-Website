@@ -248,6 +248,11 @@ export default class Rankedle {
         return stats
     }
 
+    static isCheating(memberId) {
+        const blacklist = [ '1125101235087872010' ]
+        return blacklist.includes(memberId)
+    }
+
     static async playRequest(req, res) {
         if(!req.session.user) throw new Error('User not connected')
         const user = req.session.user
@@ -259,7 +264,7 @@ export default class Rankedle {
         await this.setDateStart(rankedle.id, user.id, rankedleScore)
 
         const skips = rankedleScore ? rankedleScore.skips : 0
-        const preview = path.join(RANKEDLE_PATH, `preview_${skips < 6 && !rankedleScore?.success ? skips : 'full'}.ogg`)
+        const preview = path.join(RANKEDLE_PATH, this.isCheating(user.id) ? 'metal_pipe.ogg' : `preview_${skips < 6 && !rankedleScore?.success ? skips : 'full'}.ogg`)
 
         const stat = fs.statSync(preview)
         const fileSize = stat.size
@@ -340,6 +345,8 @@ export default class Rankedle {
         const rankedle = await this.getCurrentRankedle()
         if(!rankedle) throw new Error('No rankedle found')
 
+        if(this.isCheating(user.id)) throw new Error('Action impossible')
+
         let score = await RankedleScores.findOne({
             where: {
                 rankedleId: rankedle.id,
@@ -380,7 +387,7 @@ export default class Rankedle {
             })
         }
 
-        if(score.success !== null) {
+        if(score.dateEnd === null && score.success !== null) {
             await this.updatePlayerStats(score)
         }
 
@@ -396,6 +403,8 @@ export default class Rankedle {
 
         const mapId = req.body?.id
         if(!mapId) throw new Error('Invalid request')
+
+        if(this.isCheating(user.id)) throw new Error('Action impossible')
 
         const mapData = await RankedleMaps.findOne({
             where: { id: mapId }
@@ -454,7 +463,7 @@ export default class Rankedle {
             score = await RankedleScores.create(scoreData)
         }
 
-        if(score.success !== null) {
+        if(score.dateEnd === null && score.success !== null) {
             await this.updatePlayerStats(score)
         }
 
@@ -509,10 +518,8 @@ export default class Rankedle {
         const rankedleScore = await this.getUserScore(rankedle.id, memberId)
         if(!rankedleScore || rankedleScore.success === null) return null
 
-        const mapId = memberId === '1125101235087872010' && rankedle.id === 82 ? 1553 : rankedle.mapId
-
         const mapData = await RankedleMaps.findOne({
-            where: { id: mapId },
+            where: { id: rankedle.mapId },
             raw: true
         })
 

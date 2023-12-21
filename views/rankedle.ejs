@@ -148,16 +148,25 @@
                                                             </div>
 
                                                             <div class="mb-3">
-                                                                <select type="text" class="form-select" id="song"></select>
+                                                                <select type="text" class="form-select" id="song"<%= isCheating ? ' disabled': '' %>></select>
                                                             </div>
+
+                                                            <% if(isCheating) { %>
+                                                            <div class="alert alert-danger" role="alert">
+                                                                <div class="text-secondary">
+                                                                    Le système anti-cheat a détécté une anomalie sur votre compte.<br>
+                                                                    Si vous pensez que cela est une erreur, veuillez contacter un administrateur/modérateur sur le serveur Discord.
+                                                                </div>
+                                                            </div>
+                                                            <% } %>
 
                                                             <div class="row">
                                                                 <div class="col">
-                                                                    <button type="button" class="btn" id="skip">PASSER (+<span id="skip-seconds">1</span>s)</button>
+                                                                    <button type="button" class="btn" id="skip"<%= isCheating ? ' disabled': '' %>>PASSER (+<span id="skip-seconds">1</span>s)</button>
                                                                 </div>
                                                                 <div class="col-auto ms-auto">
-                                                                    <button type="button" class="btn btn-success" id="submit">ENVOYER</button>
-                                                                    <button type="button" class="btn btn-success d-none" id="end">TERMINER</button>
+                                                                    <button type="button" class="btn btn-success" id="submit"<%= isCheating ? ' disabled': '' %>>ENVOYER</button>
+                                                                    <button type="button" class="btn btn-success d-none" id="end"<%= isCheating ? ' disabled': '' %>>TERMINER</button>
                                                                 </div>
                                                             </div>
                                                             <% } else { %>
@@ -340,12 +349,12 @@
                                                         <table class="table text-center w-100">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>1 tentative</th>
-                                                                    <th>2 tentatives</th>
-                                                                    <th>3 tentatives</th>
-                                                                    <th>4 tentatives</th>
-                                                                    <th>5 tentatives</th>
-                                                                    <th>6 tentatives</th>
+                                                                    <th>1<sup>ère</sup> tentative</th>
+                                                                    <th>2<sup>ème</sup> tentative</th>
+                                                                    <th>3<sup>ème</sup> tentative</th>
+                                                                    <th>4<sup>ème</sup> tentative</th>
+                                                                    <th>5<sup>ème</sup> tentative</th>
+                                                                    <th>6<sup>ème</sup> tentative</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
