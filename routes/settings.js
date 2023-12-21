@@ -46,7 +46,7 @@ app.post('/birthday', requireLogin, async (req, res) => {
         
         res.end()
     } catch(e) {
-        res.statusMessage = e.message
+        res.header('X-Status-Message', e.message)
         res.status(400).end()
     }
 })
@@ -74,7 +74,7 @@ app.post('/roles', requireLogin, async (req, res) => {
         
         res.end()
     } catch(e) {
-        res.statusMessage = e.message
+        res.header('X-Status-Message', e.message)
         res.status(400).end()
     }
 })
@@ -113,7 +113,7 @@ app.post('/city', requireLogin, async (req, res) => {
         
         res.end()
     } catch(e) {
-        res.statusMessage = e.message
+        res.header('X-Status-Message', e.message)
         res.status(400).end()
     }
 })
@@ -141,7 +141,7 @@ app.post('/twitch', requireLogin, async (req, res) => {
         
         res.end()
     } catch(e) {
-        res.statusMessage = e.message
+        res.header('X-Status-Message', e.message)
         res.status(400).end()
     }
 })
@@ -211,7 +211,7 @@ app.post('/card', requireNitro, async (req, res) => {
         
         res.end()
     } catch(e) {
-        res.statusMessage = e.message
+        res.header('X-Status-Message', e.message)
         res.status(400).end()
     }
 })
@@ -222,7 +222,7 @@ app.post('/card/remove', requireNitro, async (req, res) => {
         await cubestalker.removeMemberCard(user.id)
         res.end()
     } catch(e) {
-        res.statusMessage = e.message
+        res.header('X-Status-Message', e.message)
         res.status(400).end()
     }
 })

@@ -148,7 +148,7 @@ if($btnSkip) {
             resumeAudio()
         } else {
             toggleButtons(true)
-            showAlert(false, skipRequest.statusText, 5000)
+            showAlert(false, skipRequest.headers.get('X-Status-Message') ?? '', 5000)
         }
     })
 
@@ -179,7 +179,7 @@ if($btnSkip) {
                 songChoice.removeOption(value)
             } else {
                 toggleButtons(true)
-                showAlert(false, submitRequest.statusText, 5000)
+                showAlert(false, submitRequest.headers.get('X-Status-Message') ?? '', 5000)
             }
         }
     })
@@ -330,7 +330,7 @@ if($btnStats) {
             const modalStats = bootstrap.Modal.getOrCreateInstance($modalStats)
             modalStats.show()
         } else {
-            showAlert(false, statsRequest.statusText, 5000)
+            showAlert(false, statsRequest.headers.get('X-Status-Message') ?? '', 5000)
         }
     }
 }
@@ -361,7 +361,7 @@ if($btnShare) {
                 $btnShare.querySelector('span').textContent = 'Partager'
             }, 2000)
         } else {
-            showAlert(false, shareRequest.statusText, 5000)
+            showAlert(false, shareRequest.headers.get('X-Status-Message') ?? '', 5000)
         }
 
         $btnShare.classList.remove('btn-loading')
@@ -413,7 +413,7 @@ if($modalHistory) {
             const history = await historyRequest.json()
             return history
         } else {
-            showAlert(false, historyRequest.statusText, 5000)
+            showAlert(false, historyRequest.headers.get('X-Status-Message') ?? '', 5000)
         }
 
         return null
