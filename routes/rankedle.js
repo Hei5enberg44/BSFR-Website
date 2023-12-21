@@ -10,12 +10,14 @@ app.get('/', requireLogin, async (req, res) => {
     const currentRankedle = await rankedle.getCurrentRankedle()
     const ranking = await rankedle.getRanking()
     const result = await rankedle.getResult(currentRankedle, user.id)
+    const isCheating = rankedle.isCheating(user.id)
     res.render('rankedle.ejs', {
         page: 'rankedle',
         user,
         rankedle: currentRankedle,
         ranking,
         result,
+        isCheating,
         inviteUrl: config.discord.invitation_url
     })
 })
@@ -24,7 +26,8 @@ app.get('/song', async (req, res) => {
     try {
         await rankedle.playRequest(req, res)
     } catch(e) {
-        res.status(404).end()
+        res.statusMessage = e.message
+        res.status(400).end()
     }
 })
 
@@ -34,7 +37,8 @@ app.get('/songs', async (req, res) => {
         const songs = await rankedle.getSongList(user.id, req.query.q)
         res.json(songs)
     } catch(e) {
-        res.status(404).end()
+        res.statusMessage = e.message
+        res.status(400).end()
     }
 })
 
@@ -42,7 +46,8 @@ app.get('/score', async (req, res) => {
     try {
         await rankedle.scoreRequest(req, res)
     } catch(e) {
-        res.status(404).end()
+        res.statusMessage = e.message
+        res.status(400).end()
     }
 })
 
@@ -50,7 +55,8 @@ app.post('/skip', async (req, res) => {
     try {
         await rankedle.skipRequest(req, res)
     } catch(e) {
-        res.status(404).end()
+        res.statusMessage = e.message
+        res.status(400).end()
     }
 })
 
@@ -58,7 +64,8 @@ app.post('/submit', async (req, res) => {
     try {
         await rankedle.submitRequest(req, res)
     } catch(e) {
-        res.status(404).end()
+        res.statusMessage = e.message
+        res.status(400).end()
     }
 })
 
@@ -66,7 +73,8 @@ app.get('/share', async (req, res) => {
     try {
         await rankedle.shareRequest(req, res)
     } catch(e) {
-        res.status(404).end()
+        res.statusMessage = e.message
+        res.status(400).end()
     }
 })
 
@@ -74,7 +82,8 @@ app.get('/stats', async (req, res) => {
     try {
         await rankedle.statsRequest(req, res)
     } catch(e) {
-        res.status(404).end()
+        res.statusMessage = e.message
+        res.status(400).end()
     }
 })
 
@@ -83,7 +92,8 @@ app.get('/ranking', async (req, res) => {
         const ranking = await rankedle.getRanking()
         res.json(ranking)
     } catch(e) {
-        res.status(404).end()
+        res.statusMessage = e.message
+        res.status(400).end()
     }
 })
 
@@ -92,7 +102,8 @@ app.get('/history', async (req, res) => {
         const page = req.query.page ? parseInt(req.query.page) : 0
         await rankedle.getRankedleHistory(req, res, page)
     } catch(e) {
-        res.status(404).end()
+        res.statusMessage = e.message
+        res.status(400).end()
     }
 })
 
@@ -101,7 +112,8 @@ app.get('/list', async (req, res) => {
         const rankedleList = await rankedle.getRankedleList()
         res.json(rankedleList)
     } catch(e) {
-        res.status(404).end()
+        res.statusMessage = e.message
+        res.status(400).end()
     }
 })
 
