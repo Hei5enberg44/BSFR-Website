@@ -1,3 +1,8 @@
+window.addEventListener('DOMContentLoaded', async () => {
+    const twitter = await (await fetch('/static/assets/libs/emoji-mart/twitter.json')).json()
+    EmojiMart.init({ data: twitter })
+})
+
 const SKIPS = [ 1, 2, 3, 4, 5, 14, 0 ]
 const playIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" /></svg>'
 const stopIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 4h-10a3 3 0 0 0 -3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3 -3v-10a3 3 0 0 0 -3 -3z" /></svg>'
@@ -433,7 +438,7 @@ if($modalHistory) {
                 const $tdScore = document.createElement('td')
                 $tdScore.style.minWidth = '175px'
                 if(historyEntrie.score) {
-                    $tdScore.textContent = historyEntrie.score
+                    $tdScore.innerHTML = historyEntrie.score.map(s => `<em-emoji native="${s}" set="twitter"></em-emoji>`).join(' ')
                 }
                 const $tdDate = document.createElement('td')
                 $tdDate.textContent = historyEntrie.date

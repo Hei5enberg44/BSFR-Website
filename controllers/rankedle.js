@@ -524,7 +524,10 @@ export default class Rankedle {
             }
         }
         if(rankedleScore.success) steps[rankedleScore.skips] = 'success'
-        const score = (!rankedleScore.success ? '🔇' : rankedleScore.skips === 0 ? '🔊' : '🔉') + steps.map(s => s === 'skip' ? '⬛️' : s === 'fail' ? '🟥' : s === 'success' ? '🟩' : '⬜️').join('')
+        const score = [
+            (!rankedleScore.success ? '🔇' : rankedleScore.skips === 0 ? '🔊' : '🔉'),
+            ...steps.map(s => s === 'skip' ? '⬛' : s === 'fail' ? '🟥' : s === 'success' ? '🟩' : '⬜️')
+        ]
 
         return {
             won: rankedleScore.success,
@@ -560,7 +563,7 @@ export default class Rankedle {
         if(rankedleScore.success) steps[rankedleScore.skips] = 'success'
 
         let result = `Rankedle #${rankedle.id}\n\n`
-        result += (!rankedleScore.success ? '🔇' : rankedleScore.skips === 0 ? '🔊' : '🔉') + steps.map(s => s === 'skip' ? '⬛️' : s === 'fail' ? '🟥' : s === 'success' ? '🟩' : '⬜️').join('') + '\n\n'
+        result += (!rankedleScore.success ? '🔇' : rankedleScore.skips === 0 ? '🔊' : '🔉') + steps.map(s => s === 'skip' ? '⬛' : s === 'fail' ? '🟥' : s === 'success' ? '🟩' : '⬜️').join('') + '\n\n'
         result += '<https://bsaber.fr/rankedle>'
 
         res.send(result)
@@ -697,7 +700,10 @@ export default class Rankedle {
                     }
                 }
                 if(rankedleScore.success) steps[rankedleScore.skips] = 'success'
-                score = (!rankedleScore.success ? '🔇' : rankedleScore.skips === 0 ? '🔊' : '🔉') + steps.map(s => s === 'skip' ? '⬛️' : s === 'fail' ? '🟥' : s === 'success' ? '🟩' : '⬜️').join('')
+                score = [
+                    (!rankedleScore.success ? '🔇' : rankedleScore.skips === 0 ? '🔊' : '🔉'),
+                    ...steps.map(s => s === 'skip' ? '⬛' : s === 'fail' ? '🟥' : s === 'success' ? '🟩' : '⬜️')
+                ]
             }
     
             history.push({
