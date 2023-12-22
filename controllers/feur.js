@@ -4,8 +4,6 @@ import { Sequelize } from 'sequelize'
 
 export default {
     async getAttackers() {
-        const memberList = await members.getGuildMembers()
-        
         const attackerList = await Feur.findAll({
             group: 'attackerId',
             attributes: [
@@ -17,21 +15,21 @@ export default {
         })
 
         let rank = 1
-        const attackers = attackerList.map(a => {
-            const member = memberList.find(m => m.user.id === a.attackerId)
-            a.avatar = member ? `${members.getAvatar(member.user)}?size=80` : ''
-            a.name = member ? member.user.username : ''
-            a.rank = rank
+        const attackers = []
+        for(const attacker of attackerList) {
+            const user = await members.getUser(attacker.attackerId)
+            if(!user) continue
+            attacker.avatar = `${user.getAvatarURL()}?size=80`
+            attacker.name = user.username
+            attacker.rank = rank
+            attackers.push(attacker)
             rank++
-            return a
-        })
+        }
 
         return attackers
     },
 
     async getVictims() {
-        const memberList = await members.getGuildMembers()
-
         const victimList = await Feur.findAll({
             group: 'victimId',
             attributes: [
@@ -43,21 +41,21 @@ export default {
         })
 
         let rank = 1
-        const victims = victimList.map(a => {
-            const member = memberList.find(m => m.user.id === a.victimId)
-            a.avatar = member ? `${members.getAvatar(member.user)}?size=80` : ''
-            a.name = member ? member.user.username : ''
-            a.rank = rank
+        const victims = []
+        for(const victim of victimList) {
+            const user = await members.getUser(victim.victimId)
+            if(!user) continue
+            victim.avatar = `${user.getAvatarURL()}?size=80`
+            victim.name = user.username
+            victim.rank = rank
+            victims.push(victim)
             rank++
-            return a
-        })
+        }
 
         return victims
     },
 
     async getAttackerMessages(attackerId) {
-        const memberList = await members.getGuildMembers()
-
         const messageList = await Feur.findAll({
             where: {
                 attackerId: attackerId
@@ -66,22 +64,21 @@ export default {
             raw: true
         })
 
-        const messages = messageList.map(mes => {
-            const memberAttacker = memberList.find(m => m.user.id === mes.attackerId)
-            const memberVictim = memberList.find(m => m.user.id === mes.victimId)
-            mes.attackerName = memberAttacker ? memberAttacker.user.username : ''
-            mes.attackerAvatar = memberAttacker ? `${members.getAvatar(memberAttacker.user)}?size=80` : ''
-            mes.victimName = memberVictim ? memberVictim.user.username : ''
-            mes.victimAvatar = memberVictim ? `${members.getAvatar(memberVictim.user)}?size=80` : ''
-            return mes
-        })
+        const messages = []
+        for(const message of messageList) {
+            const victim = await members.getUser(message.victimId)
+            const attacker = await members.getUser(message.attackerId)
+            message.attackerName = attacker ? attacker.username : ''
+            message.attackerAvatar = attacker ? `${attacker.getAvatarURL()}?size=80` : ''
+            message.victimName = victim ? victim.username : '?'
+            message.victimAvatar = victim ? `${victim.getAvatarURL()}?size=80` : ''
+            messages.push(message)
+        }
 
         return messages
     },
 
     async getVictimMessages(victimId) {
-        const memberList = await members.getGuildMembers()
-
         const messageList = await Feur.findAll({
             where: {
                 victimId: victimId
@@ -90,15 +87,16 @@ export default {
             raw: true
         })
 
-        const messages = messageList.map(mes => {
-            const memberAttacker = memberList.find(m => m.user.id === mes.attackerId)
-            const memberVictim = memberList.find(m => m.user.id === mes.victimId)
-            mes.attackerName = memberAttacker ? memberAttacker.user.username : ''
-            mes.attackerAvatar = memberAttacker ? `${members.getAvatar(memberAttacker.user)}?size=80` : ''
-            mes.victimName = memberVictim ? memberVictim.user.username : ''
-            mes.victimAvatar = memberVictim ? `${members.getAvatar(memberVictim.user)}?size=80` : ''
-            return mes
-        })
+        const messages = []
+        for(const message of messageList) {
+            const attacker = await members.getUser(message.attackerId)
+            const victim = await members.getUser(message.victimId)
+            message.attackerName = attacker ? attacker.username : '?'
+            message.attackerAvatar = attacker ? `${attacker.getAvatarURL()}?size=80` : ''
+            message.victimName = victim ? victim.username : ''
+            message.victimAvatar = victim ? `${victim.getAvatarURL()}?size=80` : ''
+            messages.push(message)
+        }
 
         return messages
     }

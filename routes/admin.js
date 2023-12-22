@@ -12,20 +12,23 @@ app.get('/', requireAdmin, async (req, res) => {
 })
 
 app.get('/birthdays', requireAdmin, async (req, res) => {
-    const memberList = await members.getGuildMembers()
     const birthdays = await agent.getBirthdays()
-    const membersBirthday = birthdays.map(b => {
-        const member = memberList.find(ml => ml.user.id === b.memberId)
-        const date = new Intl.DateTimeFormat('fr-FR').format(new Date(b.date))
-        return {
-            avatar: member ? `${members.getAvatar(member.user)}?size=80` : '',
-            name: member ? `${member.user.username}#${member.user.discriminator}` : '',
+
+    const membersBirthday = []
+    for(const birthday of birthdays) {
+        const user = await members.getUser(birthday.memberId)
+        if(!user) continue
+        const date = new Intl.DateTimeFormat('fr-FR').format(new Date(birthday.date))
+        membersBirthday.push({
+            avatar: `${user.getAvatarURL()}?size=80`,
+            name: user.username,
             date: {
-                timestamp: new Date(b.date).getTime(),
+                timestamp: new Date(birthday.date).getTime(),
                 formated: date
             }
-        }
-    })
+        })
+    }
+
     res.render('admin/birthdays', {
         page: 'birthdays',
         user: req.session.user,
@@ -34,31 +37,33 @@ app.get('/birthdays', requireAdmin, async (req, res) => {
 })
 
 app.get('/mutes', requireAdmin, async (req, res) => {
-    const memberList = await members.getGuildMembers()
     const mutes = await agent.getMutes()
-    const mutedMembers = await Promise.all(mutes.map(async (m) => {
-        const member = memberList.find(ml => ml.user.id === m.memberId) ?? await members.getUser(m.memberId)
-        const author = memberList.find(ml => ml.user.id === m.mutedBy) ?? await members.getUser(m.mutedBy)
-        const muteDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(m.muteDate)
-        const unmuteDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(m.unmuteDate)
-        return {
-            avatar: member ? `${members.getAvatar(member.user)}?size=80` : '',
-            name: member ? `${member.user.username}#${member.user.discriminator}` : '',
+
+    const mutedMembers = []
+    for(const mute of mutes) {
+        const user = await members.getUser(mute.memberId)
+        const author = await members.getUser(mute.mutedBy)
+        const muteDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(mute.muteDate)
+        const unmuteDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(mute.unmuteDate)
+        mutedMembers.push({
+            avatar: user ? `${user.getAvatarURL()}?size=80` : '',
+            name: user ? user.username : '',
             author: {
-                avatar: author ? `${members.getAvatar(author.user)}?size=80` : '',
-                name: author ? `${author.user.username}#${author.user.discriminator}` : ''
+                avatar: author ? `${author.getAvatarURL()}?size=80` : '',
+                name: author ? author.username : ''
             },
-            reason: m.reason,
+            reason: mute.reason,
             muteDate: {
-                timestamp: m.muteDate.getTime(),
+                timestamp: mute.muteDate.getTime(),
                 formated: muteDate
             },
             unmuteDate: {
-                timestamp: m.unmuteDate.getTime(),
+                timestamp: mute.unmuteDate.getTime(),
                 formated: unmuteDate
             }
-        }
-    }))
+        })
+    }
+
     res.render('admin/mutes', {
         page: 'mutes',
         user: req.session.user,
@@ -67,31 +72,33 @@ app.get('/mutes', requireAdmin, async (req, res) => {
 })
 
 app.get('/bans', requireAdmin, async (req, res) => {
-    const memberList = await members.getGuildMembers()
     const bans = await agent.getBans()
-    const bannedMembers = await Promise.all(bans.map(async (b) => {
-        const member = memberList.find(ml => ml.user.id === b.memberId) ?? await members.getUser(b.memberId)
-        const author = memberList.find(ml => ml.user.id === b.bannedBy) ?? await members.getUser(b.bannedBy)
-        const banDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(b.banDate)
-        const unbanDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(b.unbanDate)
-        return {
-            avatar: member ? `${members.getAvatar(member.user)}?size=80` : '',
-            name: member ? `${member.user.username}#${member.user.discriminator}` : '',
+
+    const bannedMembers = []
+    for(const ban of bans) {
+        const user = await members.getUser(ban.memberId)
+        const author = await members.getUser(mute.bannedBy)
+        const banDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(ban.banDate)
+        const unbanDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(ban.unbanDate)
+        bannedMembers.push({
+            avatar: user ? `${user.getAvatarURL()}?size=80` : '',
+            name: user ? user.username : '',
             author: {
-                avatar: author ? `${members.getAvatar(author.user)}?size=80` : '',
-                name: author ? `${author.user.username}#${author.user.discriminator}` : ''
+                avatar: author ? `${author.getAvatarURL()}?size=80` : '',
+                name: author ? author.username : ''
             },
-            reason: b.reason,
+            reason: ban.reason,
             banDate: {
-                timestamp: b.banDate.getTime(),
+                timestamp: ban.banDate.getTime(),
                 formated: banDate
             },
             unbanDate: {
-                timestamp: b.unbanDate.getTime(),
+                timestamp: ban.unbanDate.getTime(),
                 formated: unbanDate
             }
-        }
-    }))
+        })
+    }
+
     res.render('admin/bans', {
         page: 'bans',
         user: req.session.user,
@@ -100,24 +107,26 @@ app.get('/bans', requireAdmin, async (req, res) => {
 })
 
 app.get('/birthdayMessages', requireAdmin, async (req, res) => {
-    const memberList = await members.getGuildMembers()
     const messageList = await agent.getBirthdayMessages()
-    const birthdayMessages = await Promise.all(messageList.map(async (m) => {
-        const author = memberList.find(ml => ml.user.id === m.memberId) ?? await members.getUser(m.memberId)
-        const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(m.date)
-        return {
-            id: m.id,
-            message: m.message,
+
+    const birthdayMessages = []
+    for(const message of messageList) {
+        const author = await members.getUser(message.memberId)
+        const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(message.date)
+        birthdayMessages.push({
+            id: message.id,
+            message: message.message,
             author: {
-                avatar: author ? `${members.getAvatar(author.user)}?size=80` : '',
-                name: author ? `${author.user.username}#${author.user.discriminator}` : ''
+                avatar: author ? `${author.getAvatarURL()}?size=80` : '',
+                name: author ? author.username : ''
             },
             date: {
-                timestamp: m.date.getTime(),
+                timestamp: message.date.getTime(),
                 formated: date
             }
-        }
-    }))
+        })
+    }
+
     res.render('admin/birthdayMessages', {
         page: 'birthdayMessages',
         user: req.session.user,
@@ -168,19 +177,21 @@ app.delete('/birthdayMessage/:id([0-9]+)', requireAdmin, async (req, res) => {
 })
 
 app.get('/twitchChannels', requireAdmin, async (req, res) => {
-    const memberList = await members.getGuildMembers()
     const channelList = await agent.getTwitchChannels()
-    const twitchChannels = await Promise.all(channelList.map(async (c) => {
-        const member = memberList.find(ml => ml.user.id === c.memberId)
-        return {
+
+    const twitchChannels = []
+    for(const channel of channelList) {
+        const user = await members.getUser(channel.memberId)
+        twitchChannels.push({
             user: {
-                avatar: member ? `${members.getAvatar(member.user)}?size=80` : '',
-                name: member ? `${member.user.username}#${member.user.discriminator}` : ''
+                avatar: user ? `${user.getAvatarURL()}?size=80` : '',
+                name: user ? user.username : ''
             },
-            name: c.channelName,
-            isLive: c.live
-        }
-    }))
+            name: channel.channelName,
+            isLive: channel.live
+        })
+    }
+
     res.render('admin/twitchChannels', {
         page: 'twitchChannels',
         user: req.session.user,
@@ -206,15 +217,15 @@ app.post('/rankedleLogs', requireAdmin, async (req, res) => {
         const memberId = body.player
         const rankedleId = parseInt(body.rankedle)
     
-        const member = await members.getUser(memberId)
+        const user = await members.getUser(memberId)
         const score = await rankedle.getUserScore(rankedleId, memberId)
     
         res.render('admin/rankedle/player', {
             page: 'rankedleLogs',
             user: req.session.user,
             rankedleId,
-            player: member?.user?.username ?? '',
-            score,
+            player: user?.username ?? '',
+            score
         })
     }
 })
@@ -223,10 +234,10 @@ app.get('/card/request/:id([0-9]+)', requireAdmin, async (req, res) => {
     const requestId = req.params.id
     const memberCard = await cubestalker.getCardById(requestId)
     if(memberCard) {
-        const member = await members.getUser(memberCard.memberId)
+        const user = await members.getUser(memberCard.memberId)
         memberCard.user = {
-            name: member ? member.user.username : '',
-            avatar: member ? `${members.getAvatar(member.user)}?size=80` : ''
+            name: user ? user.username : '',
+            avatar: user ? `${user.getAvatarURL()}?size=80` : ''
         }
         const card = await cubestalker.getCard(memberCard.image)
         memberCard.image = card
