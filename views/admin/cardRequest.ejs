@@ -106,49 +106,51 @@
     <script src="/static/assets/js/app.js"></script>
     <script>
         const $approbationForm = document.querySelector('#approbation-form')
-        const $cardId = $approbationForm.querySelector('#card-id')
-        const $btnDeny = document.querySelector('#deny')
-        const $btnAccept = document.querySelector('#accept')
+        if($approbationForm) {
+            const $cardId = $approbationForm.querySelector('#card-id')
+            const $btnDeny = document.querySelector('#deny')
+            const $btnAccept = document.querySelector('#accept')
 
-        const cardId = parseInt($cardId.value)
+            const cardId = parseInt($cardId.value)
 
-        $btnAccept.addEventListener('click', async (e) => {
-            $btnAccept.classList.add('btn-loading')
+            $btnAccept.addEventListener('click', async (e) => {
+                $btnAccept.classList.add('btn-loading')
 
-            const request = await fetch('/admin/card/request/approve', {
-                method: 'POST',
-                body: JSON.stringify({
-                    cardId
+                const request = await fetch('/admin/card/request/approve', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        cardId
+                    })
                 })
+
+                if(request.ok) {
+                    $approbationForm.remove()
+                    showAlert(true, 'La demande d\'image de carte Cube-Stalker a été acceptée', 5000)
+                } else {
+                    $btnAccept.classList.remove('btn-loading')
+                    showAlert(false, request.headers.get('X-Status-Message') ?? '', 5000)
+                }
             })
 
-            if(request.ok) {
-                $approbationForm.remove()
-                showAlert(true, 'La demande d\'image de carte Cube-Stalker a été acceptée', 5000)
-            } else {
-                $btnAccept.classList.remove('btn-loading')
-                showAlert(false, request.headers.get('X-Status-Message') ?? '', 5000)
-            }
-        })
+            $btnDeny.addEventListener('click', async (e) => {
+                $btnDeny.classList.add('btn-loading')
 
-        $btnDeny.addEventListener('click', async (e) => {
-            $btnDeny.classList.add('btn-loading')
-
-            const request = await fetch('/admin/card/request/deny', {
-                method: 'POST',
-                body: JSON.stringify({
-                    cardId
+                const request = await fetch('/admin/card/request/deny', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        cardId
+                    })
                 })
-            })
 
-            if(request.ok) {
-                $approbationForm.remove()
-                showAlert(true, 'La demande d\'image de carte Cube-Stalker a été refusée', 5000)
-            } else {
-                $btnDeny.classList.remove('btn-loading')
-                showAlert(false, request.headers.get('X-Status-Message') ?? '', 5000)
-            }
-        })
+                if(request.ok) {
+                    $approbationForm.remove()
+                    showAlert(true, 'La demande d\'image de carte Cube-Stalker a été refusée', 5000)
+                } else {
+                    $btnDeny.classList.remove('btn-loading')
+                    showAlert(false, request.headers.get('X-Status-Message') ?? '', 5000)
+                }
+            })
+        }
     </script>
 </body>
 </html>

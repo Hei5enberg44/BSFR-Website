@@ -249,7 +249,7 @@ export default class Rankedle {
     }
 
     static isCheating(memberId) {
-        const blacklist = [ '1125101235087872010' ]
+        const blacklist = []
         return blacklist.includes(memberId)
     }
 
@@ -629,14 +629,17 @@ export default class Rankedle {
             raw: true
         })
 
-        const memberList = await members.getGuildMembers()
-        const ranking = rankingList.map((r, i) => {
-            const member = memberList.find(m => m.user.id === r.memberId)
-            r.avatar = member ? `${members.getAvatar(member.user)}?size=80` : ''
-            r.name = member ? member.user.username : ''
-            r.rank = i + 1
-            return r
-        })
+        let rank = 1
+        const ranking = []
+        for(const player of rankingList) {
+            const user = await members.getUser(player.memberId)
+            if(!user) continue
+            player.avatar = `${user.getAvatarURL()}?size=80`
+            player.name = user.username
+            player.rank = rank
+            ranking.push(player)
+            rank++
+        }
 
         return ranking
     }
