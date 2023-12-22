@@ -77,7 +77,7 @@ app.get('/bans', requireAdmin, async (req, res) => {
     const bannedMembers = []
     for(const ban of bans) {
         const user = await members.getUser(ban.memberId)
-        const author = await members.getUser(mute.bannedBy)
+        const author = await members.getUser(ban.bannedBy)
         const banDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(ban.banDate)
         const unbanDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(ban.unbanDate)
         bannedMembers.push({
