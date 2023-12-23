@@ -59,9 +59,14 @@
                                         <i>Actualisez la page après avoir rejoint le serveur Discord pour accéder à Rankedle.</i>
                                     </div>
                                 </div>
-                                <% } %>
-
-                                <% if(user.isBSFR) { %>
+                                <% } else { %>
+                                    <% if(isBanned) { %>
+                                    <div class="alert alert-danger bg-white" role="alert">
+                                        <div class="text-muted">
+                                            Votre compte a été banni de Rankedle.
+                                        </div>
+                                    </div>
+                                    <% } else { %>
                                     <div class="row">
                                         <div class="col-lg-8 col-12 mb-3">
                                             <div class="card">
@@ -150,15 +155,6 @@
                                                             <div class="mb-3">
                                                                 <select type="text" class="form-select" id="song"<%= isCheating ? ' disabled': '' %>></select>
                                                             </div>
-
-                                                            <% if(isCheating) { %>
-                                                            <div class="alert alert-danger" role="alert">
-                                                                <div class="text-secondary">
-                                                                    Le système anti-cheat a détécté une anomalie sur votre compte.<br>
-                                                                    Si vous pensez que cela est une erreur, veuillez contacter un administrateur/modérateur sur le serveur Discord.
-                                                                </div>
-                                                            </div>
-                                                            <% } %>
 
                                                             <div class="row">
                                                                 <div class="col">
@@ -508,6 +504,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <% } %>
                                 <% } %>
                             </form>
                         </div>

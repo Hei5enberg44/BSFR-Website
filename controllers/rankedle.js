@@ -248,8 +248,8 @@ export default class Rankedle {
         return stats
     }
 
-    static isCheating(memberId) {
-        const blacklist = []
+    static isBanned(memberId) {
+        const blacklist = [ '1125101235087872010' ]
         return blacklist.includes(memberId)
     }
 
@@ -264,7 +264,7 @@ export default class Rankedle {
         await this.setDateStart(rankedle.id, user.id, rankedleScore)
 
         const skips = rankedleScore ? rankedleScore.skips : 0
-        const preview = path.join(RANKEDLE_PATH, this.isCheating(user.id) ? 'metal_pipe.ogg' : `preview_${skips < 6 && !rankedleScore?.success ? skips : 'full'}.ogg`)
+        const preview = path.join(RANKEDLE_PATH, `preview_${skips < 6 && !rankedleScore?.success ? skips : 'full'}.ogg`)
 
         const stat = fs.statSync(preview)
         const fileSize = stat.size
@@ -345,7 +345,7 @@ export default class Rankedle {
         const rankedle = await this.getCurrentRankedle()
         if(!rankedle) throw new Error('No rankedle found')
 
-        if(this.isCheating(user.id)) throw new Error('Action impossible')
+        if(this.isBanned(user.id)) throw new Error('Action impossible')
 
         let score = await RankedleScores.findOne({
             where: {
@@ -404,7 +404,7 @@ export default class Rankedle {
         const mapId = req.body?.id
         if(!mapId) throw new Error('Invalid request')
 
-        if(this.isCheating(user.id)) throw new Error('Action impossible')
+        if(this.isBanned(user.id)) throw new Error('Action impossible')
 
         const mapData = await RankedleMaps.findOne({
             where: { id: mapId }

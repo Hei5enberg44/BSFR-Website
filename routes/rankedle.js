@@ -8,18 +8,27 @@ const app = express()
 app.get('/', requireLogin, async (req, res) => {
     const user = req.session.user
     const currentRankedle = await rankedle.getCurrentRankedle()
-    const ranking = await rankedle.getRanking()
-    const result = await rankedle.getResult(currentRankedle, user.id)
-    const isCheating = rankedle.isCheating(user.id)
-    res.render('rankedle.ejs', {
-        page: 'rankedle',
-        user,
-        rankedle: currentRankedle,
-        ranking,
-        result,
-        isCheating,
-        inviteUrl: config.discord.invitation_url
-    })
+    if(user.isBSFR) {
+        const ranking = await rankedle.getRanking()
+        const result = await rankedle.getResult(currentRankedle, user.id)
+        const isBanned = rankedle.isBanned(user.id)
+        res.render('rankedle.ejs', {
+            page: 'rankedle',
+            user,
+            rankedle: currentRankedle,
+            ranking,
+            result,
+            isBanned,
+            inviteUrl: config.discord.invitation_url
+        })
+    } else {
+        res.render('rankedle.ejs', {
+            page: 'rankedle',
+            user,
+            rankedle: currentRankedle,
+            inviteUrl: config.discord.invitation_url
+        })
+    }
 })
 
 app.get('/song', async (req, res) => {
