@@ -128,8 +128,7 @@ export default class DiscordAPI {
             isAdmin: false,
             isNitroBooster: false,
             avatarURL: members.getAvatarURL(user),
-            roles: [],
-            expires: Date.now() + (24 * 3600 * 1000)
+            roles: []
         }
         const member = await this.send('GET', `/guilds/${config.discord.guild_id}/members/${user.id}`, headers, null, true)
         if(!member) return user
