@@ -1,5 +1,3 @@
-import DiscordAPI from '../controllers/discord.js'
-
 const requireLogin = (req, res, next) => {
     req.session.redirect = req.originalUrl
     if(!req.session.token) {
@@ -8,16 +6,7 @@ const requireLogin = (req, res, next) => {
         if(!req.session.user) {
             res.redirect('/discord/logout')
         } else {
-            const expires = req.session.user?.expires ?? 0
-            if(expires < Date.now()) {
-                const discord = new DiscordAPI(req.session)
-                discord.getCurrentUser().then(user => {
-                    req.session.user = user
-                    next()
-                })
-            } else {
-                next()
-            }
+            next()
         }
     }
 }
