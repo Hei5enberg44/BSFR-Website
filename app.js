@@ -109,4 +109,8 @@ app.listen(port, () => {
     new CronJob('0 0 * * *', async () => {
         await rankedle.generateRankedle()
     }, null, true, 'Europe/Paris')
+
+    new CronJob('*/10 * * * *', async () => {
+        await rankedle.updateRankedland()
+    }, null, true, 'Europe/Paris')
 })

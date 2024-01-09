@@ -323,6 +323,14 @@ export default class DiscordAPI {
         return res
     }
 
+    async updateChannel(channelId, payload) {
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+        const res = await this.send('PATCH', `/channels/${channelId}`, headers, payload, true)
+        return res
+    }
+
     async getBotMessage(channelId, messageId) {
         const headers = {
             'Content-Type': 'application/json'

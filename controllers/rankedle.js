@@ -8,9 +8,11 @@ import yauzl from 'yauzl'
 import tmp from 'tmp'
 import { Sequelize, Op } from 'sequelize'
 import members from './members.js'
+import DiscordAPI from './discord.js'
 import { Rankedles, RankedleSeasons, RankedleMaps, RankedleScores, RankedleStats, RankedleMessages } from './database.js'
 import mime from '../utils/mime.js'
 import Logger from '../utils/logger.js'
+import config from '../config.json' assert { type: 'json' }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -596,6 +598,44 @@ export default class Rankedle {
                 stats.points += score.hint ? POINTS[score.skips] / 2 : POINTS[score.skips]
             }
             await RankedleStats.create(stats)
+        }
+    }
+
+    static async updateRankedland() {
+        const VIEW_CHANNEL = 1 << 10
+        const READ_MESSAGE_HISTORY = 1 << 16
+
+        const rankedle = await this.getCurrentRankedle()
+        
+        if(rankedle) {
+            // Permissions par défaut du salon
+            const permissions = [
+                {
+                    id: config.discord.roles['everyone'],
+                    type: 0,
+                    deny: (VIEW_CHANNEL | READ_MESSAGE_HISTORY).toString()
+                },
+                {
+                    id: config.discord.roles['Admin'],
+                    type: 0,
+                    allow: VIEW_CHANNEL.toString()
+                }
+            ]
+
+            const scores = await this.getRankedleScores(rankedle.id)
+            const finishedScores = scores.filter(s => s.success !== null)
+
+            for(const score of finishedScores) {
+                permissions.push({
+                    id: score.memberId,
+                    type: 1,
+                    allow: VIEW_CHANNEL.toString()
+                })
+            }
+
+            const payload = { permission_overwrites: permissions }
+            const discord = new DiscordAPI()
+            await discord.updateChannel(config.discord.channels['rankedland'], payload)
         }
     }
 
