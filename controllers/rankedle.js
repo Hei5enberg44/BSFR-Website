@@ -1,12 +1,14 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'url'
+import { createCanvas, loadImage } from 'canvas'
+import sharp from 'sharp'
 import ffmpeg from 'fluent-ffmpeg'
 import yauzl from 'yauzl'
 import tmp from 'tmp'
 import { Sequelize, Op } from 'sequelize'
 import members from './members.js'
-import { Rankedles, RankedleMaps, RankedleScores, RankedleStats, RankedleMessages } from './database.js'
+import { Rankedles, RankedleSeasons, RankedleMaps, RankedleScores, RankedleStats, RankedleMessages } from './database.js'
 import mime from '../utils/mime.js'
 import Logger from '../utils/logger.js'
 
@@ -25,6 +27,7 @@ const RANGES = [
     '00:11',
     '00:16'
 ]
+const POINTS = [ 8, 6, 4, 3, 2, 1, 0 ]
 
 export default class Rankedle {
     static async downloadSong(url) {
@@ -162,11 +165,35 @@ export default class Rankedle {
                     await this.trim(TRIMED_OGG_PATH, path.join(RANKEDLE_PATH, `preview_${i}.ogg`), '00:00', RANGES[i])
                 }
 
-                await Rankedles.create({ mapId: mapId })
+                const seasonId = await this.getCurrentSeason()
+
+                await Rankedles.create({ mapId: mapId, seasonId })
             }
         } catch(e) {
             Logger.log('Rankedle', 'ERROR', `Imposible de générer une Rankedle pour la map (${e.message})`)
         }
+    }
+
+    static async getCurrentSeason() {
+        const seasons = await RankedleSeasons.findAll({
+            order: [
+                [ 'id', 'desc' ]
+            ],
+            limit: 1
+        })
+        if(seasons.length === 0) {
+            const dateStart = new Date()
+            dateStart.setHours(0, 0, 0, 0)
+            const dateEnd = new Date()
+            dateEnd.setDate(dateEnd.getDate() + 100)
+            dateEnd.setHours(0, 0, 0, 0)
+            const season = await RankedleSeasons.create({
+                dateStart,
+                dateEnd
+            })
+            return season.id
+        }
+        return seasons[0].id
     }
 
     static async getSongList(memberId, query) {
@@ -242,8 +269,10 @@ export default class Rankedle {
     }
 
     static async getUserStats(memberId) {
+        const currentRankedle = await this.getCurrentRankedle()
+        const seasonId = currentRankedle.seasonId
         const stats = await RankedleStats.findOne({
-            where: { memberId }
+            where: { memberId, seasonId }
         })
         return stats
     }
@@ -338,6 +367,57 @@ export default class Rankedle {
         res.json(rankedleScore)
     }
 
+    static async hintRequest(req, res) {
+        if(!req.session.user) throw new Error('User not connected')
+        const user = req.session.user
+
+        const rankedle = await this.getCurrentRankedle()
+        if(!rankedle) throw new Error('No rankedle found')
+
+        const rankedleScore = await this.getUserScore(rankedle.id, user.id)
+
+        if(rankedleScore && rankedleScore.hint) {
+            const mapData = await RankedleMaps.findOne({
+                where: { id: rankedle.mapId },
+                raw: true
+            })
+            const coverURL = mapData.map.versions[mapData.map.versions.length - 1].coverURL
+            const coverBuffer = await this.blurImage(coverURL)
+            const cover = coverBuffer.toString('base64')
+            res.json({ cover })
+        } else {
+            res.json(null)
+        }
+    }
+
+    static async blurImage(url) {
+        const canvas = createCanvas(300, 300)
+        const ctx = canvas.getContext('2d')
+        const songCover = await loadImage(url)
+        ctx.filter = 'blur(20px)'
+        ctx.drawImage(songCover, 0, 0, 300, 300)
+        const image = await sharp(canvas.toBuffer()).blur(10).webp({ quality: 100 }).toBuffer()
+        return image
+    }
+
+    static async hintRedeem(req, res) {
+        if(!req.session.user) throw new Error('User not connected')
+        const user = req.session.user
+
+        const rankedle = await this.getCurrentRankedle()
+        if(!rankedle) throw new Error('No rankedle found')
+
+        const rankedleScore = await this.getUserScore(rankedle.id, user.id)
+        await this.setDateStart(rankedle.id, user.id, rankedleScore)
+
+        if(!rankedleScore.hint) {
+            rankedleScore.hint = true
+            await rankedleScore.save()
+        }
+        
+        await this.hintRequest(req, res)
+    }
+
     static async skipRequest(req, res) {
         if(!req.session.user) throw new Error('User not connected')
         const user = req.session.user
@@ -388,7 +468,7 @@ export default class Rankedle {
         }
 
         if(score.dateEnd === null && score.success !== null) {
-            await this.updatePlayerStats(score)
+            await this.updatePlayerStats(rankedle, score)
         }
 
         res.json(score)
@@ -433,7 +513,7 @@ export default class Rankedle {
 
                 if(success && score.skips < 6) {
                     score.success = true
-                    score.messageId = await this.getRandomMessage('won')
+                    score.messageId = score.skips === 0 ? await this.getRandomMessage('first_try') : await this.getRandomMessage('won')
                 } else {
                     if(score.skips === 6) {
                         score.success = false
@@ -464,17 +544,20 @@ export default class Rankedle {
         }
 
         if(score.dateEnd === null && score.success !== null) {
-            await this.updatePlayerStats(score)
+            await this.updatePlayerStats(rankedle, score)
         }
 
         res.json(score)
     }
 
-    static async updatePlayerStats(score) {
+    static async updatePlayerStats(rankedle, score) {
         await this.setDateEnd(score)
 
         const stats = await RankedleStats.findOne({
-            where: { memberId: score.memberId }
+            where: {
+                seasonId: rankedle.seasonId,
+                memberId: score.memberId
+            }
         })
 
         if(stats) {
@@ -484,12 +567,14 @@ export default class Rankedle {
                 stats.won++
                 stats.currentStreak++
                 if(stats.currentStreak > stats.maxStreak) stats.maxStreak = stats.currentStreak
+                stats.points += score.hint ? POINTS[score.skips] / 2 : POINTS[score.skips]
             } else {
                 stats.currentStreak = 0
             }
             await stats.save()
         } else {
-            const statsData = {
+            const stats = {
+                seasonId: rankedle.seasonId,
                 memberId: score.memberId,
                 try1: 0,
                 try2: 0,
@@ -500,15 +585,17 @@ export default class Rankedle {
                 played: 1,
                 won: 0,
                 currentStreak: 0,
-                maxStreak: 0
+                maxStreak: 0,
+                points: 0
             }
             if(score.success) {
-                statsData[`try${score.skips + 1}`] = 1
-                statsData.won = 1
-                statsData.currentStreak = 1
-                statsData.maxStreak = 1
+                stats[`try${score.skips + 1}`] = 1
+                stats.won = 1
+                stats.currentStreak = 1
+                stats.maxStreak = 1
+                stats.points += score.hint ? POINTS[score.skips] / 2 : POINTS[score.skips]
             }
-            await RankedleStats.create(statsData)
+            await RankedleStats.create(stats)
         }
     }
 
@@ -614,17 +701,19 @@ export default class Rankedle {
     }
 
     static async getRanking() {
+        const seasonId = await this.getCurrentSeason()
         const rankingList = await RankedleStats.findAll({
+            where: { seasonId },
             attributes: [
                 'memberId',
                 'played',
                 'won',
                 'currentStreak',
                 'maxStreak',
-                [ Sequelize.literal('(try1 * 8) + (try2 * 6) + (try3 * 4) + (try4 * 3) + (try5 * 2) + try6'), 'score' ]
+                'points'
             ],
             order: [
-                [ 'score', 'desc' ]
+                [ 'points', 'desc' ]
             ],
             raw: true
         })
@@ -649,12 +738,14 @@ export default class Rankedle {
         
         if(rankedle) {
             const scores = await this.getRankedleScores(rankedle.id)
-            const unfinishedScores = scores.filter(s => s.success === null && s.skips > 0)
+            const unfinishedScores = scores.filter(s => s.success === null)
 
             for(const score of unfinishedScores) {
-                score.success = false
-                await score.save()
-                await this.updatePlayerStats(score)
+                if(score.skips > 0) {
+                    score.success = false
+                    await score.save()
+                }
+                await this.updatePlayerStats(rankedle, score)
             }
         }
     }
