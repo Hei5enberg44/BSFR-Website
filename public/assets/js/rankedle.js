@@ -20,6 +20,10 @@ const $currentTime = document.querySelector('#current-time')
 /** @type {HTMLSpanElement} */
 const $skipSeconds = document.querySelector('#skip-seconds')
 /** @type {HTMLButtonElement} */
+const $btnHint = document.querySelector('#hint')
+/** @type {HTMLButtonElement} */
+const $btnRedeemHint = document.querySelector('#redeemHint')
+/** @type {HTMLButtonElement} */
 const $btnSkip = document.querySelector('#skip')
 /** @type {HTMLButtonElement} */
 const $btnSubmit = document.querySelector('#submit')
@@ -279,6 +283,70 @@ if($btnSkip) {
             update(score)
         }
     })
+}
+
+if($btnHint) {
+    const $modalHintConfirm = document.querySelector('#modalHintConfirm')
+    const $modalHint = document.querySelector('#modalHint')
+    const modalHintConfirm = bootstrap.Modal.getOrCreateInstance($modalHintConfirm)
+    const modalHint = bootstrap.Modal.getOrCreateInstance($modalHint)
+
+    $btnHint.addEventListener('click', async () => {
+        $btnHint.classList.add('btn-loading')
+
+        const hintRequest = await fetch('/rankedle/hint')
+
+        if(hintRequest.ok) {
+            const hint = await hintRequest.json()
+            if(!hint) {
+                modalHintConfirm.show()
+            } else {
+                await showHint(hint)
+            }
+        } else {
+            showAlert(false, hintRequest.headers.get('X-Status-Message') ?? '', 5000)
+        }
+
+        $btnHint.classList.remove('btn-loading')
+    })
+
+    $btnRedeemHint.addEventListener('click', async () => {
+        $btnRedeemHint.classList.add('btn-loading')
+
+        const hintRequest = await fetch('/rankedle/hint', {
+            method: 'POST'
+        })
+
+        if(hintRequest.ok) {
+            const hint = await hintRequest.json()
+            await showHint(hint)
+        } else {
+            showAlert(false, hintRequest.headers.get('X-Status-Message') ?? '', 5000)
+        }
+
+        $btnRedeemHint.classList.remove('btn-loading')
+    })
+
+    const showHint = async () => {
+        const hintRequest = await fetch('/rankedle/hint', {
+            method: 'POST'
+        })
+
+        if(hintRequest.ok) {
+            const hint = await hintRequest.json()
+
+            const $hintContent = $modalHint.querySelector('#hintContent')
+            const $img = document.createElement('img')
+            $img.src = `data:image/webp;base64,${hint.cover}`
+            $hintContent.innerHTML = ''
+            $hintContent.append($img)
+
+            modalHintConfirm.hide()
+            modalHint.show()
+        } else {
+            showAlert(false, hintRequest.headers.get('X-Status-Message') ?? '', 5000)
+        }
+    }
 }
 
 if($btnStats) {

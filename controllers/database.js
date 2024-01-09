@@ -19,8 +19,19 @@ const Rankedles = sequelizeWebsite.define('rankedles', {
         autoIncrement: true,
         primaryKey: true
     },
+    seasonId: DataTypes.INTEGER(),
     mapId: DataTypes.STRING(255),
     date: DataTypes.DATEONLY()
+})
+
+const RankedleSeasons = sequelizeWebsite.define('rankedle_seasons', {
+    id: {
+        type: DataTypes.INTEGER(),
+        autoIncrement: true,
+        primaryKey: true
+    },
+    dateStart: DataTypes.DATE(),
+    dateEnd: DataTypes.DATE()
 })
 
 const RankedleMaps = sequelizeWebsite.define('rankedle_maps', {
@@ -44,6 +55,7 @@ const RankedleScores = sequelizeWebsite.define('rankedle_scores', {
     dateEnd: DataTypes.DATE(),
     skips: DataTypes.INTEGER(),
     details: DataTypes.JSON(),
+    hint: DataTypes.BOOLEAN(),
     success: DataTypes.BOOLEAN(),
     messageId: DataTypes.INTEGER()
 })
@@ -54,6 +66,7 @@ const RankedleStats = sequelizeWebsite.define('rankedle_stats', {
         autoIncrement: true,
         primaryKey: true
     },
+    seasonId: DataTypes.INTEGER(),
     memberId: DataTypes.STRING(255),
     try1: DataTypes.INTEGER(),
     try2: DataTypes.INTEGER(),
@@ -64,7 +77,8 @@ const RankedleStats = sequelizeWebsite.define('rankedle_stats', {
     played: DataTypes.INTEGER(),
     won: DataTypes.INTEGER(),
     currentStreak: DataTypes.INTEGER(),
-    maxStreak: DataTypes.INTEGER()
+    maxStreak: DataTypes.INTEGER(),
+    points: DataTypes.INTEGER()
 })
 
 const RankedleMessages = sequelizeWebsite.define('rankedle_messages', {
@@ -278,7 +292,7 @@ const Cards = sequelizeCubeStalker.define('cards', {
 })
 
 export {
-    Rankedles, RankedleMaps, RankedleScores, RankedleStats, RankedleMessages,
+    Rankedles, RankedleSeasons, RankedleMaps, RankedleScores, RankedleStats, RankedleMessages,
     Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, FranceCities, Cities, MPOV, YoutubeVideos, Feur, Roles, RolesCategories,
     Cards
 }
