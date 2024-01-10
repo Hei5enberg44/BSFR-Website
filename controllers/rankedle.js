@@ -183,18 +183,18 @@ export default class Rankedle {
             ],
             limit: 1
         })
-        if(seasons.length === 0) {
-            const dateStart = new Date()
-            dateStart.setHours(0, 0, 0, 0)
-            const dateEnd = new Date()
-            dateEnd.setDate(dateEnd.getDate() + 100)
-            dateEnd.setHours(0, 0, 0, 0)
-            const season = await RankedleSeasons.create({
-                dateStart,
-                dateEnd
-            })
-            return season.id
-        }
+        // if(seasons.length === 0) {
+        //     const dateStart = new Date()
+        //     dateStart.setHours(0, 0, 0, 0)
+        //     const dateEnd = new Date()
+        //     dateEnd.setDate(dateEnd.getDate() + 100)
+        //     dateEnd.setHours(0, 0, 0, 0)
+        //     const season = await RankedleSeasons.create({
+        //         dateStart,
+        //         dateEnd
+        //     })
+        //     return season.id
+        // }
         return seasons[0].id
     }
 
@@ -271,8 +271,7 @@ export default class Rankedle {
     }
 
     static async getUserStats(memberId) {
-        const currentRankedle = await this.getCurrentRankedle()
-        const seasonId = currentRankedle.seasonId
+        const seasonId = await this.getCurrentSeason()
         const stats = await RankedleStats.findOne({
             where: { memberId, seasonId }
         })
@@ -603,7 +602,6 @@ export default class Rankedle {
 
     static async updateRankedland() {
         const VIEW_CHANNEL = 1 << 10
-        const READ_MESSAGE_HISTORY = 1 << 16
 
         const rankedle = await this.getCurrentRankedle()
         
@@ -613,7 +611,7 @@ export default class Rankedle {
                 {
                     id: config.discord.roles['everyone'],
                     type: 0,
-                    deny: (VIEW_CHANNEL | READ_MESSAGE_HISTORY).toString()
+                    deny: VIEW_CHANNEL.toString()
                 },
                 {
                     id: config.discord.roles['Admin'],
