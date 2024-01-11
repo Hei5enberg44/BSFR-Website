@@ -26,7 +26,7 @@ app.get('/authorize', (req, res) => {
 app.get('/login', async (req, res) => {
     const { code, state } = req.query
 
-    let error = false
+    let error = true
 
     if(code && state === req.session.state) {
         const options = new URLSearchParams({
@@ -48,34 +48,36 @@ app.get('/login', async (req, res) => {
         if(exchangeCodeRequest.ok) {
             const token = await exchangeCodeRequest.json()
 
-            const discord = new DiscordAPI(req.session)
-            await discord.setToken(token)
+            const discord = new DiscordAPI()
+            const user = await discord.setToken(token)
 
-            const user = await discord.getCurrentUser()
-            req.session.user = user
+            const userData = await discord.getUserData()
+            req.session.user = userData
 
             Logger.log('User', 'INFO', `L'utilisateur ${user.username} s'est connecté`)
-        } else {
-            error = true
+
+            error = false
         }
-    } else {
-        error = true
     }
 
     if(error) {
         res.redirect('/')
     } else {
         const redirect = req.session.redirect ?? '/'
+        delete req.session.state
         delete req.session.redirect
         res.redirect(redirect)
     }
 })
 
 app.get('/logout', async (req, res) => {
-    if(req.session.token) {
-        const user = req.session.user
-        const discord = new DiscordAPI(req.session)
+    const user = req.session.user
+    if(user) {
+        const discord = new DiscordAPI(user.id)
         await discord.revokeToken()
+        await new Promise(res => req.session.destroy(() => {
+            res()
+        }))
         Logger.log('User', 'INFO', `L'utilisateur ${user.username} s'est déconnecté`)
     }
     res.redirect('/')

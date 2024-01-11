@@ -1,13 +1,18 @@
+import DiscordAPI from '../controllers/discord.js'
+
 const requireLogin = (req, res, next) => {
+    const user = req.session.user
     req.session.redirect = req.originalUrl
-    if(!req.session.token) {
+    if(!user?.id) {
         res.redirect('/discord/authorize')
     } else {
-        if(!req.session.user) {
-            res.redirect('/discord/logout')
-        } else {
-            next()
-        }
+        const discord = new DiscordAPI(user.id)
+        discord.validateToken().then(valid => {
+            if(valid)
+                next()
+            else
+                res.redirect('/discord/authorize')
+        })
     }
 }
 

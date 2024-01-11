@@ -6,8 +6,8 @@ const cache = new NodeCache({ stdTTL: 600 })
 export default {
     async getGuildEmojis(session) {
         if(!cache.has('guildEmojis')) {
-            const discord = new DiscordAPI(session)
-            const emojis = await discord.getGuildEmojis(session.discord)
+            const discord = new DiscordAPI()
+            const emojis = await discord.getGuildEmojis()
 
             cache.set('guildEmojis', emojis)
             return emojis

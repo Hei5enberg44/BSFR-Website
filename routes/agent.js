@@ -11,7 +11,7 @@ app.get('/', requireAdmin, async (req, res) => {
 })
 
 app.get('/message/send', requireAdmin, async (req, res) => {
-    const channelList = await channels.getGuildChannels(req.session)
+    const channelList = await channels.getGuildChannels()
     res.render('agent/message/send', {
         page: 'message_send',
         user: req.session.user,
@@ -21,13 +21,13 @@ app.get('/message/send', requireAdmin, async (req, res) => {
 
 app.post('/message/send', requireAdmin, async (req, res) => {
     const { channelId, payload } = req.body
-    const discord = new DiscordAPI(req.session)
+    const discord = new DiscordAPI()
     const response = await discord.sendMessage(channelId, payload)
     res.status(response ? 200 : 500).end()
 })
 
 app.get('/message/edit', requireAdmin, async (req, res) => {
-    const channelList = await channels.getGuildChannels(req.session)
+    const channelList = await channels.getGuildChannels()
     res.render('agent/message/edit', {
         page: 'message_edit',
         user: req.session.user,
@@ -46,7 +46,7 @@ app.get('/message/get', requireAdmin, async (req, res) => {
 })
 
 app.get('/reaction/add', requireAdmin, async (req, res) => {
-    const channelList = await channels.getGuildChannels(req.session)
+    const channelList = await channels.getGuildChannels()
     res.render('agent/reaction/add', {
         page: 'reaction_add',
         user: req.session.user,
@@ -56,13 +56,13 @@ app.get('/reaction/add', requireAdmin, async (req, res) => {
 
 app.post('/reaction/send', requireAdmin, async (req, res) => {
     const { channelId, messageId, emoji } = req.body
-    const discord = new DiscordAPI(req.session)
+    const discord = new DiscordAPI()
     const response = await discord.sendReaction(channelId, messageId, emoji)
     res.status(response ? 200 : 500).end()
 })
 
 app.get('/guildEmojis', requireAdmin, async (req, res) => {
-    const guildEmojis = await emojis.getGuildEmojis(req.session)
+    const guildEmojis = await emojis.getGuildEmojis()
     res.json(guildEmojis)
 })
 

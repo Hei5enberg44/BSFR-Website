@@ -288,7 +288,7 @@ export default class Agent {
         const updatedRoles = currentUserRoles.concat(newUserRoles)
         
         if(updatedRoles.length > 0) {
-            const discord = new DiscordAPI(session)
+            const discord = new DiscordAPI(user.id)
             await discord.updateMemberRoles(user.id, updatedRoles.map(ur => ur.id))
             session.user.roles = updatedRoles
         }
