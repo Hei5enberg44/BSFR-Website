@@ -26,7 +26,19 @@ const Users = sequelizeWebsite.define('users', {
     token: DataTypes.TEXT()
 })
 
-const Rankedles = sequelizeWebsite.define('rankedles', {
+const sequelizeRankedle = new Sequelize(config.databases.rankedle.name, config.databases.rankedle.username, config.databases.rankedle.password, {
+    host: config.databases.website.host,
+    port: config.databases.website.port,
+    dialect: 'mariadb',
+    logging: false,
+    define: {
+        timestamps: false,
+        freezeTableName: true
+    },
+    timezone: 'Europe/Paris'
+})
+
+const Rankedles = sequelizeRankedle.define('rankedles', {
     id: {
         type: DataTypes.INTEGER(),
         autoIncrement: true,
@@ -37,7 +49,7 @@ const Rankedles = sequelizeWebsite.define('rankedles', {
     date: DataTypes.DATEONLY()
 })
 
-const RankedleSeasons = sequelizeWebsite.define('rankedle_seasons', {
+const RankedleSeasons = sequelizeRankedle.define('rankedle_seasons', {
     id: {
         type: DataTypes.INTEGER(),
         autoIncrement: true,
@@ -47,7 +59,7 @@ const RankedleSeasons = sequelizeWebsite.define('rankedle_seasons', {
     dateEnd: DataTypes.DATE()
 })
 
-const RankedleMaps = sequelizeWebsite.define('rankedle_maps', {
+const RankedleMaps = sequelizeRankedle.define('rankedle_maps', {
     id: {
         type: DataTypes.INTEGER(),
         autoIncrement: true,
@@ -56,7 +68,7 @@ const RankedleMaps = sequelizeWebsite.define('rankedle_maps', {
     map: DataTypes.JSON()
 })
 
-const RankedleScores = sequelizeWebsite.define('rankedle_scores', {
+const RankedleScores = sequelizeRankedle.define('rankedle_scores', {
     id: {
         type: DataTypes.INTEGER(),
         autoIncrement: true,
@@ -73,7 +85,7 @@ const RankedleScores = sequelizeWebsite.define('rankedle_scores', {
     messageId: DataTypes.INTEGER()
 })
 
-const RankedleStats = sequelizeWebsite.define('rankedle_stats', {
+const RankedleStats = sequelizeRankedle.define('rankedle_stats', {
     id: {
         type: DataTypes.INTEGER(),
         autoIncrement: true,
@@ -94,7 +106,7 @@ const RankedleStats = sequelizeWebsite.define('rankedle_stats', {
     points: DataTypes.INTEGER()
 })
 
-const RankedleMessages = sequelizeWebsite.define('rankedle_messages', {
+const RankedleMessages = sequelizeRankedle.define('rankedle_messages', {
     id: {
         type: DataTypes.INTEGER(),
         autoIncrement: true,
