@@ -756,16 +756,17 @@ export default class Rankedle {
             raw: true
         })
 
-        let rank = 1
+        let rank = 0
         const ranking = []
         for(const player of rankingList) {
             const user = await members.getUser(player.memberId)
             if(!user) continue
+
+            rank = ([...ranking].pop())?.points === player.points ? rank : rank + 1
             player.avatar = `${user.getAvatarURL()}?size=80`
             player.name = user.username
             player.rank = rank
             ranking.push(player)
-            rank++
         }
 
         return ranking
