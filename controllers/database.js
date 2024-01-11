@@ -293,6 +293,16 @@ Roles.hasOne(RolesCategories, {
     foreignKey: 'id'
 })
 
+const Settings = sequelizeAgent.define('settings', {
+    id: {
+        type: DataTypes.INTEGER(),
+        autoIncrement: true,
+        primaryKey: true
+    },
+    name: DataTypes.STRING(255),
+    data: DataTypes.JSON()
+})
+
 const sequelizeCubeStalker = new Sequelize(config.databases.cubestalker.name, config.databases.cubestalker.username, config.databases.cubestalker.password, {
     host: config.databases.agent.host,
     port: config.databases.agent.port,
@@ -318,6 +328,6 @@ const Cards = sequelizeCubeStalker.define('cards', {
 
 export {
     Users, Rankedles, RankedleSeasons, RankedleMaps, RankedleScores, RankedleStats, RankedleMessages,
-    Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, FranceCities, Cities, MPOV, YoutubeVideos, Feur, Roles, RolesCategories,
+    Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, FranceCities, Cities, MPOV, YoutubeVideos, Feur, Roles, RolesCategories, Settings,
     Cards
 }
