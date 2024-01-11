@@ -32,13 +32,14 @@ app.get('/run/mpov', requireLogin, async (req, res) => {
     })
 })
 
-app.post('/run/pc', async (req, res) => {
+app.post('/run/pc', requireLogin, async (req, res) => {
     const body = req.body
     if(body.url !== null && body.description !== null && body.leaderboard_profil !== null && body.map_leaderboard !== null
         && body.beatsaver !== null && body.headset !== null && body.grip !== null && body.twitch_url !== null && body.comments !== null) {
 
-        const discord = new DiscordAPI(req.session)
-        const result = await discord.submitRun(body)
+        const user = req.session.user
+        const discord = new DiscordAPI(user.id)
+        const result = await discord.submitRun(user, body)
 
         res.json(result)
     } else {
@@ -46,7 +47,7 @@ app.post('/run/pc', async (req, res) => {
     }
 })
 
-app.post('/run/quest', async (req, res) => {
+app.post('/run/quest', requireLogin, async (req, res) => {
     const body = req.body    
     if(req?.files?.video && req?.files?.audio && body.description !== null && body.leaderboard_profil !== null && body.map_leaderboard !== null
         && body.beatsaver !== null && body.headset !== null && body.grip !== null && body.twitch_url !== null && body.comments !== null) {
@@ -106,8 +107,9 @@ app.post('/run/quest', async (req, res) => {
     
             if(shareUrl) {
                 body.url = shareUrl
-                const discord = new DiscordAPI(req.session)
-                await discord.submitRun(body)
+                const user = req.session.user
+                const discord = new DiscordAPI(user.id)
+                await discord.submitRun(user, body)
             }
         } catch(error) {
             res.send({ success: false, message: error.message })

@@ -13,6 +13,19 @@ const sequelizeWebsite = new Sequelize(config.databases.website.name, config.dat
     timezone: 'Europe/Paris'
 })
 
+const Users = sequelizeWebsite.define('users', {
+    id: {
+        type: DataTypes.INTEGER(),
+        autoIncrement: true,
+        primaryKey: true
+    },
+    userId: {
+        type: DataTypes.STRING(255),
+        unique: true
+    },
+    token: DataTypes.TEXT()
+})
+
 const Rankedles = sequelizeWebsite.define('rankedles', {
     id: {
         type: DataTypes.INTEGER(),
@@ -292,7 +305,7 @@ const Cards = sequelizeCubeStalker.define('cards', {
 })
 
 export {
-    Rankedles, RankedleSeasons, RankedleMaps, RankedleScores, RankedleStats, RankedleMessages,
+    Users, Rankedles, RankedleSeasons, RankedleMaps, RankedleScores, RankedleStats, RankedleMessages,
     Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, FranceCities, Cities, MPOV, YoutubeVideos, Feur, Roles, RolesCategories,
     Cards
 }

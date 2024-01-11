@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import { Users } from './database.js'
 import members from './members.js'
 import roles from './roles.js'
 import config from '../config.json' assert { type: 'json' }
@@ -6,10 +7,10 @@ import config from '../config.json' assert { type: 'json' }
 const DISCORD_API_URL = 'https://discord.com/api'
 
 export default class DiscordAPI {
-    session
+    userId
 
-    constructor(session = null) {
-        this.session = session
+    constructor(userId = null) {
+        this.userId = userId
     }
 
     async send(method, endpoint, headers = null, body = null, bot = false) {
@@ -37,7 +38,7 @@ export default class DiscordAPI {
     }
 
     async setToken(token) {
-        this.session.token = await new Promise((res, rej) => {
+        const discordJWT = await new Promise((res, rej) => {
             jwt.sign({
                 ...token,
                 expiration_date: Math.floor(Date.now() / 1000) + token.expires_in - 60
@@ -48,26 +49,48 @@ export default class DiscordAPI {
                 res(token)
             })
         })
+        const user = await this.getCurrentUser(token)
+        await Users.upsert({
+            userId: user.id,
+            token: discordJWT
+        })
+        this.userId = user.id
+        return user
     }
 
     async getToken() {
-        try {
-            const decodedToken = await new Promise((res, rej) => {
-                jwt.verify(this.session.token, config.cookie.secret, (err, decoded) => {
-                    if(err) rej(err)
-                    res(decoded)
-                })
-            })
+        if(!this.userId) throw new Error('userId manquant')
 
-            if(Math.floor(new Date().getTime() / 1000) > decodedToken.expiration_date) {
-                const token = await this.refreshToken(decodedToken.refresh_token)
-                return token
+        try {
+            const user = await Users.findOne({ where: { userId: this.userId } })
+            if(user?.token) {
+                const decodedToken = await new Promise((res, rej) => {
+                    jwt.verify(user.token, config.cookie.secret, (err, decoded) => {
+                        if(err) rej(err)
+                        res(decoded)
+                    })
+                })
+
+                if(Math.round(Date.now() / 1000) > decodedToken.expiration_date) {
+                    const token = await this.refreshToken(decodedToken.refresh_token)
+                    return token
+                }
+
+                return decodedToken
             }
 
-            return decodedToken
+            return null
         } catch(error) {
             console.log(error)
         }
+    }
+
+    async validateToken() {
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+        const valid = await this.send('GET', '/oauth2/@me', headers)
+        return valid !== false
     }
 
     async refreshToken(refreshToken) {
@@ -89,6 +112,7 @@ export default class DiscordAPI {
         if(request.ok) {
             const token = await request.json()
             await this.setToken(token)
+            console.log('Token refreshed')
             return token
         } else {
             throw new Error('Failed to refresh token')
@@ -98,26 +122,24 @@ export default class DiscordAPI {
     async revokeToken() {
         const token = await this.getToken()
 
-        const options = new URLSearchParams({
-            client_id: config.discord.client_id,
-            client_secret: config.discord.client_secret,
-            token: token.access_token
-        })
-
-        await fetch(`${DISCORD_API_URL}/oauth2/token/revoke`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: options
-        })
-
-        await new Promise(res => this.session.destroy(() => {
-            res()
-        }))
+        if(token) {
+            const options = new URLSearchParams({
+                client_id: config.discord.client_id,
+                client_secret: config.discord.client_secret,
+                token: token.access_token
+            })
+    
+            await fetch(`${DISCORD_API_URL}/oauth2/token/revoke`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: options
+            })
+        }
     }
 
-    async getCurrentUser() {
+    async getUserData() {
         const headers = {
             'Content-Type': 'application/json'
         }
@@ -146,10 +168,24 @@ export default class DiscordAPI {
         return user
     }
 
-    async submitRun(data) {
-        try {
-            const user = await this.getCurrentUser()
+    async getCurrentUser(token) {
+        const request = await fetch(`${DISCORD_API_URL}/users/@me`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `${token.token_type} ${token.access_token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        if(request.ok) {
+            const user = await request.json()
+            return user
+        } else {
+            throw new Error('Échec de récupération de l\'utilisateur')
+        }
+    }
 
+    async submitRun(user, data) {
+        try {
             let leaderboardName = 'ScoreSaber'
             if(data.leaderboard_profil.includes('beatleader')) leaderboardName = 'BeatLeader'
 

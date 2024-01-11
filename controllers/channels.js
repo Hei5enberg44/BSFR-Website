@@ -4,9 +4,9 @@ import DiscordAPI from './discord.js'
 const cache = new NodeCache({ stdTTL: 600 })
 
 export default {
-    async getGuildChannels(session) {
+    async getGuildChannels() {
         if(!cache.has('guildChannels')) {
-            const discord = new DiscordAPI(session)
+            const discord = new DiscordAPI()
             const channels = await discord.getGuildChannels()
 
             cache.set('guildChannels', channels)
