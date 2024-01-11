@@ -11,15 +11,15 @@
     <link rel="stylesheet" href="/static/assets/css/rankedle.css">
     <title>Beat Saber FR - Rankedle</title>
     <style>
-        #ranking tbody tr:nth-child(1) td:first-child .avatar.rank {
+        #ranking .avatar.rank.rank-1 {
             background: #ffc71e;
             color: white;
         }
-        #ranking tbody tr:nth-child(2) td:first-child .avatar.rank {
+        #ranking .avatar.rank.rank-2 {
             background: #959595;
             color: white;
         }
-        #ranking tbody tr:nth-child(3) td:first-child .avatar.rank {
+        #ranking .avatar.rank.rank-3 {
             background: #b5532d;
             color: white;
         }
@@ -267,7 +267,7 @@
                                                             <% for(const rank of ranking) { %>
                                                             <tr>
                                                                 <td class="w-1">
-                                                                    <span class="avatar rank"><%= rank.rank %></span>
+                                                                    <span class="avatar rank<%= rank.rank <= 3 ? ` rank-${rank.rank}` : '' %>"><%= rank.rank %></span>
                                                                 </td>
                                                                 <td>
                                                                     <a href="#" class="d-flex py-1 align-items-center text-reset player-stats" data-member-id="<%= rank.memberId %>">
