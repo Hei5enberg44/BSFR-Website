@@ -1,6 +1,6 @@
 import roles from './roles.js'
 import DiscordAPI from './discord.js'
-import { Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, Roles, RolesCategories, FranceCities, Cities } from './database.js'
+import { Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, Roles, RolesCategories, FranceCities, Cities, Settings } from './database.js'
 import { Op } from 'sequelize'
 
 export default class Agent {
@@ -332,6 +332,20 @@ export default class Agent {
             await Cities.destroy({
                 where: { memberId }
             })
+        }
+    }
+
+    static async getSetting(name) {
+        const setting = await Settings.findOne({ where: { name } })
+        if(setting) return setting.data
+        return null
+    }
+
+    static async updateSetting(name, data) {
+        const setting = await Settings.findOne({ where: { name } })
+        if(setting) {
+            setting.data = data
+            await setting.save()
         }
     }
 }
