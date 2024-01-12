@@ -470,6 +470,7 @@ export default class Rankedle {
 
         if(score.dateEnd === null && score.success !== null) {
             await this.updatePlayerStats(rankedle, score)
+            await this.updateRankedland()
         }
 
         res.json(score)
@@ -546,6 +547,7 @@ export default class Rankedle {
 
         if(score.dateEnd === null && score.success !== null) {
             await this.updatePlayerStats(rankedle, score)
+            await this.updateRankedland()
         }
 
         res.json(score)
@@ -620,9 +622,9 @@ export default class Rankedle {
                 }
             ]
 
+            // Ajout de chaque joueur ayant terminé le Rankedle du jour aux permissions du salon
             const scores = await this.getRankedleScores(rankedle.id)
             const finishedScores = scores.filter(s => s.success !== null)
-
             for(const score of finishedScores) {
                 permissions.push({
                     id: score.memberId,
@@ -632,8 +634,14 @@ export default class Rankedle {
             }
 
             const payload = { permission_overwrites: permissions }
-            const discord = new DiscordAPI()
-            await discord.updateChannel(config.discord.channels['rankedland'], payload)
+
+            try {
+                const discord = new DiscordAPI()
+                await discord.updateChannel(config.discord.channels['rankedland'], payload)
+            } catch(error) {
+                console.log(error)
+                Logger.log('Échec de mise à jour des permissions pour le channel #rankedland')
+            }
         }
     }
 
