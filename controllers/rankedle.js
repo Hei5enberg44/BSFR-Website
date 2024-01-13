@@ -973,59 +973,59 @@ export default class Rankedle {
 
                 // Top 1
                 seasonStats.sort((a, b) => b.points - a.points)
-                const top1 = {
+                const top1 = seasonStats[0].points > 0 ? {
                     player: seasonStats[0].player,
                     count: seasonStats[0].points
-                }
+                } : null
 
                 // Meilleure série
                 seasonStats.sort((a, b) => b.maxStreak - a.maxStreak)
-                const maxStreak = {
+                const maxStreak = seasonStats[0].maxStreak > 0 ? {
                     player: seasonStats[0].player,
                     count: seasonStats[0].maxStreak
-                }
+                } : null
 
                 // Parties jouées
                 seasonStats.sort((a, b) => b.played - a.played)
-                const played = {
+                const played = seasonStats[0].played > 0 ? {
                     player: seasonStats[0].player,
                     count: seasonStats[0].played
-                }
+                } : null
 
                 // Du premier coup
                 seasonStats.sort((a, b) => b.try1 - a.try1)
-                const firstTry = {
+                const firstTry = seasonStats[0].try1 > 0 ? {
                     player: seasonStats[0].player,
                     count: seasonStats[0].try1
-                }
+                } : null
 
                 // Nombre de victoires
                 seasonStats.sort((a, b) => b.won - a.won)
-                const wins = {
+                const wins = seasonStats[0].won > 0 ? {
                     player: seasonStats[0].player,
                     count: seasonStats[0].won
-                }
+                } : null
 
                 // Nombre de défaites
                 seasonStats.sort((a, b) => (b.played - b.won) - (a.played - a.won))
-                const loses = {
+                const loses = seasonStats[0].played - seasonStats[0].won > 0 ? {
                     player: seasonStats[0].player,
                     count: seasonStats[0].played - seasonStats[0].won
-                }
+                } : null
 
                 // Clics du bouton « PASSER »
                 scores.sort((a, b) => b.totalSkips - a.totalSkips)
-                const skips = {
+                const skips = scores[0].totalSkips > 0 ? {
                     player: scores[0].player,
                     count: scores[0].totalSkips
-                }
+                } : null
 
                 // Nombre d'indices demandés
                 scores.sort((a, b) => b.totalHints - a.totalHints)
-                const hints = {
+                const hints = scores[0].totalHints > 0 ? {
                     player: scores[0].player,
                     count: scores[0].totalHints
-                }
+                } : null
 
                 season = {
                     id: seasonId,
