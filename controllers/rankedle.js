@@ -887,6 +887,7 @@ export default class Rankedle {
         const globalStats = []
         for(const s of globalStatsData) {
             const user = await members.getUser(s.memberId)
+            if(!user) continue
             globalStats.push({
                 ...s,
                 player: {
@@ -932,6 +933,7 @@ export default class Rankedle {
                 const seasonStats = []
                 for(const s of seasonStatsData) {
                     const user = await members.getUser(s.memberId)
+                    if(!user) continue
                     seasonStats.push({
                         ...s,
                         player: {
