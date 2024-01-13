@@ -102,142 +102,158 @@
                             </div>
                         </div>
                         <% } else { %>
-                        <!-- Top 1 -->
-                        <div class="col-12 col-md-4 col-lg-3">
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <h3 class="card-title">🏆 Top 1</h3>
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <div class="avatar" style="background-image: url(<%= summary.season.top1.player.avatar %>);"></div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="fw-medium"><%= summary.season.top1.player.name %></div>
-                                            <div class="text-secondary"><%= summary.season.top1.count %></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Meilleure série -->
-                        <div class="col-12 col-md-4 col-lg-3">
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <h3 class="card-title">Meilleure série</h3>
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <div class="avatar" style="background-image: url(<%= summary.season.maxStreak.player.avatar %>);"></div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="fw-medium"><%= summary.season.maxStreak.player.name %></div>
-                                            <div class="text-secondary"><%= summary.season.maxStreak.count %></div>
+                            <!-- Top 1 -->
+                            <% if(summary.season.top1) { %>
+                            <div class="col-12 col-md-4 col-lg-3">
+                                <div class="card card-sm">
+                                    <div class="card-body">
+                                        <h3 class="card-title">🏆 Top 1</h3>
+                                        <div class="row align-items-center">
+                                            <div class="col-auto">
+                                                <div class="avatar" style="background-image: url(<%= summary.season.top1.player.avatar %>);"></div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="fw-medium"><%= summary.season.top1.player.name %></div>
+                                                <div class="text-secondary"><%= summary.season.top1.count %></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Parties jouées -->
-                        <div class="col-12 col-md-4 col-lg-3">
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <h3 class="card-title">Parties jouées</h3>
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <div class="avatar" style="background-image: url(<%= summary.season.played.player.avatar %>);"></div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="fw-medium"><%= summary.season.played.player.name %></div>
-                                            <div class="text-secondary"><%= summary.season.played.count %></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Du premier coup -->
-                        <div class="col-12 col-md-4 col-lg-3">
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <h3 class="card-title">Du premier coup</h3>
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <div class="avatar" style="background-image: url(<%= summary.season.firstTry.player.avatar %>);"></div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="fw-medium"><%= summary.season.firstTry.player.name %></div>
-                                            <div class="text-secondary"><%= summary.season.firstTry.count %></div>
+                            <% } %>
+                            <!-- Meilleure série -->
+                            <% if(summary.season.maxStreak) { %>
+                            <div class="col-12 col-md-4 col-lg-3">
+                                <div class="card card-sm">
+                                    <div class="card-body">
+                                        <h3 class="card-title">Meilleure série</h3>
+                                        <div class="row align-items-center">
+                                            <div class="col-auto">
+                                                <div class="avatar" style="background-image: url(<%= summary.season.maxStreak.player.avatar %>);"></div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="fw-medium"><%= summary.season.maxStreak.player.name %></div>
+                                                <div class="text-secondary"><%= summary.season.maxStreak.count %></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Nombre de victoires -->
-                        <div class="col-12 col-md-4 col-lg-3">
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <h3 class="card-title">Nombre de victoires</h3>
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <div class="avatar" style="background-image: url(<%= summary.season.wins.player.avatar %>);"></div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="fw-medium"><%= summary.season.wins.player.name %></div>
-                                            <div class="text-secondary"><%= summary.season.wins.count %></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Nombre de défaites -->
-                        <div class="col-12 col-md-4 col-lg-3">
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <h3 class="card-title">Nombre de défaites</h3>
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <div class="avatar" style="background-image: url(<%= summary.season.loses.player.avatar %>);"></div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="fw-medium"><%= summary.season.loses.player.name %></div>
-                                            <div class="text-secondary"><%= summary.season.loses.count %></div>
+                            <% } %>
+                            <!-- Parties jouées -->
+                            <% if(summary.season.played) { %>
+                            <div class="col-12 col-md-4 col-lg-3">
+                                <div class="card card-sm">
+                                    <div class="card-body">
+                                        <h3 class="card-title">Parties jouées</h3>
+                                        <div class="row align-items-center">
+                                            <div class="col-auto">
+                                                <div class="avatar" style="background-image: url(<%= summary.season.played.player.avatar %>);"></div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="fw-medium"><%= summary.season.played.player.name %></div>
+                                                <div class="text-secondary"><%= summary.season.played.count %></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Clics du bouton « PASSER » -->
-                        <div class="col-12 col-md-4 col-lg-3">
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <h3 class="card-title">Clics du bouton « PASSER »</h3>
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <div class="avatar" style="background-image: url(<%= summary.season.skips.player.avatar %>);"></div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="fw-medium"><%= summary.season.skips.player.name %></div>
-                                            <div class="text-secondary"><%= summary.season.skips.count %></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Nombre d'indices demandés -->
-                        <div class="col-12 col-md-4 col-lg-3">
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <h3 class="card-title">Nombre d'indices demandés</h3>
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <div class="avatar" style="background-image: url(<%= summary.season.hints.player.avatar %>);"></div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="fw-medium"><%= summary.season.hints.player.name %></div>
-                                            <div class="text-secondary"><%= summary.season.hints.count %></div>
+                            <% } %>
+                            <!-- Du premier coup -->
+                            <% if(summary.season.firstTry) { %>
+                            <div class="col-12 col-md-4 col-lg-3">
+                                <div class="card card-sm">
+                                    <div class="card-body">
+                                        <h3 class="card-title">Du premier coup</h3>
+                                        <div class="row align-items-center">
+                                            <div class="col-auto">
+                                                <div class="avatar" style="background-image: url(<%= summary.season.firstTry.player.avatar %>);"></div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="fw-medium"><%= summary.season.firstTry.player.name %></div>
+                                                <div class="text-secondary"><%= summary.season.firstTry.count %></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            <% } %>
+                            <!-- Nombre de victoires -->
+                            <% if(summary.season.wins) { %>
+                            <div class="col-12 col-md-4 col-lg-3">
+                                <div class="card card-sm">
+                                    <div class="card-body">
+                                        <h3 class="card-title">Nombre de victoires</h3>
+                                        <div class="row align-items-center">
+                                            <div class="col-auto">
+                                                <div class="avatar" style="background-image: url(<%= summary.season.wins.player.avatar %>);"></div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="fw-medium"><%= summary.season.wins.player.name %></div>
+                                                <div class="text-secondary"><%= summary.season.wins.count %></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                            <!-- Nombre de défaites -->
+                            <% if(summary.season.loses) { %>
+                            <div class="col-12 col-md-4 col-lg-3">
+                                <div class="card card-sm">
+                                    <div class="card-body">
+                                        <h3 class="card-title">Nombre de défaites</h3>
+                                        <div class="row align-items-center">
+                                            <div class="col-auto">
+                                                <div class="avatar" style="background-image: url(<%= summary.season.loses.player.avatar %>);"></div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="fw-medium"><%= summary.season.loses.player.name %></div>
+                                                <div class="text-secondary"><%= summary.season.loses.count %></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                            <!-- Clics du bouton « PASSER » -->
+                            <% if(summary.season.skips) { %>
+                            <div class="col-12 col-md-4 col-lg-3">
+                                <div class="card card-sm">
+                                    <div class="card-body">
+                                        <h3 class="card-title">Clics du bouton « PASSER »</h3>
+                                        <div class="row align-items-center">
+                                            <div class="col-auto">
+                                                <div class="avatar" style="background-image: url(<%= summary.season.skips.player.avatar %>);"></div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="fw-medium"><%= summary.season.skips.player.name %></div>
+                                                <div class="text-secondary"><%= summary.season.skips.count %></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                            <!-- Nombre d'indices demandés -->
+                            <% if(summary.season.hints) { %>
+                            <div class="col-12 col-md-4 col-lg-3">
+                                <div class="card card-sm">
+                                    <div class="card-body">
+                                        <h3 class="card-title">Nombre d'indices demandés</h3>
+                                        <div class="row align-items-center">
+                                            <div class="col-auto">
+                                                <div class="avatar" style="background-image: url(<%= summary.season.hints.player.avatar %>);"></div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="fw-medium"><%= summary.season.hints.player.name %></div>
+                                                <div class="text-secondary"><%= summary.season.hints.count %></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
                         <% } %>
                     </div>
                 </div>
