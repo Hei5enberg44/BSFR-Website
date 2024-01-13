@@ -875,6 +875,43 @@ export default class Rankedle {
     }
 
     static async getSummary() {
+        const globalStatsData = await RankedleStats.findAll({
+            attributes: [
+                'memberId',
+                [ Sequelize.fn('sum', Sequelize.col('points')), 'totalPoints' ]
+            ],
+            group: 'memberId',
+            raw: true
+        })
+
+        const globalStats = []
+        for(const s of globalStatsData) {
+            const user = await members.getUser(s.memberId)
+            globalStats.push({
+                ...s,
+                player: {
+                    name: user ? user.username : s.memberId,
+                    avatar: user ? `${user.getAvatarURL()}?size=80` : ''
+                }
+            })
+        }
+
+        // Classement général
+        globalStats.sort((a, b) => b.totalPoints - a.totalPoints)
+
+        let rank = 0
+        const ranking = []
+        for(const stat of globalStats) {
+            rank = ([...ranking].pop())?.points === stat.totalPoints ? rank : rank + 1
+            ranking.push({
+                player: stat.player,
+                points: stat.totalPoints,
+                rank
+            })
+        }
+
+        let season = null
+
         const seasons = await RankedleSeasons.findAll({
             order: [
                 [ 'id', 'desc' ]
@@ -882,125 +919,133 @@ export default class Rankedle {
             raw: true
         })
         const prevSeason = seasons.length > 1 ? seasons[seasons.length - 1] : null
-        if(!prevSeason) return null
 
-        const seasonId = prevSeason.id
+        if(prevSeason) {
+            const seasonId = prevSeason.id
 
-        const seasonStats = await RankedleStats.findAll({
-            where: { seasonId },
-            raw: true
-        })
+            const seasonStatsData = await RankedleStats.findAll({
+                where: { seasonId },
+                raw: true
+            })
+
+            if(seasonStatsData.length > 0) {
+                const seasonStats = []
+                for(const s of seasonStatsData) {
+                    const user = await members.getUser(s.memberId)
+                    seasonStats.push({
+                        ...s,
+                        player: {
+                            name: user ? user.username : s.memberId,
+                            avatar: user ? `${user.getAvatarURL()}?size=80` : ''
+                        }
+                    })
+                }
+
+                const seasonScores = await RankedleScores.findAll({
+                    include: {
+                        model: Rankedles,
+                        required: false,
+                        attributes: []
+                    },
+                    attributes: [
+                        'memberId',
+                        [ Sequelize.fn('sum', Sequelize.col('skips')), 'totalSkips' ],
+                        [ Sequelize.fn('sum', Sequelize.col('hint')), 'totalHints' ]
+                    ],
+                    where: {
+                        '$rankedle.seasonId$': seasonId
+                    },
+                    group: 'memberId',
+                    raw: true
+                })
         
-        if(seasonStats.length === 0) return null
-
-        const stats = []
-        for(const s of seasonStats) {
-            const user = await members.getUser(s.memberId)
-            stats.push({
-                ...s,
-                player: {
-                    name: user ? user.username : s.memberId,
-                    avatar: user ? `${user.getAvatarURL()}?size=80` : ''
+                const scores = []
+                for(const s of seasonScores) {
+                    const user = await members.getUser(s.memberId)
+                    scores.push({
+                        ...s,
+                        player: {
+                            name: user ? user.username : s.memberId,
+                            avatar: user ? `${user.getAvatarURL()}?size=80` : ''
+                        }
+                    })
                 }
-            })
-        }
 
-        const seasonScores = await RankedleScores.findAll({
-            include: {
-                model: Rankedles,
-                required: false,
-                attributes: []
-            },
-            attributes: [
-                'memberId',
-                [ Sequelize.fn('sum', Sequelize.col('skips')), 'totalSkips' ],
-                [ Sequelize.fn('sum', Sequelize.col('hint')), 'totalHints' ]
-            ],
-            where: {
-                '$rankedle.seasonId$': seasonId
-            },
-            group: 'memberId',
-            raw: true
-        })
-
-        const scores = []
-        for(const s of seasonScores) {
-            const user = await members.getUser(s.memberId)
-            scores.push({
-                ...s,
-                player: {
-                    name: user ? user.username : s.memberId,
-                    avatar: user ? `${user.getAvatarURL()}?size=80` : ''
+                // Top 1
+                seasonStats.sort((a, b) => b.points - a.points)
+                const top1 = {
+                    player: seasonStats[0].player,
+                    count: seasonStats[0].points
                 }
-            })
-        }
 
-        // Podium
-        stats.sort((a, b) => b.points - a.points)
+                // Meilleure série
+                seasonStats.sort((a, b) => b.maxStreak - a.maxStreak)
+                const maxStreak = {
+                    player: seasonStats[0].player,
+                    count: seasonStats[0].maxStreak
+                }
 
-        let rank = 0
-        const podium = []
-        for(const p of stats) {
-            rank = ([...podium].pop())?.points === p.points ? rank : rank + 1
-            if(rank === 4) break
-            podium.push({
-                player: p.player,
-                points: p.points,
-                rank
-            })
-        }
+                // Parties jouées
+                seasonStats.sort((a, b) => b.played - a.played)
+                const played = {
+                    player: seasonStats[0].player,
+                    count: seasonStats[0].played
+                }
 
-        // Meilleure série
-        stats.sort((a, b) => b.maxStreak - a.maxStreak)
-        const maxStreak = {
-            player: stats[0].player,
-            count: stats[0].maxStreak
-        }
+                // Du premier coup
+                seasonStats.sort((a, b) => b.try1 - a.try1)
+                const firstTry = {
+                    player: seasonStats[0].player,
+                    count: seasonStats[0].try1
+                }
 
-        // Parties jouées
-        stats.sort((a, b) => b.played - a.played)
-        const played = {
-            player: stats[0].player,
-            count: stats[0].played
-        }
+                // Nombre de victoires
+                seasonStats.sort((a, b) => b.won - a.won)
+                const wins = {
+                    player: seasonStats[0].player,
+                    count: seasonStats[0].won
+                }
 
-        // Nombre de victoires
-        stats.sort((a, b) => b.won - a.won)
-        const wins = {
-            player: stats[0].player,
-            count: stats[0].won
-        }
+                // Nombre de défaites
+                seasonStats.sort((a, b) => (b.played - b.won) - (a.played - a.won))
+                const loses = {
+                    player: seasonStats[0].player,
+                    count: seasonStats[0].played - seasonStats[0].won
+                }
 
-        // Nombre de défaites
-        stats.sort((a, b) => (b.played - b.won) - (a.played - a.won))
-        const loses = {
-            player: stats[0].player,
-            count: stats[0].played - stats[0].won
-        }
+                // Clics du bouton « PASSER »
+                scores.sort((a, b) => b.totalSkips - a.totalSkips)
+                const skips = {
+                    player: scores[0].player,
+                    count: scores[0].totalSkips
+                }
 
-        // Clics du bouton « PASSER »
-        scores.sort((a, b) => b.totalSkips - a.totalSkips)
-        const skips = {
-            player: scores[0].player,
-            count: scores[0].totalSkips
-        }
+                // Nombre d'indices demandés
+                scores.sort((a, b) => b.totalHints - a.totalHints)
+                const hints = {
+                    player: scores[0].player,
+                    count: scores[0].totalHints
+                }
 
-        // Nombre d'indices demandés
-        scores.sort((a, b) => b.totalHints - a.totalHints)
-        const hints = {
-            player: scores[0].player,
-            count: scores[0].totalHints
+                season = {
+                    id: seasonId,
+                    top1,
+                    maxStreak,
+                    played,
+                    firstTry,
+                    wins,
+                    loses,
+                    skips,
+                    hints
+                }
+            }
         }
 
         return {
-            seasonId,
-            podium,
-            maxStreak,
-            played,
-            wins,
-            loses,
-            skips,
-            hints
+            global: {
+                ranking
+            },
+            season
         }
     }
 }
