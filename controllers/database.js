@@ -119,8 +119,12 @@ const RankedleMessages = sequelizeRankedle.define('rankedle_messages', {
 
 RankedleMaps.hasOne(Rankedles, {
     sourceKey: 'id',
-    foreignKey: 'mapId',
-    targetKey: 'mapId'
+    foreignKey: 'mapId'
+})
+
+RankedleScores.hasOne(Rankedles, {
+    sourceKey: 'rankedleId',
+    foreignKey: 'id',
 })
 
 const sequelizeAgent = new Sequelize(config.databases.agent.name, config.databases.agent.username, config.databases.agent.password, {
