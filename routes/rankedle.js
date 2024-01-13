@@ -12,7 +12,7 @@ app.get('/', requireLogin, async (req, res) => {
         const ranking = await rankedle.getRanking()
         const result = await rankedle.getResult(currentRankedle, user.id)
         const isBanned = rankedle.isBanned(user.id)
-        res.render('rankedle.ejs', {
+        res.render('rankedle/rankedle.ejs', {
             page: 'rankedle',
             user,
             rankedle: currentRankedle,
@@ -22,7 +22,7 @@ app.get('/', requireLogin, async (req, res) => {
             inviteUrl: config.discord.invitation_url
         })
     } else {
-        res.render('rankedle.ejs', {
+        res.render('rankedle/rankedle.ejs', {
             page: 'rankedle',
             user,
             rankedle: currentRankedle,
@@ -142,6 +142,17 @@ app.get('/list', async (req, res) => {
         res.header('X-Status-Message', e.message)
         res.status(400).end()
     }
+})
+
+app.get('/summary', requireLogin, async (req, res) => {
+    const user = req.session.user
+    const summary = await rankedle.getSummary()
+    res.render('rankedle/summary.ejs', {
+        page: 'rankedle',
+        user,
+        summary,
+        inviteUrl: config.discord.invitation_url
+    })
 })
 
 export default app
