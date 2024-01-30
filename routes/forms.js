@@ -63,11 +63,11 @@ app.post('/run/quest', requireLogin, async (req, res) => {
         const audioFilePath = `${uploadFilePath}/audio/${date}-${audioFile.name}`
 
         try {
-            if(videoFile.size > 3 * 1024 * 1024 * 1024)
-                throw new Error('La taille du fichier vidéo ne doit pas exéder 3 Go')
+            if(videoFile.size > 2 * 1024 * 1024 * 1024)
+                throw new Error('La taille du fichier vidéo ne doit pas exéder 2 Go')
 
-            if(audioFile.size > 3 * 1024 * 1024 * 1024)
-                throw new Error('La taille du fichier audio ne doit pas exéder 3 Go')
+            if(audioFile.size > 2 * 1024 * 1024 * 1024)
+                throw new Error('La taille du fichier audio ne doit pas exéder 2 Go')
 
             await videoFile.mv(videoFilePath)
             await audioFile.mv(audioFilePath)
@@ -133,8 +133,8 @@ app.post('/run/mpov', async (req, res) => {
                 throw new Error('La soumission de vidéo Multi POV BSFR est fermée')
             } else if(file.mimetype !== 'video/mp4') {
                 throw new Error('Le format du fichier sélectionné n\'est pas autorisé')
-            } else if(file.size > 3 * 1024 * 1024 * 1024) {
-                throw new Error('La taille du fichier ne doit pas exéder 3 Go')
+            } else if(file.size > 2 * 1024 * 1024 * 1024) {
+                throw new Error('La taille du fichier ne doit pas exéder 2 Go')
             }
 
             await new Promise((resolve, reject) => {

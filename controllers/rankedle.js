@@ -673,6 +673,7 @@ export default class Rankedle {
             won: rankedleScore.success,
             skips: rankedleScore.skips,
             score,
+            points: rankedleScore.hint ? POINTS[rankedleScore.skips] / 2 : POINTS[rankedleScore.skips],
             map: {
                 id: mapData.map.id,
                 cover: mapData.map.versions[mapData.map.versions.length - 1].coverURL,
