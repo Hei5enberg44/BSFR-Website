@@ -46,40 +46,56 @@ const $countdown = document.querySelector('#countdown')
 
 const SONG_URL = '/rankedle/song'
 
-const audio = new Audio(SONG_URL)
+let audio = null
+let audioProgress
 
-const playAudio = () => {
-    audio.src = `${SONG_URL}?nocache=${Date.now()}`
-    audio.load()
-    audio.volume = window.localStorage.getItem('rankedleVolume') ? parseInt(window.localStorage.getItem('rankedleVolume')) / 100 : 0.5
-    audio.play()
-    $playBtn.innerHTML = stopIcon
+const playAudio = async (resume = false) => {
+    const isPlaying = audio && audio.playing()
+    const currentTime = resume ? audio.seek() : 0
+
+    if(audio) audio.unload()
+
+    audio = new Howl({
+        src: `${SONG_URL}?nocache=${Date.now()}`,
+        format: [ 'ogg' ],
+        volume: window.localStorage.getItem('rankedleVolume') ? parseInt(window.localStorage.getItem('rankedleVolume')) / 100 : 0.5
+    })
+
+    audio.on('end', () => {
+        cancelAnimationFrame(audioProgress)
+        $playBtn.innerHTML = playIcon
+    })
+
+    if(resume) {
+        cancelAnimationFrame(audioProgress)
+        audio.seek(currentTime)
+        if(isPlaying) {
+            audio.play()
+            audioProgress = requestAnimationFrame(audioSeek)
+            $playBtn.innerHTML = stopIcon
+        }
+    } else {
+        audio.play()
+        audioProgress = requestAnimationFrame(audioSeek)
+        $playBtn.innerHTML = stopIcon
+    }
 }
 
 const stopAudio = () => {
-    audio.pause()
-    audio.currentTime = 0
-    $playBtn.innerHTML = playIcon
+    if(audio) {
+        audio.unload()
+        cancelAnimationFrame(audioProgress)
+        $playBtn.innerHTML = playIcon
+    }
 }
 
-const resumeAudio = () => {
-    const isPlaying = audio.duration > 0 && !audio.paused
-    const currentTime = audio.currentTime
-    audio.src = `${SONG_URL}?nocache=${Date.now()}`
-    audio.load()
-    audio.currentTime = currentTime
-    if(isPlaying) audio.play()
-}
-
-audio.addEventListener('ended', () => {
-    $playBtn.innerHTML = playIcon
-})
-
-audio.addEventListener('timeupdate', () => {
-    const elapsed = Math.floor(audio.currentTime)
-    $seekBar.style.width = `${audio.currentTime * 100 / 30}%`
+const audioSeek = () => {
+    const seek = audio.seek() || 0
+    const elapsed = Math.floor(seek)
+    $seekBar.style.width = `${seek * 100 / 30}%`
     $currentTime.textContent = `00:${elapsed < 10 ? `0${elapsed}` : elapsed}`
-})
+    audioProgress = requestAnimationFrame(audioSeek)
+}
 
 const getElementOffset = (el) => {
     let top = 0
@@ -100,7 +116,7 @@ const getElementOffset = (el) => {
 
 if($playBtn) {
     $playBtn.addEventListener('click', (e) => {
-        const isPlaying = audio.currentTime > 0 && !audio.paused && !audio.ended && audio.readyState > audio.HAVE_CURRENT_DATA
+        const isPlaying = audio && audio.playing()
         if(!isPlaying)
             playAudio()
         else
@@ -121,7 +137,7 @@ if($playBtn) {
     
         volumeSlider.on('update', (e) => {
             window.localStorage.setItem('rankedleVolume', e[0])
-            audio.volume = parseInt(e[0]) / 100
+            if(audio) audio.volume(parseInt(e[0]) / 100)
         })
     })
 }
@@ -149,7 +165,7 @@ if($btnSkip) {
         if(skipRequest.ok) {
             const score = await skipRequest.json()
             update(score)
-            resumeAudio()
+            playAudio(true)
         } else {
             toggleButtons(true)
             showAlert(false, skipRequest.headers.get('X-Status-Message') ?? '', 5000)
@@ -179,7 +195,7 @@ if($btnSkip) {
             if(submitRequest.ok) {
                 const score = await submitRequest.json()
                 update(score)
-                resumeAudio()
+                playAudio(true)
                 songChoice.removeOption(value)
             } else {
                 toggleButtons(true)
