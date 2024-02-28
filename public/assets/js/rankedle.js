@@ -66,15 +66,19 @@ const playAudio = async (resume = false) => {
         $playBtn.innerHTML = playIcon
     })
 
-    if(resume && isPlaying) {
+    if(resume) {
         cancelAnimationFrame(audioProgress)
         audio.seek(currentTime)
+        if(isPlaying) {
+            audio.play()
+            audioProgress = requestAnimationFrame(audioSeek)
+            $playBtn.innerHTML = stopIcon
+        }
+    } else {
+        audio.play()
+        audioProgress = requestAnimationFrame(audioSeek)
+        $playBtn.innerHTML = stopIcon
     }
-
-    audio.play()
-    $playBtn.innerHTML = stopIcon
-
-    audioProgress = requestAnimationFrame(audioSeek)
 }
 
 const stopAudio = () => {
