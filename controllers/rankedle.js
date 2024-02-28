@@ -18,8 +18,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const RANKEDLE_PATH = path.resolve(__dirname, '../rankedle')
 const EGG_PATH = path.join(RANKEDLE_PATH, 'song.egg')
-const OGG_PATH = path.join(RANKEDLE_PATH, 'song.ogg')
-const TRIMED_OGG_PATH = path.join(RANKEDLE_PATH, 'preview_full.ogg')
+const WEBM_PATH = path.join(RANKEDLE_PATH, 'song.webm')
+const TRIMED_WEBM_PATH = path.join(RANKEDLE_PATH, 'preview_full.webm')
 const BITRATE = 96
 const RANGES = [
     '00:01',
@@ -82,8 +82,8 @@ export default class Rankedle {
             .audioFilters([
                 'silenceremove=1:0:-50dB'
             ])
-            .addOptions('-c:a libopus')
             .outputOptions([
+                '-dash 1',
                 '-map_metadata -1',
                 '-map 0:a'
             ])
@@ -111,9 +111,9 @@ export default class Rankedle {
     static async trim(songPath, outPath, from = 0, duration = 30) {
         return new Promise((res, rej) => {
             ffmpeg(songPath)
-            .addInputOption(`-ss ${from}`)
+            .addOutputOption(`-ss ${from}`)
             .addOutputOption(`-t ${duration}`)
-            .addOption('-c:a copy')
+            .addOption('-c copy')
             .output(outPath)
             .on('error', (err) => {
                 rej(err)
@@ -153,18 +153,18 @@ export default class Rankedle {
                 songZip.removeCallback()
         
                 // Trim silence
-                await this.trimSilence(EGG_PATH, OGG_PATH)
+                await this.trimSilence(EGG_PATH, WEBM_PATH)
         
                 // Get time range
-                const dataTrimed = await this.getSongMetaData(OGG_PATH)
+                const dataTrimed = await this.getSongMetaData(WEBM_PATH)
                 const duration = Math.floor(dataTrimed.format.duration)
                 const start = duration >= 30 ? Math.round(Math.random() * (duration - 30)) : 0
         
                 // Trim song
-                await this.trim(OGG_PATH, TRIMED_OGG_PATH, start)
+                await this.trim(WEBM_PATH, TRIMED_WEBM_PATH, start)
 
                 for(let i = 0; i < RANGES.length; i++) {
-                    await this.trim(TRIMED_OGG_PATH, path.join(RANKEDLE_PATH, `preview_${i}.ogg`), '00:00', RANGES[i])
+                    await this.trim(TRIMED_WEBM_PATH, path.join(RANKEDLE_PATH, `preview_${i}.webm`), '00:00', RANGES[i])
                 }
 
                 const seasonId = await this.getCurrentSeason()
@@ -294,7 +294,7 @@ export default class Rankedle {
         await this.setDateStart(rankedle.id, user.id, rankedleScore)
 
         const skips = rankedleScore ? rankedleScore.skips : 0
-        const preview = path.join(RANKEDLE_PATH, `preview_${skips < 6 && !rankedleScore?.success ? skips : 'full'}.ogg`)
+        const preview = path.join(RANKEDLE_PATH, `preview_${skips < 6 && !rankedleScore?.success ? skips : 'full'}.webm`)
 
         const stat = fs.statSync(preview)
         const fileSize = stat.size
@@ -316,7 +316,7 @@ export default class Rankedle {
                 'Content-Range': `bytes ${start}-${end}/${fileSize}`,
                 'Accept-Ranges': 'bytes',
                 'Content-Length': chunksize,
-                'Content-Type': 'audio/ogg',
+                'Content-Type': 'audio/webm',
                 'Cache-Controle': 'max-age=0, no-cache, no-store, must-revalidate, proxy-revalidate',
                 'Pragma': 'no-cache',
                 'Expires': 'Wed, 21 Oct 2015 01:00:00 GMT'
@@ -327,7 +327,7 @@ export default class Rankedle {
         } else {
             const head = {
                 'Content-Length': fileSize,
-                'Content-Type': 'audio/ogg',
+                'Content-Type': 'audio/webm',
                 'Cache-Controle': 'max-age=0, no-cache, no-store, must-revalidate, proxy-revalidate',
                 'Pragma': 'no-cache',
                 'Expires': 'Wed, 21 Oct 2015 01:00:00 GMT'
