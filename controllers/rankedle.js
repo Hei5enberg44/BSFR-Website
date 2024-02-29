@@ -18,8 +18,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const RANKEDLE_PATH = path.resolve(__dirname, '../rankedle')
 const EGG_PATH = path.join(RANKEDLE_PATH, 'song.egg')
-const WEBM_PATH = path.join(RANKEDLE_PATH, 'song.webm')
-const TRIMED_WEBM_PATH = path.join(RANKEDLE_PATH, 'preview_full.webm')
+const WEBM_PATH = path.join(RANKEDLE_PATH, 'song.mp3')
+const TRIMED_WEBM_PATH = path.join(RANKEDLE_PATH, 'preview_full.mp3')
 const BITRATE = 96
 const RANGES = [
     '00:01',
@@ -83,7 +83,8 @@ export default class Rankedle {
                 'silenceremove=1:0:-50dB'
             ])
             .outputOptions([
-                '-dash 1',
+                '-codec:a libmp3lame',
+                '-b:a 128k',
                 '-map_metadata -1',
                 '-map 0:a'
             ])
@@ -164,7 +165,7 @@ export default class Rankedle {
                 await this.trim(WEBM_PATH, TRIMED_WEBM_PATH, start)
 
                 for(let i = 0; i < RANGES.length; i++) {
-                    await this.trim(TRIMED_WEBM_PATH, path.join(RANKEDLE_PATH, `preview_${i}.webm`), '00:00', RANGES[i])
+                    await this.trim(TRIMED_WEBM_PATH, path.join(RANKEDLE_PATH, `preview_${i}.mp3`), '00:00', RANGES[i])
                 }
 
                 const seasonId = await this.getCurrentSeason()
@@ -294,48 +295,25 @@ export default class Rankedle {
         await this.setDateStart(rankedle.id, user.id, rankedleScore)
 
         const skips = rankedleScore ? rankedleScore.skips : 0
-        const preview = path.join(RANKEDLE_PATH, `preview_${skips < 6 && !rankedleScore?.success ? skips : 'full'}.webm`)
+        const fileName = `preview_${skips < 6 && !rankedleScore?.success ? skips : 'full'}.mp3`
+        const preview = path.join(RANKEDLE_PATH, fileName)
 
         const stat = fs.statSync(preview)
         const fileSize = stat.size
-        const range = req.headers.range
 
-        if(range) {
-            const parts = range.replace(/bytes=/, '').split('-')
-            const start = parseInt(parts[0], 10)
-            const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1
-
-            if(start >= fileSize) {
-                res.status(416).send('Requested range not satisfiable\n' + start + ' >= ' + fileSize)
-                return
-            }
-
-            const chunksize = (end - start) + 1
-            const file = fs.createReadStream(preview, { start, end })
-            const head = {
-                'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-                'Accept-Ranges': 'bytes',
-                'Content-Length': chunksize,
-                'Content-Type': 'audio/webm',
-                'Cache-Controle': 'max-age=0, no-cache, no-store, must-revalidate, proxy-revalidate',
-                'Pragma': 'no-cache',
-                'Expires': 'Wed, 21 Oct 2015 01:00:00 GMT'
-            }
-
-            res.writeHead(206, head)
-            file.pipe(res)
-        } else {
-            const head = {
-                'Content-Length': fileSize,
-                'Content-Type': 'audio/webm',
-                'Cache-Controle': 'max-age=0, no-cache, no-store, must-revalidate, proxy-revalidate',
-                'Pragma': 'no-cache',
-                'Expires': 'Wed, 21 Oct 2015 01:00:00 GMT'
-            }
-
-            res.writeHead(200, head)
-            fs.createReadStream(preview).pipe(res)
+        const file = fs.createReadStream(preview)
+        const head = {
+            'Content-Length': fileSize,
+            'Content-Type': 'audio/mp3',
+            'Cache-Controle': 'max-age=0, no-cache, no-store, must-revalidate, proxy-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+            'X-Pad': 'avoid browser bug',
+            'ETag': fileName
         }
+
+        res.writeHead(200, head)
+        file.pipe(res)
     }
 
     static async setDateStart(rankedleId, userId, score) {
