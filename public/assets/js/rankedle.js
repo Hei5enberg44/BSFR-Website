@@ -57,7 +57,7 @@ const playAudio = async (resume = false) => {
 
     audio = new Howl({
         src: `${SONG_URL}?nocache=${Date.now()}`,
-        format: [ 'webm' ],
+        format: [ 'mp3' ],
         html5: true,
         volume: window.localStorage.getItem('rankedleVolume') ? parseInt(window.localStorage.getItem('rankedleVolume')) / 100 : 0.5
     })
