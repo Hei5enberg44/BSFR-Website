@@ -50,15 +50,14 @@ let audio = null
 let audioProgress
 
 const playAudio = async (resume = false) => {
-    const isPlaying = audio && audio.playing()
-    const currentTime = resume ? audio.seek() : 0
+    const isPlaying = audio?.playing()
+    const currentTime = audio?.seek() || 0
 
-    if(audio) audio.unload()
+    audio?.unload()
 
     audio = new Howl({
         src: `${SONG_URL}?nocache=${Date.now()}`,
         format: [ 'mp3' ],
-        html5: true,
         volume: window.localStorage.getItem('rankedleVolume') ? parseInt(window.localStorage.getItem('rankedleVolume')) / 100 : 0.5
     })
 
@@ -69,8 +68,8 @@ const playAudio = async (resume = false) => {
 
     if(resume) {
         cancelAnimationFrame(audioProgress)
-        audio.seek(currentTime)
         if(isPlaying) {
+            audio.seek(currentTime)
             audio.play()
             audioProgress = requestAnimationFrame(audioSeek)
             $playBtn.innerHTML = stopIcon
