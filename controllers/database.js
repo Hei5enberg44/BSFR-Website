@@ -26,6 +26,23 @@ const Users = sequelizeWebsite.define('users', {
     token: DataTypes.TEXT()
 })
 
+const Runs = sequelizeWebsite.define('runs', {
+    id: {
+        type: DataTypes.INTEGER(),
+        autoIncrement: true,
+        primaryKey: true
+    },
+    memberId: DataTypes.STRING(255),
+    url: DataTypes.TEXT(),
+    description: DataTypes.TEXT(),
+    map: DataTypes.STRING(255),
+    headset: DataTypes.STRING(255),
+    grip: DataTypes.STRING(255),
+    comment: DataTypes.TEXT(),
+    date: DataTypes.DATE(),
+    status: DataTypes.INTEGER()
+})
+
 const sequelizeRankedle = new Sequelize(config.databases.rankedle.name, config.databases.rankedle.username, config.databases.rankedle.password, {
     host: config.databases.website.host,
     port: config.databases.website.port,
@@ -103,7 +120,7 @@ const RankedleStats = sequelizeRankedle.define('rankedle_stats', {
     won: DataTypes.INTEGER(),
     currentStreak: DataTypes.INTEGER(),
     maxStreak: DataTypes.INTEGER(),
-    points: DataTypes.INTEGER()
+    points: DataTypes.FLOAT()
 })
 
 const RankedleMessages = sequelizeRankedle.define('rankedle_messages', {
@@ -331,7 +348,7 @@ const Cards = sequelizeCubeStalker.define('cards', {
 })
 
 export {
-    Users, Rankedles, RankedleSeasons, RankedleMaps, RankedleScores, RankedleStats, RankedleMessages,
+    Users, Runs, Rankedles, RankedleSeasons, RankedleMaps, RankedleScores, RankedleStats, RankedleMessages,
     Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, FranceCities, Cities, MPOV, YoutubeVideos, Feur, Roles, RolesCategories, Settings,
     Cards
 }
