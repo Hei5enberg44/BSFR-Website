@@ -153,7 +153,7 @@
                                                             <div class="mb-3">
                                                                 <div class="input-group">
                                                                     <select type="text" class="form-select" id="song"></select>
-                                                                    <button type="button" class="btn btn-purple" id="hint">INDICE</button>
+                                                                    <button type="button" class="btn btn-purple disabled" id="hint">INDICE</button>
                                                                 </div>
                                                             </div>
 
@@ -364,8 +364,6 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
-
-                                                    <div class="text-red"><i>Attention: L'obtention d'un indice divisera le nombre de points obtenus par deux !</i></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -506,42 +504,13 @@
                                         </div>
                                     </div>
 
-                                    <div class="modal modal-xl" id="modalHintConfirm" tabindex="-1">
-                                        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                <div class="modal-status bg-info"></div>
-                                                <div class="modal-body text-center py-4">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-info icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 9v4" /><path d="M12 16v.01" /></svg>
-                                                    <h3>Obtenir un indice ?</h3>
-                                                    <div class="text-secondary">
-                                                        Cela affichera la cover de la map floutée.<br>
-                                                        Les points obtenus à l'issue de la partie<br> seront divisés par deux.
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <div class="w-100">
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <a href="#" class="btn w-100" data-bs-dismiss="modal">Annuler</a>
-                                                            </div>
-                                                            <div class="col">
-                                                                <a href="#" class="btn btn-primary w-100" id="redeemHint">Confirmer</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <div class="modal modal-xl" id="modalHint" tabindex="-1">
                                         <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 <div class="modal-status bg-info"></div>
                                                 <div class="modal-body text-center py-4">
-                                                    <h3>Votre indice</h3>
+                                                    <h3>Indice</h3>
                                                     <div id="hintContent"></div>
                                                 </div>
                                                 <div class="modal-footer">

@@ -60,15 +60,6 @@ app.get('/score', async (req, res) => {
     }
 })
 
-app.get('/hint', async (req, res) => {
-    try {
-        await rankedle.hintRequest(req, res)
-    } catch(e) {
-        res.header('X-Status-Message', e.message)
-        res.status(400).end()
-    }
-})
-
 app.post('/hint', async (req, res) => {
     try {
         await rankedle.hintRedeem(req, res)

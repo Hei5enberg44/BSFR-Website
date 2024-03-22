@@ -346,29 +346,6 @@ export default class Rankedle {
         res.json(rankedleScore)
     }
 
-    static async hintRequest(req, res) {
-        if(!req.session.user) throw new Error('User not connected')
-        const user = req.session.user
-
-        const rankedle = await this.getCurrentRankedle()
-        if(!rankedle) throw new Error('No rankedle found')
-
-        const rankedleScore = await this.getUserScore(rankedle.id, user.id)
-
-        if(rankedleScore && rankedleScore.hint) {
-            const mapData = await RankedleMaps.findOne({
-                where: { id: rankedle.mapId },
-                raw: true
-            })
-            const coverURL = mapData.map.versions[mapData.map.versions.length - 1].coverURL
-            const coverBuffer = await this.blurImage(coverURL)
-            const cover = coverBuffer.toString('base64')
-            res.json({ cover })
-        } else {
-            res.json(null)
-        }
-    }
-
     static async blurImage(url) {
         const canvas = createCanvas(300, 300)
         const ctx = canvas.getContext('2d')
@@ -387,14 +364,21 @@ export default class Rankedle {
         if(!rankedle) throw new Error('No rankedle found')
 
         const rankedleScore = await this.getUserScore(rankedle.id, user.id)
-        await this.setDateStart(rankedle.id, user.id, rankedleScore)
+        if(rankedleScore?.skips !== 5) throw new Error('Action impossible')
 
         if(!rankedleScore.hint) {
             rankedleScore.hint = true
             await rankedleScore.save()
         }
-        
-        await this.hintRequest(req, res)
+
+        const mapData = await RankedleMaps.findOne({
+            where: { id: rankedle.mapId },
+            raw: true
+        })
+        const coverURL = mapData.map.versions[mapData.map.versions.length - 1].coverURL
+        const coverBuffer = await this.blurImage(coverURL)
+        const cover = coverBuffer.toString('base64')
+        res.json({ cover })
     }
 
     static async skipRequest(req, res) {
@@ -548,7 +532,7 @@ export default class Rankedle {
                 stats.won++
                 stats.currentStreak++
                 if(stats.currentStreak > stats.maxStreak) stats.maxStreak = stats.currentStreak
-                stats.points += score.hint ? POINTS[score.skips] / 2 : POINTS[score.skips]
+                stats.points += POINTS[score.skips]
             } else {
                 stats.currentStreak = 0
             }
@@ -574,7 +558,7 @@ export default class Rankedle {
                 stats.won = 1
                 stats.currentStreak = 1
                 stats.maxStreak = 1
-                stats.points += score.hint ? POINTS[score.skips] / 2 : POINTS[score.skips]
+                stats.points += POINTS[score.skips]
             }
             await RankedleStats.create(stats)
         }
@@ -651,7 +635,7 @@ export default class Rankedle {
             won: rankedleScore.success,
             skips: rankedleScore.skips,
             score,
-            points: rankedleScore.hint ? POINTS[rankedleScore.skips] / 2 : POINTS[rankedleScore.skips],
+            points: POINTS[rankedleScore.skips],
             map: {
                 id: mapData.map.id,
                 cover: mapData.map.versions[mapData.map.versions.length - 1].coverURL,
