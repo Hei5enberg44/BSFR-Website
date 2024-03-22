@@ -22,8 +22,6 @@ const $skipSeconds = document.querySelector('#skip-seconds')
 /** @type {HTMLButtonElement} */
 const $btnHint = document.querySelector('#hint')
 /** @type {HTMLButtonElement} */
-const $btnRedeemHint = document.querySelector('#redeemHint')
-/** @type {HTMLButtonElement} */
 const $btnSkip = document.querySelector('#skip')
 /** @type {HTMLButtonElement} */
 const $btnSubmit = document.querySelector('#submit')
@@ -237,6 +235,11 @@ if($btnSkip) {
                             $stepText.textContent = detail.text
                         }
                         if(i === score.skips && score.skips < 6) $steps[i].classList.add('step-active')
+                        if(score.skips === 5) {
+                            $btnHint.classList.remove('disabled')
+                        } else {
+                            $btnHint.classList.add('disabled')
+                        }
                         if(score.skips === 6) {
                             $btnSkip.classList.add('disabled')
                             $btnSubmit.classList.add('d-none')
@@ -302,32 +305,11 @@ if($btnSkip) {
 }
 
 if($btnHint) {
-    const $modalHintConfirm = document.querySelector('#modalHintConfirm')
     const $modalHint = document.querySelector('#modalHint')
-    const modalHintConfirm = bootstrap.Modal.getOrCreateInstance($modalHintConfirm)
     const modalHint = bootstrap.Modal.getOrCreateInstance($modalHint)
 
     $btnHint.addEventListener('click', async () => {
         $btnHint.classList.add('btn-loading')
-
-        const hintRequest = await fetch('/rankedle/hint')
-
-        if(hintRequest.ok) {
-            const hint = await hintRequest.json()
-            if(!hint) {
-                modalHintConfirm.show()
-            } else {
-                await showHint(hint)
-            }
-        } else {
-            showAlert(false, hintRequest.headers.get('X-Status-Message') ?? '', 5000)
-        }
-
-        $btnHint.classList.remove('btn-loading')
-    })
-
-    $btnRedeemHint.addEventListener('click', async () => {
-        $btnRedeemHint.classList.add('btn-loading')
 
         const hintRequest = await fetch('/rankedle/hint', {
             method: 'POST'
@@ -340,7 +322,7 @@ if($btnHint) {
             showAlert(false, hintRequest.headers.get('X-Status-Message') ?? '', 5000)
         }
 
-        $btnRedeemHint.classList.remove('btn-loading')
+        $btnHint.classList.remove('btn-loading')
     })
 
     const showHint = async () => {
@@ -357,7 +339,6 @@ if($btnHint) {
             $hintContent.innerHTML = ''
             $hintContent.append($img)
 
-            modalHintConfirm.hide()
             modalHint.show()
         } else {
             showAlert(false, hintRequest.headers.get('X-Status-Message') ?? '', 5000)
