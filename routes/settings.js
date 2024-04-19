@@ -91,9 +91,7 @@ app.get('/city', requireLogin, async (req, res) => {
 
 app.get('/cities', async (req, res) => {
     try {
-        const user = req.session.user
-
-        const cities = await city.getCityList(user.id, req.query.q)
+        const cities = await city.getCityList(req.query.q)
         res.json(cities)
     } catch(e) {
         res.status(404).end()

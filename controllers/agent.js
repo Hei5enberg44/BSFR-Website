@@ -1,4 +1,5 @@
 import roles from './roles.js'
+import city from './city.js'
 import DiscordAPI from './discord.js'
 import { Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, Roles, RolesCategories, FranceCities, Cities, Settings } from './database.js'
 import { Op } from 'sequelize'
@@ -295,21 +296,24 @@ export default class Agent {
     }
 
     static async getMemberCity(memberId) {
-        const city = await Cities.findOne({
+        const memberCity = await Cities.findOne({
             where: { memberId },
             raw: true
         })
-        return city ?? null
+        return memberCity ?? null
     }
 
     static async updateMemberCity(memberId, cityId) {
         if(cityId !== null) {
-            const city = await FranceCities.findOne({
-                where: { id: cityId },
-                raw: true
-            })
+            const citySearch = await city.getCityById(cityId)
     
-            if(!city) throw new Error('La ville sélectionnée est introuvable.')
+            if(citySearch.length === 0) throw new Error('La ville sélectionnée est introuvable.')
+
+            const cityData = {
+                country: citySearch[0].country,
+                name: citySearch[0].name,
+                coordinates: `${citySearch[0].coordinates.lat},${citySearch[0].coordinates.lon}`
+            }
 
             const userCity = await Cities.findOne({
                 where: { memberId }
@@ -318,14 +322,14 @@ export default class Agent {
             if(!userCity) {
                 await Cities.create({
                     memberId,
-                    code_postal: city.code_postal,
-                    nom_de_la_commune: city.nom_de_la_commune,
-                    coordonnees_gps: city.coordonnees_gps
+                    pays: cityData.country,
+                    commune: cityData.name,
+                    coordonnees_gps: cityData.coordinates
                 })
             } else {
-                userCity.code_postal = city.code_postal
-                userCity.nom_de_la_commune = city.nom_de_la_commune
-                userCity.coordonnees_gps = city.coordonnees_gps
+                userCity.pays = cityData.country
+                userCity.commune = cityData.name
+                userCity.coordonnees_gps = cityData.coordinates
                 await userCity.save()
             }
         } else {

@@ -26,15 +26,15 @@ window.onload = async function() {
         const avatarURL = member.user.avatar ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : `https://cdn.discordapp.com/embed/avatars/${parseInt(member.user.discriminator) % 5}.png`
 
         const coords = city.coordonnees_gps
-        const postalCode = city.code_postal.toString().padStart(5, '0')
-        const cityName = city.nom_de_la_commune
+        const countryName = city.pays
+        const cityName = city.commune
 
-        const p = popups.find(p => p.coords === coords && p.postalCode === postalCode && p.cityName === cityName)
+        const p = popups.find(p => p.countryName === countryName && p.cityName === cityName && p.coords === coords)
 
         if(!p) {
             popups.push({
                 coords: coords,
-                postalCode: postalCode,
+                countryName: countryName,
                 cityName: cityName,
                 users: [
                     {
@@ -57,7 +57,7 @@ window.onload = async function() {
 
         const popupUsers = []
         for(const u of p.users) {
-            popupUsers.push(`<table><tbody><tr><td><span class="avatar avatar-rounded me-2" style="background-image: url(${u.avatar})"></span></td><td><b>${u.username}</b><br>${p.postalCode} ${p.cityName}</td></tr></tbody></table>`)
+            popupUsers.push(`<table><tbody><tr><td><span class="avatar avatar-rounded me-2" style="background-image: url(${u.avatar})"></span></td><td><b>${u.username}</b><br>${p.cityName} (${p.countryName})</td></tr></tbody></table>`)
         }
         marker.bindPopup(popupUsers.join('<hr class="my-2">'))
     }

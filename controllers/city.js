@@ -1,10 +1,10 @@
-import { Op } from 'sequelize'
-import { FranceCities, Cities } from './database.js'
+import opendatasoft from './opendatasoft.js'
+import { Cities } from './database.js'
 
 export default class City {
     /**
      * Récupère les villes d'origine des membres du serveur Discord
-     * @returns {Promise<Array<{code_commune_insee: String, nom_de_la_commune: String, code_postal: Number, ligne_5: String, libelle_d_acheminement: String, coordonnees_gps: String}>>} liste des villes
+     * @returns {Promise<Array<{memberId: string, pays: string, commune: string, coordonnees_gps: string}>>} liste des villes
      */
     static async get() {
         const cities = await Cities.findAll({
@@ -13,26 +13,34 @@ export default class City {
         return cities
     }
 
-    static async getCityList(memberId, query) {
-        const cities = await FranceCities.findAll({
-            where: {
-                [Op.or]: {
-                    code_postal: {
-                        [Op.like]: `%${query}%`
-                    },
-                    nom_de_la_commune: {
-                        [Op.like]: `%${query}%`
-                    }
-                }
-            },
-            raw: true
-        })
-
-        return !cities ? {} : cities.map(c => {
+    static async getCityList(cityName) {
+        const params = {
+            select: 'geoname_id, name, country, coordinates',
+            where: `name LIKE \'%${cityName.replace('\'', '\\\'')}%\'`,
+            include_links: 'false',
+            include_app_metas: 'false',
+            offset: '0',
+            limit: '50'
+        }
+        const cities = await opendatasoft.getDatasetRecords('geonames-all-cities-with-a-population-500', params)
+        return cities.results.map(r => {
             return {
-                id: c.id,
-                name: `${c.nom_de_la_commune} (${c.code_postal})`
+                id: r.geoname_id,
+                name: `${r.name} (${r.country})`
             }
         })
+    }
+
+    static async getCityById(cityId) {
+        const params = {
+            select: 'geoname_id, name, country, coordinates',
+            where: `geoname_id = '${cityId}'`,
+            include_links: 'false',
+            include_app_metas: 'false',
+            offset: '0',
+            limit: '50'
+        }
+        const cities = await opendatasoft.getDatasetRecords('geonames-all-cities-with-a-population-500', params)
+        return cities.results
     }
 }

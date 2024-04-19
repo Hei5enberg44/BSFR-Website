@@ -85,6 +85,15 @@ const RankedleMaps = sequelizeRankedle.define('rankedle_maps', {
     map: DataTypes.JSON()
 })
 
+const RankedleMapsExcluded = sequelizeRankedle.define('rankedle_maps_excluded', {
+    id: {
+        type: DataTypes.INTEGER(),
+        autoIncrement: true,
+        primaryKey: true
+    },
+    mapId: DataTypes.STRING(255)
+})
+
 const RankedleScores = sequelizeRankedle.define('rankedle_scores', {
     id: {
         type: DataTypes.INTEGER(),
@@ -234,8 +243,8 @@ const Cities = sequelizeAgent.define('cities', {
         primaryKey: true
     },
     memberId: DataTypes.STRING(255),
-    code_postal: DataTypes.INTEGER(),
-    nom_de_la_commune: DataTypes.STRING(255),
+    pays: DataTypes.STRING(255),
+    commune: DataTypes.STRING(255),
     coordonnees_gps: DataTypes.STRING(255)
 })
 
@@ -348,7 +357,7 @@ const Cards = sequelizeCubeStalker.define('cards', {
 })
 
 export {
-    Users, Runs, Rankedles, RankedleSeasons, RankedleMaps, RankedleScores, RankedleStats, RankedleMessages,
+    Users, Runs, Rankedles, RankedleSeasons, RankedleMaps, RankedleMapsExcluded, RankedleScores, RankedleStats, RankedleMessages,
     Birthdays, Mutes, Bans, BirthdayMessages, MaliciousURL, Twitch, FranceCities, Cities, MPOV, YoutubeVideos, Feur, Roles, RolesCategories, Settings,
     Cards
 }
