@@ -16,7 +16,11 @@ window.onload = async function() {
     const members = await membersRequest.json()
 
     const map = L.map('map').setView([47, 2], 5.75)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map)
+
+    L.esri.Vector.vectorBasemapLayer("arcgis/navigation", {
+        apikey: 'AAPKbd80a71eb7694e0cad9f29fea06b27b7YKFdaFPfA5lECHP8_qvqG5b0eyJW4TbpP5ndaM1QvNkj1Oya5z9Oxx5ShArwhraE',
+        language: 'fr'
+    }).addTo(map)
 
     const popups = []
     for(const city of cities) {
