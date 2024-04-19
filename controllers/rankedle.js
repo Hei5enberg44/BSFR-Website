@@ -878,11 +878,11 @@ export default class Rankedle {
 
         const seasons = await RankedleSeasons.findAll({
             order: [
-                [ 'id', 'desc' ]
+                [ 'id', 'asc' ]
             ],
             raw: true
         })
-        const prevSeason = seasons.length > 1 ? seasons[seasons.length - 1] : null
+        const prevSeason = seasons.length > 1 ? seasons[seasons.length - 2] : null
 
         if(prevSeason) {
             const seasonId = prevSeason.id
