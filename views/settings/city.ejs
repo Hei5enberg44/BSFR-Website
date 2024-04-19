@@ -72,7 +72,7 @@
                                                         <div class="col">
                                                             <select type="text" class="form-select" id="city">
                                                                 <% if(city) { %>
-                                                                <option value="<%= city.id %>"><%= `${city.nom_de_la_commune} (${city.code_postal})` %></option>
+                                                                <option value="<%= city.id %>"><%= `${city.commune} (${city.pays})` %></option>
                                                                 <% } %>
                                                             </select>
                                                         </div>
@@ -116,6 +116,7 @@
             labelField: 'name',
             searchField: 'name',
             openOnFocus: false,
+            loadThrottle: 500,
             load: (query, callback) => {
                 fetch('/settings/cities?q=' + encodeURIComponent(query))
                     .then(response => response.json())
@@ -155,7 +156,7 @@
         $btnSave.addEventListener('click', async (e) => {
             $btnSave.classList.add('btn-loading')
 
-            const cityId = cityChoice.getValue() !== '' ? parseInt(cityChoice.getValue()) : null
+            const cityId = cityChoice.getValue() !== '' ? cityChoice.getValue() : null
             
             const saveRequest = await fetch('/settings/city', {
                 method: 'POST',
