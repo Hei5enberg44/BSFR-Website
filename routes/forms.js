@@ -55,7 +55,7 @@ app.post('/run/quest', requireLogin, async (req, res) => {
         const videoFile = req.files.video
         const audioFile = req.files.audio
         const user = req.session.user
-        const username = `${user.username}#${user.discriminator}`
+        const username = user.username
 
         const date = Date.now()
         const uploadFilePath = `${process.cwd()}/uploads/youtube`
@@ -124,7 +124,7 @@ app.post('/run/mpov', async (req, res) => {
     if(req?.files?.file) {
         const file = req.files.file
         const user = req.session.user
-        const username = `${user.username}#${user.discriminator}`
+        const username = user.username
 
         try {
             const mpovInfos = await mpov.getMPOVInfos()

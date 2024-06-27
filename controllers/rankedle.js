@@ -735,7 +735,7 @@ export default class Rankedle {
 
             rank = ([...ranking].pop())?.points === player.points ? rank : rank + 1
             player.avatar = `${user.getAvatarURL()}?size=80`
-            player.name = user.username
+            player.name = user.name
             player.rank = rank
             ranking.push(player)
         }
@@ -854,7 +854,7 @@ export default class Rankedle {
             globalStats.push({
                 ...s,
                 player: {
-                    name: user.username,
+                    name: user.name,
                     avatar: `${user.getAvatarURL()}?size=80`
                 }
             })
@@ -900,7 +900,7 @@ export default class Rankedle {
                     seasonStats.push({
                         ...s,
                         player: {
-                            name: user.username,
+                            name: user.name,
                             avatar: `${user.getAvatarURL()}?size=80`
                         }
                     })
@@ -930,7 +930,7 @@ export default class Rankedle {
                     scores.push({
                         ...s,
                         player: {
-                            name: user ? user.username : s.memberId,
+                            name: user ? user.name : s.memberId,
                             avatar: user ? `${user.getAvatarURL()}?size=80` : ''
                         }
                     })

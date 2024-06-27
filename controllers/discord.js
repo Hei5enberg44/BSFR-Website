@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { Users } from './database.js'
+import { Users, Runs } from './database.js'
 import members from './members.js'
 import roles from './roles.js'
 import config from '../config.json' assert { type: 'json' }
@@ -112,7 +112,6 @@ export default class DiscordAPI {
         if(request.ok) {
             const token = await request.json()
             await this.setToken(token)
-            console.log('Token refreshed')
             return token
         } else {
             throw new Error('Failed to refresh token')
@@ -155,6 +154,7 @@ export default class DiscordAPI {
         const member = await this.send('GET', `/guilds/${config.discord.guild_id}/members/${user.id}`, headers, null, true)
         if(!member) return user
         if(member) {
+            user.name = member.nick ?? user.global_name
             user.isBSFR = true
             // On vérifie si le membre a le rôle "Administrateur" ou "Modérateur"
             if(member.roles.find(r => r === config.discord.roles['Admin'] || r === config.discord.roles['Modérateur']))
@@ -225,6 +225,16 @@ export default class DiscordAPI {
                 console.log(response)
                 throw new Error('Échec de l\'envoi de la run')
             }
+
+            // await Runs.create({
+            //     memberId: user.id,
+            //     url: data.url,
+            //     description: data.description,
+            //     map: data.beatsaver,
+            //     headset: data.headset,
+            //     grip: data.grip,
+            //     comment: data.comments
+            // })
 
             return {
                 success: 'La run a bien été envoyée'

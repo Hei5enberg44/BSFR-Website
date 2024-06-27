@@ -21,7 +21,7 @@ app.get('/birthdays', requireAdmin, async (req, res) => {
         const date = new Intl.DateTimeFormat('fr-FR').format(new Date(birthday.date))
         membersBirthday.push({
             avatar: `${user.getAvatarURL()}?size=80`,
-            name: user.username,
+            name: user.name,
             date: {
                 timestamp: new Date(birthday.date).getTime(),
                 formated: date
@@ -47,10 +47,10 @@ app.get('/mutes', requireAdmin, async (req, res) => {
         const unmuteDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(mute.unmuteDate)
         mutedMembers.push({
             avatar: user ? `${user.getAvatarURL()}?size=80` : '',
-            name: user ? user.username : '',
+            name: user ? user.name : '',
             author: {
                 avatar: author ? `${author.getAvatarURL()}?size=80` : '',
-                name: author ? author.username : ''
+                name: author ? author.name : ''
             },
             reason: mute.reason,
             muteDate: {
@@ -82,10 +82,10 @@ app.get('/bans', requireAdmin, async (req, res) => {
         const unbanDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'medium' }).format(ban.unbanDate)
         bannedMembers.push({
             avatar: user ? `${user.getAvatarURL()}?size=80` : '',
-            name: user ? user.username : '',
+            name: user ? user.name : '',
             author: {
                 avatar: author ? `${author.getAvatarURL()}?size=80` : '',
-                name: author ? author.username : ''
+                name: author ? author.name : ''
             },
             reason: ban.reason,
             banDate: {
@@ -118,7 +118,7 @@ app.get('/birthdayMessages', requireAdmin, async (req, res) => {
             message: message.message,
             author: {
                 avatar: author ? `${author.getAvatarURL()}?size=80` : '',
-                name: author ? author.username : ''
+                name: author ? author.name : ''
             },
             date: {
                 timestamp: message.date.getTime(),
@@ -185,7 +185,7 @@ app.get('/twitchChannels', requireAdmin, async (req, res) => {
         twitchChannels.push({
             user: {
                 avatar: user ? `${user.getAvatarURL()}?size=80` : '',
-                name: user ? user.username : ''
+                name: user ? user.name : ''
             },
             name: channel.channelName,
             isLive: channel.live
@@ -224,7 +224,7 @@ app.post('/rankedleLogs', requireAdmin, async (req, res) => {
             page: 'rankedleLogs',
             user: req.session.user,
             rankedleId,
-            player: user?.username ?? '',
+            player: user?.name ?? '',
             score
         })
     }
@@ -236,7 +236,7 @@ app.get('/card/request/:id([0-9]+)', requireAdmin, async (req, res) => {
     if(memberCard) {
         const user = await members.getUser(memberCard.memberId)
         memberCard.user = {
-            name: user ? user.username : '',
+            name: user ? user.name : '',
             avatar: user ? `${user.getAvatarURL()}?size=80` : ''
         }
         const card = await cubestalker.getCard(memberCard.image)
