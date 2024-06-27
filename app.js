@@ -14,6 +14,7 @@ import rankedleRoutes from './routes/rankedle.js'
 import settingsRoutes from './routes/settings.js'
 import adminRoutes from './routes/admin.js'
 import agentRoutes from './routes/agent.js'
+// import runsRoutes from './routes/runs.js'
 import { requireLogin } from './routes/middlewares.js'
 import config from './config.json' assert { type: 'json' }
 
@@ -96,6 +97,7 @@ app.use('/rankedle', rankedleRoutes)
 app.use('/settings', settingsRoutes)
 app.use('/admin', adminRoutes)
 app.use('/agent', agentRoutes)
+// app.use('/runs', runsRoutes)
 
 app.get('/google/redirect', (req, res) => {
     console.log(req)

@@ -7,7 +7,14 @@ export default {
     async getGuildMembers() {
         if(!cache.has('guildMembers')) {
             const discord = new DiscordAPI()
-            const members = await discord.getGuildMembers()
+            const guildMembers = await discord.getGuildMembers()
+
+            const members = []
+            for(const guildMember of guildMembers) {
+                let member = guildMember
+                member.user.name = member.nick ?? member.user.global_name
+                members.push(member)
+            }
 
             cache.set('guildMembers', members)
             return members

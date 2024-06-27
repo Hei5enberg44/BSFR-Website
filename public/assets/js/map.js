@@ -26,7 +26,7 @@ window.onload = async function() {
     for(const city of cities) {
         const memberId = city.memberId
         const member = members.find(m => m.user.id === memberId)
-        const username = member.user.username
+        const username = member.user.name
         const avatarURL = member.user.avatar ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.webp?size=80` : `https://cdn.discordapp.com/embed/avatars/${parseInt(member.user.discriminator) % 5}.png`
 
         const coords = city.coordonnees_gps

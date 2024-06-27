@@ -20,7 +20,7 @@ export default {
             const user = await members.getUser(attacker.attackerId)
             if(!user) continue
             attacker.avatar = `${user.getAvatarURL()}?size=80`
-            attacker.name = user.username
+            attacker.name = user.name
             attacker.rank = rank
             attackers.push(attacker)
             rank++
@@ -46,7 +46,7 @@ export default {
             const user = await members.getUser(victim.victimId)
             if(!user) continue
             victim.avatar = `${user.getAvatarURL()}?size=80`
-            victim.name = user.username
+            victim.name = user.name
             victim.rank = rank
             victims.push(victim)
             rank++
@@ -68,9 +68,9 @@ export default {
         for(const message of messageList) {
             const victim = await members.getUser(message.victimId)
             const attacker = await members.getUser(message.attackerId)
-            message.attackerName = attacker ? attacker.username : ''
+            message.attackerName = attacker ? attacker.name : ''
             message.attackerAvatar = attacker ? `${attacker.getAvatarURL()}?size=80` : ''
-            message.victimName = victim ? victim.username : '?'
+            message.victimName = victim ? victim.name : '?'
             message.victimAvatar = victim ? `${victim.getAvatarURL()}?size=80` : ''
             messages.push(message)
         }
@@ -91,9 +91,9 @@ export default {
         for(const message of messageList) {
             const attacker = await members.getUser(message.attackerId)
             const victim = await members.getUser(message.victimId)
-            message.attackerName = attacker ? attacker.username : '?'
+            message.attackerName = attacker ? attacker.name : '?'
             message.attackerAvatar = attacker ? `${attacker.getAvatarURL()}?size=80` : ''
-            message.victimName = victim ? victim.username : ''
+            message.victimName = victim ? victim.name : ''
             message.victimAvatar = victim ? `${victim.getAvatarURL()}?size=80` : ''
             messages.push(message)
         }

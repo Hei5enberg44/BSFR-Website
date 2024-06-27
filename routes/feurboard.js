@@ -20,7 +20,7 @@ app.get('/', requireLogin, async (req, res) => {
 
 app.get('/messages/attacker/:id', async (req, res) => {
     if(req.xhr) {
-        if(req.session.token) {
+        if(req.session.user) {
             const messages = await feur.getAttackerMessages(req.params.id)
             res.json(messages)
             return
@@ -31,7 +31,7 @@ app.get('/messages/attacker/:id', async (req, res) => {
 
 app.get('/messages/victim/:id', async (req, res) => {
     if(req.xhr) {
-        if(req.session.token) {
+        if(req.session.user) {
             const messages = await feur.getVictimMessages(req.params.id)
             res.json(messages)
             return
