@@ -77,8 +77,10 @@ export class AppComponent implements OnInit {
         }
     ]
 
-    menuItemLink = 'p-ripple p-element no-underline text-white flex items-center cursor-pointer p-3 rounded-md hover:bg-[var(--surface-100)] transition-duration-150 transition-colors'
-    menuItemLinkActive = 'p-ripple p-element no-underline text-white flex items-center cursor-pointer p-3 rounded-md bg-[var(--primary-600)] hover:bg-[var(--primary-500)] transition-duration-150 transition-colors'
+    menuItemLink =
+        'p-ripple p-element no-underline text-white flex items-center cursor-pointer p-3 rounded-md hover:bg-[var(--surface-100)] transition-duration-150 transition-colors'
+    menuItemLinkActive =
+        'p-ripple p-element no-underline text-white flex items-center cursor-pointer p-3 rounded-md bg-[var(--primary-600)] hover:bg-[var(--primary-500)] transition-duration-150 transition-colors'
 
     logged = false
 }

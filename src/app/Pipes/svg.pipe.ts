@@ -11,7 +11,7 @@ export class svgPipe implements PipeTransform {
 
     transform(icon: FeatherIcon, size?: string) {
         const options: Partial<FeatherAttributes> = {}
-        if(size) {
+        if (size) {
             options.width = size
             options.height = size
         }

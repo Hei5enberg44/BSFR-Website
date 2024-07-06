@@ -1,36 +1,73 @@
 <div class="max-w-screen-xl md:mx-auto px-6">
-  <div class="h-16 w-full px-4 my-6 grid md:grid-cols-[auto_1fr] grid-cols-[auto_1fr_auto] md:gap-8 gap-0 items-center rounded-md bg-white/20 backdrop-blur-md shadow-lg ring-1 ring-black/15">
-      <div class="">
-          <a routerLink="/" routerLinkActive="" [routerLinkActiveOptions]="{ exact: true }">
-              <img src="images/logo/logo.gif" alt="Logo BSFR" width="48" height="48">
-          </a>
-      </div>
-      <div class="lg:flex lg:gap-2 lg:justify-end lg:whitespace-nowrap lg:items-center text-white hidden">
-        @for(menuItem of menuItems; track menuItem.label) {
-          <p-button [label]="menuItem.label" size="small" [text]="!rla.isActive" [style]="{color: 'white'}" [routerLink]="menuItem.path" routerLinkActive="" [routerLinkActiveOptions]="{ exact: true }" #rla="routerLinkActive" />
-        }
-        <p-button icon="pi pi-user" [text]="true" [style]="{color: 'white'}" />
-      </div>
-      <div class="block lg:hidden justify-self-end">
-          <p-button icon="pi pi-bars" [text]="true" [style]="{color: 'white'}" (onClick)="setIsOpen(!isOpen)" />
-      </div>
+  <div
+    class="h-16 w-full px-4 my-6 grid md:grid-cols-[auto_1fr] grid-cols-[auto_1fr_auto] md:gap-8 gap-0 items-center rounded-md bg-white/20 backdrop-blur-md shadow-lg ring-1 ring-black/15">
+    <div class="">
+      <a
+        routerLink="/"
+        routerLinkActive=""
+        [routerLinkActiveOptions]="{ exact: true }">
+        <img
+          src="images/logo/logo.gif"
+          alt="Logo BSFR"
+          width="48"
+          height="48" />
+      </a>
+    </div>
+    <div
+      class="lg:flex lg:gap-2 lg:justify-end lg:whitespace-nowrap lg:items-center text-white hidden">
+      @for (menuItem of menuItems; track menuItem.label) {
+        <p-button
+          [label]="menuItem.label"
+          size="small"
+          [text]="!rla.isActive"
+          [style]="{ color: 'white' }"
+          [routerLink]="menuItem.path"
+          routerLinkActive=""
+          [routerLinkActiveOptions]="{ exact: true }"
+          #rla="routerLinkActive" />
+      }
+      <p-button icon="pi pi-user" [text]="true" [style]="{ color: 'white' }" />
+    </div>
+    <div class="block lg:hidden justify-self-end">
+      <p-button
+        icon="pi pi-bars"
+        [text]="true"
+        [style]="{ color: 'white' }"
+        (onClick)="setIsOpen(!isOpen)" />
+    </div>
   </div>
-  @if(isOpen) {
-      <div class="fixed top-0 left-0 bottom-0 right-0 bg-black/50 lg:hidden" (click)="setIsOpen(false)"></div>
-      <div class="h-full fixed top-0 left-0 w-4/6 bg-[var(--surface-section)] p-4 lg:hidden grid grid-rows-[100px_1fr]">
-        <div class="place-self-center">
-          <img src="images/logo/logo.gif" alt="Logo BSFR" width="64" height="64">
-        </div>
-        <ul class="list-none p-0 m-0">
-          <li>
-            @for(menuItem of menuItems; track menuItem.label) {
-              <a pRipple [class]="rla.isActive ? menuItemLinkActive : menuItemLink" [routerLink]="menuItem.path" routerLinkActive="" [routerLinkActiveOptions]="{ exact: true }" #rla="routerLinkActive" (click)="setIsOpen(false)">
-                <span [innerHTML]="menuItem.icon | svg:'16'" class="flex items-center me-2"></span>
-                <span>{{ menuItem.label }}</span>
-              </a>
-            }
-          </li>
-        </ul>
+  @if (isOpen) {
+    <div
+      class="fixed top-0 left-0 bottom-0 right-0 bg-black/50 lg:hidden"
+      (click)="setIsOpen(false)"></div>
+    <div
+      class="h-full fixed top-0 left-0 w-4/6 bg-[var(--surface-section)] p-4 lg:hidden grid grid-rows-[100px_1fr]">
+      <div class="place-self-center">
+        <img
+          src="images/logo/logo.gif"
+          alt="Logo BSFR"
+          width="64"
+          height="64" />
       </div>
+      <ul class="list-none p-0 m-0">
+        <li>
+          @for (menuItem of menuItems; track menuItem.label) {
+            <a
+              pRipple
+              [class]="rla.isActive ? menuItemLinkActive : menuItemLink"
+              [routerLink]="menuItem.path"
+              routerLinkActive=""
+              [routerLinkActiveOptions]="{ exact: true }"
+              #rla="routerLinkActive"
+              (click)="setIsOpen(false)">
+              <span
+                [innerHTML]="menuItem.icon | svg: '16'"
+                class="flex items-center me-2"></span>
+              <span>{{ menuItem.label }}</span>
+            </a>
+          }
+        </li>
+      </ul>
+    </div>
   }
 </div>
