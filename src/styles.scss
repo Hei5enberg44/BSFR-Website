@@ -1,0 +1,26 @@
+/* Tailwind CSS */
+@layer tailwind-base, primeng, tailwind-utilities;
+
+/* Primeng Settings */
+@import 'primeng/resources/primeng.css';
+@import 'primeng/resources/themes/aura-dark-blue/theme.css';
+@import 'primeicons/primeicons.css';
+
+@layer tailwind-base {
+    @tailwind base;
+}
+
+@layer tailwind-utilities {
+    @tailwind components;
+    @tailwind utilities;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url(/images/background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position-x: center;
+}
