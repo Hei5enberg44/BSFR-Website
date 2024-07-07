@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router'
 import { NavbarComponent } from '../navbar/navbar.component'
 import { RippleModule } from 'primeng/ripple'
 import { TooltipModule } from 'primeng/tooltip'
-import { MenuService } from '../../services/menu.service'
+import { MenuService } from '../../services/menu/menu.service'
 import { svgPipe } from '../../pipes/svg.pipe'
 
 @Component({

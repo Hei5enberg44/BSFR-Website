@@ -4,7 +4,7 @@ import { PrimeNGConfig } from 'primeng/api'
 import { SidebarModule } from 'primeng/sidebar'
 import { ButtonModule } from 'primeng/button'
 import { RippleModule } from 'primeng/ripple'
-import { MenuService } from '../../services/menu.service'
+import { MenuService } from '../../services/menu/menu.service'
 import { svgPipe } from '../../pipes/svg.pipe'
 
 @Component({
