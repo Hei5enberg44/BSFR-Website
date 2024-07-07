@@ -12,6 +12,7 @@
     class="md:flex md:gap-2 md:justify-end md:whitespace-nowrap md:items-center text-[var(--text-color)] hidden">
     @for (menuItem of menuItems; track menuItem.label) {
       <p-button
+        pRipple
         [label]="menuItem.label"
         [text]="!rla.isActive"
         [style]="{ color: 'white' }"
@@ -20,11 +21,63 @@
         [routerLinkActiveOptions]="{ exact: true }"
         #rla="routerLinkActive" />
     }
-    <p-button
-      icon="pi pi-user"
-      [text]="true"
-      size="large"
-      [style]="{ color: 'white' }" />
+    @if (!logged) {
+      <p-button
+        pRipple
+        icon="pi pi-user"
+        [text]="true"
+        size="large"
+        [style]="{ color: 'white' }" />
+    } @else {
+      <p-avatar
+        image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+        size="large"
+        shape="circle"
+        class="ms-3 cursor-pointer"
+        (click)="avatarMenu.toggle($event)" />
+      <p-tieredMenu #avatarMenu [model]="userMenuItems" [popup]="true">
+        <ng-template pTemplate="item" let-item let-hasSubmenu="hasSubmenu">
+          <ng-container *ngIf="item.route; else withoutRoute">
+            <a
+              [routerLink]="item.route"
+              [href]="item.href"
+              class="p-menuitem-link py-3">
+              <span
+                [innerHTML]="item.featherIcon | svg: '16'"
+                class="flex items-center"></span>
+              <span class="ml-2">{{ item.label }}</span>
+            </a>
+          </ng-container>
+          <ng-template #withoutRoute>
+            <ng-container *ngIf="item.url; else withoutUrl">
+              <a
+                [href]="item.url"
+                [target]="item.target"
+                class="p-menuitem-link py-3">
+                <span
+                  [innerHTML]="item.featherIcon | svg: '16'"
+                  class="flex items-center"></span>
+                <span class="ml-2">{{ item.label }}</span>
+                <span
+                  *ngIf="hasSubmenu"
+                  class="pi pi-angle-right ml-auto"></span>
+              </a>
+            </ng-container>
+            <ng-template #withoutUrl>
+              <a class="p-menuitem-link py-3">
+                <span
+                  [innerHTML]="item.featherIcon | svg: '16'"
+                  class="flex items-center"></span>
+                <span class="ml-2">{{ item.label }}</span>
+                <span
+                  *ngIf="hasSubmenu"
+                  class="pi pi-angle-right ml-auto"></span>
+              </a>
+            </ng-template>
+          </ng-template>
+        </ng-template>
+      </p-tieredMenu>
+    }
   </div>
   <div class="block md:hidden justify-self-end">
     <p-button
@@ -35,33 +88,68 @@
       (onClick)="setIsOpen(!isOpen)" />
   </div>
 </div>
-@if (isOpen) {
-  <div
-    class="fixed z-10 top-0 left-0 bottom-0 right-0 bg-black/50 md:hidden"
-    (click)="setIsOpen(false)"></div>
-  <div
-    class="h-full fixed z-20 top-0 left-0 w-4/6 bg-black p-4 md:hidden grid grid-rows-[100px_1fr]">
-    <div class="place-self-center">
-      <img src="images/logo/logo.gif" alt="Logo BSFR" width="64" height="64" />
-    </div>
-    <ul class="list-none p-0 m-0">
-      <li>
-        @for (menuItem of menuItems; track menuItem.label) {
-          <a
-            pRipple
-            [class]="rla.isActive ? menuItemLinkActive : menuItemLink"
-            [routerLink]="menuItem.path"
-            routerLinkActive=""
-            [routerLinkActiveOptions]="{ exact: true }"
-            #rla="routerLinkActive"
-            (click)="setIsOpen(false)">
-            <span
-              [innerHTML]="menuItem.icon | svg: '16'"
-              class="flex items-center me-2"></span>
-            <span>{{ menuItem.label }}</span>
-          </a>
-        }
-      </li>
-    </ul>
+<div
+  [classList]="
+    'fixed z-10 top-0 left-0 bottom-0 right-0 bg-black/50 md:hidden transition-opacity duration-300 ' +
+    (isOpen
+      ? 'opacity-100 pointer-events-auto'
+      : 'opacity-0 pointer-events-none')
+  "
+  (click)="setIsOpen(false)"></div>
+<div
+  [classList]="
+    'h-full w-3/4 fixed z-20 top-0 p-4 md:hidden grid grid-rows-[100px_1fr_auto] grid-cols-1 bg-black transition-all duration-300 ' +
+    (isOpen ? 'left-0' : '-left-[560px]')
+  ">
+  <div class="place-self-center">
+    <img src="images/logo/logo.gif" alt="Logo BSFR" width="64" height="64" />
   </div>
-}
+  <ul class="list-none p-0 m-0">
+    <li>
+      @for (menuItem of menuItems; track menuItem.label) {
+        <a
+          pRipple
+          [class]="rla.isActive ? menuItemLinkActive : menuItemLink"
+          [routerLink]="menuItem.path"
+          routerLinkActive=""
+          [routerLinkActiveOptions]="{ exact: true }"
+          #rla="routerLinkActive"
+          (click)="setIsOpen(false)">
+          <span
+            [innerHTML]="menuItem.icon | svg: '16'"
+            class="flex items-center me-2"></span>
+          <span>{{ menuItem.label }}</span>
+        </a>
+      }
+    </li>
+  </ul>
+  <div>
+    <p-divider />
+    @if (!logged) {
+      <a pRipple [class]="menuItemLink + ' justify-between'">
+        <span>Connexion</span>
+        <span
+          [innerHTML]="icons.login | svg"
+          class="flex items-center me-2"></span>
+      </a>
+    } @else {
+      <div class="grid grid-cols-[1fr_auto] gap-2">
+        <a pRipple [class]="menuItemLink">
+          <p-avatar
+            image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+            styleClass="me-3"
+            size="large"
+            shape="circle" />
+          <span class="text-ellipsis overflow-hidden whitespace-nowrap"
+            >Hei5enberg</span
+          >
+        </a>
+        <a pRipple [class]="menuItemLink">
+          <span
+            [innerHTML]="icons.logout | svg"
+            class="flex items-center"></span>
+        </a>
+      </div>
+    }
+  </div>
+</div>

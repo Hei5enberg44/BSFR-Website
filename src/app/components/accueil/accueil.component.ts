@@ -11,7 +11,15 @@ import { Observable } from 'rxjs'
 @Component({
     selector: 'app-accueil',
     standalone: true,
-    imports: [NgIf, AsyncPipe, CardModule, DividerModule, ButtonModule, RippleModule, svgPipe],
+    imports: [
+        NgIf,
+        AsyncPipe,
+        CardModule,
+        DividerModule,
+        ButtonModule,
+        RippleModule,
+        svgPipe
+    ],
     templateUrl: './accueil.component.html',
     styleUrl: './accueil.component.scss'
 })
@@ -20,7 +28,5 @@ export class AccueilComponent implements OnInit {
         download: feather.icons.download
     }
 
-    ngOnInit(): void {
-        
-    }
+    ngOnInit(): void {}
 }

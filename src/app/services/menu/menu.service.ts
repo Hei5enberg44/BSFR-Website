@@ -20,32 +20,32 @@ export class MenuService {
         {
             label: 'Accueil',
             path: '/',
-            icon: feather.icons.home
+            icon: this.icons.home
         },
         {
             label: 'YouTube',
             path: '/youtube',
-            icon: feather.icons.youtube
+            icon: this.icons.youtube
         },
         {
             label: 'Multi POV',
-            path: '/mutli-pov',
-            icon: feather.icons.film
+            path: '/multi-pov',
+            icon: this.icons.film
         },
         {
             label: 'Carte interactive',
-            path: '/map',
-            icon: feather.icons['map-pin']
+            path: '/interactive-map',
+            icon: this.icons.map
         },
         {
             label: 'Feurboard',
             path: '/feurboard',
-            icon: feather.icons.scissors
+            icon: this.icons.scissors
         },
         {
             label: 'Rankedle',
             path: '/rankedle',
-            icon: feather.icons.music
+            icon: this.icons.music
         }
     ]
 
