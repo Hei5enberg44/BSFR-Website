@@ -1,0 +1,67 @@
+<div
+  class="h-20 w-full px-4 grid md:grid-cols-[auto_1fr] grid-cols-[auto_1fr_auto] md:gap-8 gap-0 items-center rounded-md bg-white/10 backdrop-blur-xl shadow-lg ring-1 ring-black/10">
+  <div class="">
+    <a
+      routerLink="/"
+      routerLinkActive=""
+      [routerLinkActiveOptions]="{ exact: true }">
+      <img src="images/logo/logo.gif" alt="Logo BSFR" width="48" height="48" />
+    </a>
+  </div>
+  <div
+    class="md:flex md:gap-2 md:justify-end md:whitespace-nowrap md:items-center text-[var(--text-color)] hidden">
+    @for (menuItem of menuItems; track menuItem.label) {
+      <p-button
+        [label]="menuItem.label"
+        [text]="!rla.isActive"
+        [style]="{ color: 'white' }"
+        [routerLink]="menuItem.path"
+        routerLinkActive=""
+        [routerLinkActiveOptions]="{ exact: true }"
+        #rla="routerLinkActive" />
+    }
+    <p-button
+      icon="pi pi-user"
+      [text]="true"
+      size="large"
+      [style]="{ color: 'white' }" />
+  </div>
+  <div class="block md:hidden justify-self-end">
+    <p-button
+      icon="pi pi-bars"
+      [text]="true"
+      size="large"
+      [style]="{ color: 'white' }"
+      (onClick)="setIsOpen(!isOpen)" />
+  </div>
+</div>
+@if (isOpen) {
+  <div
+    class="fixed z-10 top-0 left-0 bottom-0 right-0 bg-black/50 md:hidden"
+    (click)="setIsOpen(false)"></div>
+  <div
+    class="h-full fixed z-20 top-0 left-0 w-4/6 bg-black p-4 md:hidden grid grid-rows-[100px_1fr]">
+    <div class="place-self-center">
+      <img src="images/logo/logo.gif" alt="Logo BSFR" width="64" height="64" />
+    </div>
+    <ul class="list-none p-0 m-0">
+      <li>
+        @for (menuItem of menuItems; track menuItem.label) {
+          <a
+            pRipple
+            [class]="rla.isActive ? menuItemLinkActive : menuItemLink"
+            [routerLink]="menuItem.path"
+            routerLinkActive=""
+            [routerLinkActiveOptions]="{ exact: true }"
+            #rla="routerLinkActive"
+            (click)="setIsOpen(false)">
+            <span
+              [innerHTML]="menuItem.icon | svg: '16'"
+              class="flex items-center me-2"></span>
+            <span>{{ menuItem.label }}</span>
+          </a>
+        }
+      </li>
+    </ul>
+  </div>
+}
