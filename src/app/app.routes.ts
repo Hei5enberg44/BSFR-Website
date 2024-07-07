@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router'
-import { AccueilComponent } from './Components/Accueil/accueil.component'
-import { RankedleComponent } from './Components/Rankedle/rankedle.component'
+import { AccueilComponent } from './components/accueil/accueil.component'
+import { RankedleComponent } from './components/rankedle/rankedle.component'
 
 const title = 'Beat Saber FR'
 
