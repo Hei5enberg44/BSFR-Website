@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://127.0.0.1:3031'
+    apiUrl: 'https://bsaber.weezle.xyz/'
 }

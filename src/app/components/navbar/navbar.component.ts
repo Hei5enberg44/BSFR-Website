@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core'
-import { NgIf } from '@angular/common'
+import { NgIf, AsyncPipe } from '@angular/common'
 import { RouterLink, RouterLinkActive } from '@angular/router'
 import { PrimeNGConfig } from 'primeng/api'
 import { SidebarModule } from 'primeng/sidebar'
@@ -10,6 +10,7 @@ import { AvatarModule } from 'primeng/avatar'
 import { TieredMenuModule } from 'primeng/tieredmenu'
 import { MenuItem } from 'primeng/api'
 import { MenuService } from '../../services/menu/menu.service'
+import { AuthService } from '../../services/auth/auth.service'
 import feather from 'feather-icons'
 import { svgPipe } from '../../pipes/svg.pipe'
 
@@ -26,17 +27,28 @@ import { svgPipe } from '../../pipes/svg.pipe'
         AvatarModule,
         TieredMenuModule,
         NgIf,
+        AsyncPipe,
         svgPipe
     ],
     templateUrl: './navbar.component.html',
     styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent implements OnInit {
-    logged = false
-    admin = false
+    constructor(
+        private primengConfig: PrimeNGConfig,
+        private authService: AuthService
+    ) {}
+
+    user$ = this.authService.user$
     isOpen = false
 
-    constructor(private primengConfig: PrimeNGConfig) {}
+    login() {
+        this.authService.login()
+    }
+
+    logout() {
+        this.authService.logout()
+    }
 
     ngOnInit(): void {
         this.primengConfig.ripple = true
@@ -70,6 +82,7 @@ export class NavbarComponent implements OnInit {
         },
         {
             label: 'Déconnexion',
+            command: this.logout.bind(this),
             featherIcon: feather.icons['log-out']
         }
     ]

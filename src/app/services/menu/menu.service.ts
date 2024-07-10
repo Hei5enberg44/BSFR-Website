@@ -19,7 +19,7 @@ export class MenuService {
     private menuItems = [
         {
             label: 'Accueil',
-            path: '/',
+            path: '/home',
             icon: this.icons.home
         },
         {

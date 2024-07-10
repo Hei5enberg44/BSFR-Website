@@ -21,16 +21,9 @@
         [routerLinkActiveOptions]="{ exact: true }"
         #rla="routerLinkActive" />
     }
-    @if (!logged) {
-      <p-button
-        pRipple
-        icon="pi pi-user"
-        [text]="true"
-        size="large"
-        [style]="{ color: 'white' }" />
-    } @else {
+    <div *ngIf="user$ | async as user; else userNotLogged">
       <p-avatar
-        image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+        [image]="user.avatarURL"
         size="large"
         shape="circle"
         class="ms-3 cursor-pointer"
@@ -41,7 +34,8 @@
             <a
               [routerLink]="item.route"
               [href]="item.href"
-              class="p-menuitem-link py-3">
+              class="p-menuitem-link py-3"
+              (click)="item.action()">
               <span
                 [innerHTML]="item.featherIcon | svg: '16'"
                 class="flex items-center"></span>
@@ -77,7 +71,16 @@
           </ng-template>
         </ng-template>
       </p-tieredMenu>
-    }
+    </div>
+    <ng-template #userNotLogged>
+      <p-button
+        pRipple
+        icon="pi pi-user"
+        [text]="true"
+        size="large"
+        [style]="{ color: 'white' }"
+        (click)="login()" />
+    </ng-template>
   </div>
   <div class="block md:hidden justify-self-end">
     <p-button
@@ -98,8 +101,8 @@
   (click)="setIsOpen(false)"></div>
 <div
   [classList]="
-    'h-full w-3/4 fixed z-20 top-0 p-4 md:hidden grid grid-rows-[100px_1fr_auto] grid-cols-1 bg-black transition-all duration-300 ' +
-    (isOpen ? 'left-0' : '-left-[560px]')
+    'h-full w-[300px] max-w-[80%] fixed z-20 top-0 p-4 md:hidden grid grid-rows-[100px_1fr_auto] grid-cols-1 bg-black transition-all duration-300 overflow-y-scroll ' +
+    (isOpen ? 'left-0' : '-left-[300px]')
   ">
   <div class="place-self-center">
     <img src="images/logo/logo.gif" alt="Logo BSFR" width="64" height="64" />
@@ -125,31 +128,30 @@
   </ul>
   <div>
     <p-divider />
-    @if (!logged) {
-      <a pRipple [class]="menuItemLink + ' justify-between'">
+    <div
+      class="grid grid-cols-[1fr_auto] gap-2"
+      *ngIf="user$ | async as user; else userNotLoggedMobile">
+      <a pRipple [class]="menuItemLink">
+        <p-avatar
+          [image]="user.avatarURL"
+          styleClass="me-3"
+          size="large"
+          shape="circle" />
+        <span class="text-ellipsis overflow-hidden whitespace-nowrap">{{
+          user.username
+        }}</span>
+      </a>
+      <a pRipple [class]="menuItemLink">
+        <span [innerHTML]="icons.logout | svg" class="flex items-center"></span>
+      </a>
+    </div>
+    <ng-template #userNotLoggedMobile>
+      <a pRipple [class]="menuItemLink + ' justify-between'" (click)="login()">
         <span>Connexion</span>
         <span
           [innerHTML]="icons.login | svg"
           class="flex items-center me-2"></span>
       </a>
-    } @else {
-      <div class="grid grid-cols-[1fr_auto] gap-2">
-        <a pRipple [class]="menuItemLink">
-          <p-avatar
-            image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-            styleClass="me-3"
-            size="large"
-            shape="circle" />
-          <span class="text-ellipsis overflow-hidden whitespace-nowrap"
-            >Hei5enberg</span
-          >
-        </a>
-        <a pRipple [class]="menuItemLink">
-          <span
-            [innerHTML]="icons.logout | svg"
-            class="flex items-center"></span>
-        </a>
-      </div>
-    }
+    </ng-template>
   </div>
 </div>
