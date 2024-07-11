@@ -43,7 +43,7 @@ export class NavbarComponent implements OnInit {
 
     user$ = this.userService.user$
     logged$ = this.authService.logged$
-    isOpen = true
+    isOpen = false
 
     login() {
         this.authService.login()
