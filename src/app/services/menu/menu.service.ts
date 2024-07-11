@@ -28,19 +28,9 @@ export class MenuService {
             icon: this.icons.youtube
         },
         {
-            label: 'Multi POV',
-            path: '/multi-pov',
-            icon: this.icons.film
-        },
-        {
             label: 'Carte interactive',
             path: '/interactive-map',
             icon: this.icons.map
-        },
-        {
-            label: 'Feurboard',
-            path: '/feurboard',
-            icon: this.icons.scissors
         },
         {
             label: 'Rankedle',

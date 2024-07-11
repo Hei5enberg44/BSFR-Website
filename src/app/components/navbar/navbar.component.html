@@ -15,71 +15,69 @@
         pRipple
         [label]="menuItem.label"
         [text]="!rla.isActive"
-        [style]="{ color: 'white' }"
         [routerLink]="menuItem.path"
         routerLinkActive=""
         [routerLinkActiveOptions]="{ exact: true }"
         #rla="routerLinkActive" />
     }
-    <div *ngIf="user$ | async as user; else userNotLogged">
-      <p-avatar
-        [image]="user.avatarURL"
-        size="large"
-        shape="circle"
-        class="ms-3 cursor-pointer"
-        (click)="avatarMenu.toggle($event)" />
-      <p-tieredMenu #avatarMenu [model]="userMenuItems" [popup]="true">
-        <ng-template pTemplate="item" let-item let-hasSubmenu="hasSubmenu">
-          <ng-container *ngIf="item.route; else withoutRoute">
-            <a
-              [routerLink]="item.route"
-              [href]="item.href"
-              class="p-menuitem-link py-3"
-              (click)="item.action()">
-              <span
-                [innerHTML]="item.featherIcon | svg: '16'"
-                class="flex items-center"></span>
-              <span class="ml-2">{{ item.label }}</span>
-            </a>
-          </ng-container>
-          <ng-template #withoutRoute>
-            <ng-container *ngIf="item.url; else withoutUrl">
+    <div *ngIf="logged$ | async as logged; else userNotLogged">
+      <div *ngIf="user$ | async as user; else userLoading">
+        <p-avatar
+          [image]="user.avatarURL"
+          size="large"
+          shape="circle"
+          class="ms-3 cursor-pointer"
+          (click)="avatarMenu.toggle($event)" />
+        <p-tieredMenu #avatarMenu [model]="userMenuItems" [popup]="true">
+          <ng-template pTemplate="item" let-item let-hasSubmenu="hasSubmenu">
+            <ng-container *ngIf="item.route; else withoutRoute">
               <a
-                [href]="item.url"
-                [target]="item.target"
-                class="p-menuitem-link py-3">
+                [routerLink]="item.route"
+                [href]="item.href"
+                class="p-menuitem-link py-3"
+                (click)="item.action()">
                 <span
                   [innerHTML]="item.featherIcon | svg: '16'"
                   class="flex items-center"></span>
                 <span class="ml-2">{{ item.label }}</span>
-                <span
-                  *ngIf="hasSubmenu"
-                  class="pi pi-angle-right ml-auto"></span>
               </a>
             </ng-container>
-            <ng-template #withoutUrl>
-              <a class="p-menuitem-link py-3">
-                <span
-                  [innerHTML]="item.featherIcon | svg: '16'"
-                  class="flex items-center"></span>
-                <span class="ml-2">{{ item.label }}</span>
-                <span
-                  *ngIf="hasSubmenu"
-                  class="pi pi-angle-right ml-auto"></span>
-              </a>
+            <ng-template #withoutRoute>
+              <ng-container *ngIf="item.url; else withoutUrl">
+                <a
+                  [href]="item.url"
+                  [target]="item.target"
+                  class="p-menuitem-link py-3">
+                  <span
+                    [innerHTML]="item.featherIcon | svg: '16'"
+                    class="flex items-center"></span>
+                  <span class="ml-2">{{ item.label }}</span>
+                  <span
+                    *ngIf="hasSubmenu"
+                    class="pi pi-angle-right ml-auto"></span>
+                </a>
+              </ng-container>
+              <ng-template #withoutUrl>
+                <a class="p-menuitem-link py-3">
+                  <span
+                    [innerHTML]="item.featherIcon | svg: '16'"
+                    class="flex items-center"></span>
+                  <span class="ml-2">{{ item.label }}</span>
+                  <span
+                    *ngIf="hasSubmenu"
+                    class="pi pi-angle-right ml-auto"></span>
+                </a>
+              </ng-template>
             </ng-template>
           </ng-template>
-        </ng-template>
-      </p-tieredMenu>
+        </p-tieredMenu>
+      </div>
+      <ng-template #userLoading>
+        <p-button [loading]="true" disabled="true" [text]="true" size="large" />
+      </ng-template>
     </div>
     <ng-template #userNotLogged>
-      <p-button
-        pRipple
-        icon="pi pi-user"
-        [text]="true"
-        size="large"
-        [style]="{ color: 'white' }"
-        (click)="login()" />
+      <p-button pRipple icon="pi pi-user" [text]="true" size="large" />
     </ng-template>
   </div>
   <div class="block md:hidden justify-self-end">
@@ -87,7 +85,6 @@
       icon="pi pi-bars"
       [text]="true"
       size="large"
-      [style]="{ color: 'white' }"
       (onClick)="setIsOpen(!isOpen)" />
   </div>
 </div>

@@ -28,3 +28,11 @@ body {
     background-attachment: fixed;
     background-position-x: center;
 }
+
+a:visited {
+    color: var(--primary-color);
+}
+
+.p-button {
+    color: white;
+}

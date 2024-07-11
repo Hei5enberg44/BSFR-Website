@@ -11,6 +11,7 @@ import { TieredMenuModule } from 'primeng/tieredmenu'
 import { MenuItem } from 'primeng/api'
 import { MenuService } from '../../services/menu/menu.service'
 import { AuthService } from '../../services/auth/auth.service'
+import { UserService } from '../../services/user/user.service'
 import feather from 'feather-icons'
 import { svgPipe } from '../../pipes/svg.pipe'
 
@@ -36,10 +37,12 @@ import { svgPipe } from '../../pipes/svg.pipe'
 export class NavbarComponent implements OnInit {
     constructor(
         private primengConfig: PrimeNGConfig,
-        private authService: AuthService
+        private authService: AuthService,
+        private userService: UserService
     ) {}
 
-    user$ = this.authService.user$
+    user$ = this.userService.user$
+    logged$ = this.authService.logged$
     isOpen = false
 
     login() {

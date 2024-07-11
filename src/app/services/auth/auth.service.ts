@@ -1,15 +1,10 @@
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { Router, ActivatedRoute } from '@angular/router'
+import { Router } from '@angular/router'
 import { CookieService } from 'ngx-cookie-service'
+import { UserService } from '../user/user.service'
 import { ToastService } from '../toast/toast.service'
 import { BehaviorSubject, Observable } from 'rxjs'
-
-interface User {
-    id: string
-    username: string
-    avatarURL: string
-}
 
 @Injectable({
     providedIn: 'root'
@@ -18,14 +13,15 @@ export class AuthService {
     constructor(
         private http: HttpClient,
         private cookieService: CookieService,
-        private activatedRoute: ActivatedRoute,
+        private userService: UserService,
         private toastService: ToastService,
         private router: Router
     ) {}
 
-    private user: BehaviorSubject<User | null> =
-        new BehaviorSubject<User | null>(null)
-    user$: Observable<User | null> = this.user.asObservable()
+    public logged: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+        this.isLogged
+    )
+    logged$: Observable<boolean> = this.logged.asObservable()
 
     private getState() {
         const validChars =
@@ -65,32 +61,14 @@ export class AuthService {
     }
 
     callback(code: string, state: string) {
-        this.http
-            .post<{ sessionId: string }>(
-                '/api/discord/login',
-                {
-                    code,
-                    state
-                }
-            )
-            .subscribe((res) => {
-                this.setSessionId(res.sessionId)
-                const requestedRoute =
-                    localStorage.getItem('requested_uri') ?? ''
-                this.router.navigate([requestedRoute])
-                this.check()
-                this.toastService.showSuccess('Connexion réussie')
-                localStorage.removeItem('requested_uri')
-                localStorage.removeItem('state')
-            })
+        return this.http.post<{ sessionId: string }>('/api/discord/login', {
+            code,
+            state
+        })
     }
 
-    check() {
-        if (this.isLogged) {
-            this.http.get<User>('/api/discord/@me').subscribe((res) => {
-                this.user.next(res)
-            })
-        }
+    checkLogin() {
+        return this.userService.getUser()
     }
 
     get isLogged(): boolean {
@@ -106,7 +84,8 @@ export class AuthService {
 
     logout() {
         this.removeSessionId()
-        this.user.next(null)
+        this.userService.user.next(null)
+        this.logged.next(false)
         this.router.navigate(['home'])
         this.toastService.showSuccess('Vous avez été déconnecté')
     }

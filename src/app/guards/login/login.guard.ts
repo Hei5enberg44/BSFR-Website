@@ -1,44 +1,22 @@
-import { Injectable } from '@angular/core'
-import {
-    ActivatedRoute,
-    ActivatedRouteSnapshot,
-    CanActivate,
-    Router,
-    RouterStateSnapshot
-} from '@angular/router'
-import { Observable } from 'rxjs'
+import { inject } from '@angular/core'
+import { CanActivateFn } from '@angular/router'
+import { UserService } from '../../services/user/user.service'
 import { AuthService } from '../../services/auth/auth.service'
-import { ToastService } from '../../services/toast/toast.service'
+import { Observable } from 'rxjs'
 
-@Injectable({
-    providedIn: 'root'
-})
-export class LoginGuard implements CanActivate {
-    constructor(
-        private router: Router,
-        private activatedRoute: ActivatedRoute,
-        private authService: AuthService,
-        private toastService: ToastService
-    ) {}
-    canActivate(
-        next: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot
-    ): Observable<boolean> | Promise<boolean> | boolean {
-        if (!this.authService.isLogged) {
-            const paramCode = next.queryParamMap.get('code')
-            const paramState = next.queryParamMap.get('state')
+export const LoginGuard: CanActivateFn = (route, state) => {
+    const userService = inject(UserService)
+    const authService = inject(AuthService)
 
-            if (paramCode && paramState) {
-                this.authService.callback(paramCode, paramState)
-            } else {
-                this.router.navigate([''])
-                this.toastService.showError(
-                    "Problème d'authentification à Discord"
-                )
-            }
-        } else {
-            this.router.navigate([''])
-        }
-        return false
+    if (authService.isLogged) {
+        return new Observable<boolean>((observer) => {
+            authService.checkLogin().subscribe((res) => {
+                userService.user.next(res)
+                authService.logged.next(true)
+                observer.next(true)
+            })
+        })
+    } else {
+        return true
     }
 }
