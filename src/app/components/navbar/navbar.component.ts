@@ -43,7 +43,7 @@ export class NavbarComponent implements OnInit {
 
     user$ = this.userService.user$
     logged$ = this.authService.logged$
-    isOpen = false
+    isOpen = true
 
     login() {
         this.authService.login()
@@ -69,11 +69,6 @@ export class NavbarComponent implements OnInit {
     menuService = inject(MenuService)
 
     menuItems = this.menuService.getMenuItems()
-
-    menuItemLink =
-        'no-underline text-[var(--text-color)] flex items-center cursor-pointer p-3 rounded-md hover:bg-[var(--surface-100)] transition-duration-150 transition-colors'
-    menuItemLinkActive =
-        'no-underline text-[var(--text-color)] flex items-center cursor-pointer p-3 rounded-md bg-[var(--primary-600)] hover:bg-[var(--primary-500)] transition-duration-150 transition-colors'
 
     userMenuItems: (MenuItem | { featherIcon: string })[] = [
         {

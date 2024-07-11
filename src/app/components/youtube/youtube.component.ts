@@ -12,7 +12,10 @@ import { InputTextModule } from 'primeng/inputtext'
 import { DropdownModule } from 'primeng/dropdown'
 import { InputTextareaModule } from 'primeng/inputtextarea'
 import { SelectItem, SelectItemGroup, Message } from 'primeng/api'
-import { YoutubeService, YouTubeVideo } from '../../services/youtube/youtube.service'
+import {
+    YoutubeService,
+    YouTubeVideo
+} from '../../services/youtube/youtube.service'
 import { trustResUrl } from '../../pipes/trustResUrl.pipe'
 
 @Component({
@@ -120,7 +123,7 @@ export class YouTubeComponent {
     ]
 
     ngOnInit() {
-        this.youtubeService.getLastVideo().subscribe(res => {
+        this.youtubeService.getLastVideo().subscribe((res) => {
             this.lastVideoLoading = false
             this.lastVideo = res
         })

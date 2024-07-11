@@ -77,7 +77,12 @@
       </ng-template>
     </div>
     <ng-template #userNotLogged>
-      <p-button pRipple icon="pi pi-user" [text]="true" size="large" (click)="login()" />
+      <p-button
+        pRipple
+        icon="pi pi-user"
+        [text]="true"
+        size="large"
+        (click)="login()" />
     </ng-template>
   </div>
   <div class="block md:hidden justify-self-end">
@@ -107,19 +112,19 @@
   <ul class="list-none p-0 m-0">
     <li>
       @for (menuItem of menuItems; track menuItem.label) {
-        <a
+        <p-button
           pRipple
-          [class]="rla.isActive ? menuItemLinkActive : menuItemLink"
+          styleClass="w-full p-4"
+          [text]="!rla.isActive"
           [routerLink]="menuItem.path"
           routerLinkActive=""
           [routerLinkActiveOptions]="{ exact: true }"
-          #rla="routerLinkActive"
-          (click)="setIsOpen(false)">
+          #rla="routerLinkActive">
           <span
             [innerHTML]="menuItem.icon | svg: '16'"
-            class="flex items-center me-2"></span>
+            class="me-3 flex items-center"></span>
           <span>{{ menuItem.label }}</span>
-        </a>
+        </p-button>
       }
     </li>
   </ul>
@@ -128,26 +133,26 @@
     <div
       class="grid grid-cols-[1fr_auto] gap-2"
       *ngIf="user$ | async as user; else userNotLoggedMobile">
-      <a pRipple [class]="menuItemLink">
+      <p-button pRipple [text]="true" styleClass="w-full p-4">
         <p-avatar
           [image]="user.avatarURL"
-          styleClass="me-3"
+          styleClass="me-4 flex items-center"
           size="large"
           shape="circle" />
         <span class="text-ellipsis overflow-hidden whitespace-nowrap">{{
           user.username
         }}</span>
-      </a>
-      <a pRipple [class]="menuItemLink">
+      </p-button>
+      <p-button pRipple [text]="true" styleClass="w-full h-full p-4">
         <span [innerHTML]="icons.logout | svg" class="flex items-center"></span>
-      </a>
+      </p-button>
     </div>
     <ng-template #userNotLoggedMobile>
-      <a pRipple [class]="menuItemLink + ' justify-between'" (click)="login()">
+      <a pRipple (click)="login()">
         <span>Connexion</span>
         <span
           [innerHTML]="icons.login | svg"
-          class="flex items-center me-2"></span>
+          class="me-3 flex items-center"></span>
       </a>
     </ng-template>
   </div>
