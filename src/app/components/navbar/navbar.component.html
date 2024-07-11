@@ -143,17 +143,25 @@
           user.username
         }}</span>
       </p-button>
-      <p-button pRipple [text]="true" styleClass="w-full h-full p-4">
+      <p-button
+        pRipple
+        [text]="true"
+        styleClass="w-full h-full p-4"
+        (click)="logout()">
         <span [innerHTML]="icons.logout | svg" class="flex items-center"></span>
       </p-button>
     </div>
     <ng-template #userNotLoggedMobile>
-      <a pRipple (click)="login()">
+      <p-button
+        pRipple
+        [text]="true"
+        styleClass="w-full p-4 flex justify-between"
+        (click)="login()">
         <span>Connexion</span>
         <span
           [innerHTML]="icons.login | svg"
           class="me-3 flex items-center"></span>
-      </a>
+      </p-button>
     </ng-template>
   </div>
 </div>

@@ -51,6 +51,7 @@ export class NavbarComponent implements OnInit {
 
     logout() {
         this.authService.logout()
+        this.setIsOpen(false)
     }
 
     ngOnInit(): void {
