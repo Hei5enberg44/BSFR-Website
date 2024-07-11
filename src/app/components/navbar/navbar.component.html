@@ -77,7 +77,7 @@
       </ng-template>
     </div>
     <ng-template #userNotLogged>
-      <p-button pRipple icon="pi pi-user" [text]="true" size="large" />
+      <p-button pRipple icon="pi pi-user" [text]="true" size="large" (click)="login()" />
     </ng-template>
   </div>
   <div class="block md:hidden justify-self-end">
