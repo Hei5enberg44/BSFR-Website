@@ -16,7 +16,6 @@
     class="md:flex md:gap-2 md:justify-end md:whitespace-nowrap md:items-center text-[var(--text-color)] hidden">
     @for (menuItem of menuItems; track menuItem.label) {
       <p-button
-        pRipple
         [label]="menuItem.label"
         [text]="!rla.isActive"
         [routerLink]="menuItem.path"
@@ -82,7 +81,6 @@
     </div>
     <ng-template #userNotLogged>
       <p-button
-        pRipple
         icon="pi pi-user"
         [text]="true"
         size="large"
@@ -111,19 +109,23 @@
     (isOpen ? 'left-0' : '-left-[300px]')
   ">
   <div class="place-self-center">
-    <img src="images/logo/transparent_animated.webp" alt="Logo BSFR" width="64" height="64" />
+    <img
+      src="images/logo/transparent_animated.webp"
+      alt="Logo BSFR"
+      width="64"
+      height="64" />
   </div>
   <ul class="list-none p-0 m-0">
     <li>
       @for (menuItem of menuItems; track menuItem.label) {
         <p-button
-          pRipple
           styleClass="w-full p-4"
           [text]="!rla.isActive"
           [routerLink]="menuItem.path"
           routerLinkActive=""
           [routerLinkActiveOptions]="{ exact: true }"
-          #rla="routerLinkActive">
+          #rla="routerLinkActive"
+          (click)="setIsOpen(false)">
           <span
             [innerHTML]="menuItem.icon | svg: '16'"
             class="me-3 flex items-center"></span>
@@ -137,7 +139,7 @@
     <div
       class="grid grid-cols-[1fr_auto] gap-2"
       *ngIf="user$ | async as user; else userNotLoggedMobile">
-      <p-button pRipple [text]="true" styleClass="w-full p-4">
+      <p-button [text]="true" styleClass="w-full p-4">
         <p-avatar
           [image]="user.avatarURL"
           styleClass="me-4 flex items-center"
@@ -147,17 +149,12 @@
           user.username
         }}</span>
       </p-button>
-      <p-button
-        pRipple
-        [text]="true"
-        styleClass="w-full h-full p-4"
-        (click)="logout()">
+      <p-button [text]="true" styleClass="w-full h-full p-4" (click)="logout()">
         <span [innerHTML]="icons.logout | svg" class="flex items-center"></span>
       </p-button>
     </div>
     <ng-template #userNotLoggedMobile>
       <p-button
-        pRipple
         [text]="true"
         styleClass="w-full p-4 flex justify-between"
         (click)="login()">

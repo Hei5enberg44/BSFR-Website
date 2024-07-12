@@ -7,7 +7,7 @@
     header="Publier une run"
     styleClass="rounded-md bg-black/30 backdrop-blur-[64px] shadow-lg ring-1 ring-white/10">
     <div
-      class="grid lg:grid-cols-[1fr_auto] lg:gap-16 grid-cols-1 gap-8 items-center">
+      class="grid md:grid-cols-[1fr_auto] md:gap-16 grid-cols-1 gap-8 items-center">
       <div>
         <p>
           Tu es fier/fière d'un score sur une map et tu voudrais le partager au
@@ -54,7 +54,7 @@
       </div>
       <div>
         <h3>Dernière vidéo sur la chaîne :</h3>
-        <div class="aspect-video lg:w-[480px] w-full">
+        <div class="aspect-video md:w-[480px] w-full">
           <div *ngIf="!lastVideoLoading; else videoLoading">
             <div *ngIf="lastVideo !== null; else noVideo">
               <iframe
@@ -85,7 +85,7 @@
       <h3>Formulaire :</h3>
       <span> <sup class="text-red-600 font-bold">*</sup> = Champ requis </span>
     </div>
-    <div class="grid lg:grid-cols-2 grid-cols-1 gap-8">
+    <div class="grid md:grid-cols-2 grid-cols-1 gap-8">
       <div class="flex flex-col gap-2">
         <label for="url"
           >Lien vers la vidéo <sup class="text-red-600 font-bold">*</sup></label
@@ -235,7 +235,7 @@
           restants)
         </small>
       </div>
-      <div class="lg:col-span-2 text-right">
+      <div class="md:col-span-2 text-right">
         <p-button label="Envoyer"></p-button>
       </div>
     </div>
