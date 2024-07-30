@@ -40,7 +40,15 @@ export class AuthService {
     }
 
     setSessionId(sessionId: string) {
-        this.cookieService.set('sessionId', sessionId)
+        this.cookieService.set(
+            'sessionId',
+            sessionId,
+            365,
+            '/',
+            undefined,
+            true,
+            'Lax'
+        )
     }
 
     removeSessionId() {

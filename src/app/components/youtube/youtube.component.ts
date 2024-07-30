@@ -12,6 +12,8 @@ import { InputTextModule } from 'primeng/inputtext'
 import { DropdownModule } from 'primeng/dropdown'
 import { InputTextareaModule } from 'primeng/inputtextarea'
 import { SelectItem, SelectItemGroup, Message } from 'primeng/api'
+import { NotBsfrMemberComponent } from '../not-bsfr-member/not-bsfr-member.component'
+import { UserService } from '../../services/user/user.service'
 import {
     YoutubeService,
     YouTubeVideo
@@ -35,13 +37,23 @@ import { trustResUrl } from '../../pipes/trustResUrl.pipe'
         InputIconModule,
         InputTextModule,
         DropdownModule,
-        InputTextareaModule
+        InputTextareaModule,
+        NotBsfrMemberComponent
     ],
     templateUrl: './youtube.component.html',
     styleUrl: './youtube.component.scss'
 })
 export class YouTubeComponent {
-    constructor(private youtubeService: YoutubeService) {}
+    isBSFR: boolean = false
+
+    constructor(
+        private userService: UserService,
+        private youtubeService: YoutubeService
+    ) {
+        this.userService.user$.subscribe((user) => {
+            this.isBSFR = user?.params.isBSFR ?? false
+        })
+    }
 
     url: string = ''
     description: string = ''
