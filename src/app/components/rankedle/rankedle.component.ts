@@ -1,6 +1,7 @@
 import { Component } from '@angular/core'
 import { NgIf } from '@angular/common'
 import { CardModule } from 'primeng/card'
+
 import { NotBsfrMemberComponent } from '../not-bsfr-member/not-bsfr-member.component'
 import { UserService } from '../../services/user/user.service'
 
@@ -16,7 +17,7 @@ export class RankedleComponent {
 
     constructor(private userService: UserService) {
         this.userService.user$.subscribe((user) => {
-            this.isBSFR = user?.params.isBSFR ?? false
+            this.isBSFR = user?.isBSFR ?? false
         })
     }
 }

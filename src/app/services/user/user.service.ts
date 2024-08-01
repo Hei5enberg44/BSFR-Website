@@ -6,10 +6,8 @@ export interface User {
     id: string
     username: string
     avatarURL: string
-    params: {
-        isBSFR: boolean
-        isAdmin: boolean
-    }
+    isBSFR: boolean
+    isAdmin: boolean
 }
 
 @Injectable({

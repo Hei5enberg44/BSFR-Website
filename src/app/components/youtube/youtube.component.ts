@@ -12,13 +12,14 @@ import { InputTextModule } from 'primeng/inputtext'
 import { DropdownModule } from 'primeng/dropdown'
 import { InputTextareaModule } from 'primeng/inputtextarea'
 import { SelectItem, SelectItemGroup, Message } from 'primeng/api'
-import { NotBsfrMemberComponent } from '../not-bsfr-member/not-bsfr-member.component'
-import { UserService } from '../../services/user/user.service'
 import {
     YoutubeService,
     YouTubeVideo
 } from '../../services/youtube/youtube.service'
 import { trustResUrl } from '../../pipes/trustResUrl.pipe'
+
+import { NotBsfrMemberComponent } from '../not-bsfr-member/not-bsfr-member.component'
+import { UserService } from '../../services/user/user.service'
 
 @Component({
     selector: 'app-youtube',
@@ -51,7 +52,7 @@ export class YouTubeComponent {
         private youtubeService: YoutubeService
     ) {
         this.userService.user$.subscribe((user) => {
-            this.isBSFR = user?.params.isBSFR ?? false
+            this.isBSFR = user?.isBSFR ?? false
         })
     }
 

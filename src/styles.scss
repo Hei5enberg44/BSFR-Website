@@ -6,6 +6,9 @@
 @import 'primeng/resources/themes/aura-dark-blue/theme.css';
 @import 'primeicons/primeicons.css';
 
+/* Leaflet */
+@import 'leaflet/dist/leaflet.css';
+
 @layer tailwind-base {
     @tailwind base;
 }

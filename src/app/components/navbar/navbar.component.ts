@@ -1,7 +1,6 @@
-import { Component, OnInit, inject } from '@angular/core'
+import { Component, inject } from '@angular/core'
 import { NgIf, AsyncPipe } from '@angular/common'
 import { RouterLink, RouterLinkActive } from '@angular/router'
-import { PrimeNGConfig } from 'primeng/api'
 import { SidebarModule } from 'primeng/sidebar'
 import { ButtonModule } from 'primeng/button'
 import { RippleModule } from 'primeng/ripple'
@@ -34,9 +33,8 @@ import { svgPipe } from '../../pipes/svg.pipe'
     templateUrl: './navbar.component.html',
     styleUrl: './navbar.component.scss'
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
     constructor(
-        private primengConfig: PrimeNGConfig,
         private authService: AuthService,
         private userService: UserService
     ) {}
@@ -53,10 +51,6 @@ export class NavbarComponent implements OnInit {
     logout() {
         this.authService.logout()
         this.setIsOpen(false)
-    }
-
-    ngOnInit(): void {
-        this.primengConfig.ripple = true
     }
 
     setIsOpen = (isOpen: boolean) => {
