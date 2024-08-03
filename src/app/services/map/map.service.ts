@@ -4,9 +4,9 @@ import { BehaviorSubject, Observable } from 'rxjs'
 
 export interface MemberCity {
     username: string
-    avatarURL: string,
-    coords: string,
-    countryName: string,
+    avatarURL: string
+    coords: string
+    countryName: string
     cityName: string
 }
 
@@ -18,7 +18,8 @@ export class MapService {
 
     public membersCity: BehaviorSubject<MemberCity[] | null> =
         new BehaviorSubject<MemberCity[] | null>(null)
-    membersCity$: Observable<MemberCity[] | null> = this.membersCity.asObservable()
+    membersCity$: Observable<MemberCity[] | null> =
+        this.membersCity.asObservable()
 
     getMembersCity() {
         return this.http.get<MemberCity[]>('/api/map/membersCity')

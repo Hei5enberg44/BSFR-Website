@@ -5,8 +5,266 @@
   </div>
   <app-not-bsfr-member *ngIf="!isBSFR; else page" />
   <ng-template #page>
-    <p-card
-      styleClass="rounded-md bg-black/30 backdrop-blur-[64px] shadow-lg ring-1 ring-white/10">
-    </p-card>
+    <div
+      class="rounded-md bg-black/30 backdrop-blur-[64px] shadow-lg ring-1 ring-white/10">
+      <p-tabView
+        [(activeIndex)]="activeTab"
+        [scrollable]="true"
+        (onChange)="onTabChange($event)">
+        <!-- Jeu -->
+        <p-tabPanel>
+          <ng-template pTemplate="header">
+            <div class="flex align-items-center gap-2">
+              <span
+                class="flex items-center"
+                [innerHTML]="tabIcons.jeu | svg: '18'"></span>
+              <span class="ms-2">Jeu</span>
+            </div>
+          </ng-template>
+          <ng-container *ngIf="rankedle$ | withLoading | async as rankedle">
+            <ng-container *ngIf="rankedle?.loading">
+              <p-card styleClass="bg-transparent">
+                <p-skeleton height="2rem" width="16rem" styleClass="mb-2" />
+              </p-card>
+            </ng-container>
+            <ng-container *ngIf="rankedle?.value === null">
+              <p-card
+                header="Pas de Rankedle en cours"
+                styleClass="bg-transparent">
+                <p-messages
+                  [enableService]="false"
+                  [(value)]="noRankedleMessage" />
+              </p-card>
+            </ng-container>
+            <ng-container *ngIf="rankedle.value">
+              <p-card
+                [header]="
+                  'Saison ' +
+                  rankedle.value.seasonId +
+                  ' — ' +
+                  'Rankedle #' +
+                  rankedle.value.id
+                "
+                styleClass="bg-transparent">
+              </p-card>
+            </ng-container>
+          </ng-container>
+        </p-tabPanel>
+        <!-- Classement -->
+        <p-tabPanel>
+          <ng-template pTemplate="header">
+            <div class="flex align-items-center gap-2">
+              <span
+                class="flex items-center"
+                [innerHTML]="tabIcons.classement | svg: '18'"></span>
+              <span class="ms-2">Classement</span>
+            </div>
+          </ng-template>
+          <ng-container *ngIf="ranking$ | withLoading | async as ranking">
+            <ng-container *ngIf="ranking?.loading">
+              <p-table [value]="[[]]" [tableStyle]="{ 'min-width': '25rem' }">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="width: 5rem"></th>
+                    <th style="width: 1%">#</th>
+                    <th>Joueur</th>
+                    <th style="width: 1%">Points</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body">
+                  <ng-container
+                    *ngFor="let i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]">
+                    <tr style="height: 67px">
+                      <td><p-skeleton /></td>
+                      <td><p-skeleton /></td>
+                      <td class="flex items-center">
+                        <p-skeleton
+                          shape="circle"
+                          size="46px"
+                          styleClass="me-4" />
+                        <p-skeleton width="10rem" />
+                      </td>
+                      <td><p-skeleton /></td>
+                    </tr>
+                  </ng-container>
+                </ng-template>
+              </p-table>
+            </ng-container>
+            <ng-container *ngIf="ranking?.value === null">
+              <p-card styleClass="bg-transparent">
+                <p-messages
+                  [enableService]="false"
+                  [(value)]="noRankingMessage" />
+              </p-card>
+            </ng-container>
+            <ng-container *ngIf="ranking.value">
+              <p-table
+                [value]="ranking.value"
+                [paginator]="true"
+                [rows]="10"
+                [tableStyle]="{ 'min-width': '25rem' }"
+                dataKey="memberId"
+                [expandedRowKeys]="rankingExpandedRows"
+                (onRowExpand)="onRankingRowExpand($event)">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="width: 5rem"></th>
+                    <th style="width: 1%">#</th>
+                    <th>Joueur</th>
+                    <th style="width: 1%">Points</th>
+                  </tr>
+                </ng-template>
+                <ng-template
+                  pTemplate="body"
+                  let-ranking
+                  let-expanded="expanded">
+                  <tr
+                    style="height: 67px"
+                    [ngClass]="{
+                      'ranking-first': ranking.rank === 1,
+                      'ranking-second': ranking.rank === 2,
+                      'ranking-third': ranking.rank === 3
+                    }">
+                    <td>
+                      <p-button
+                        type="button"
+                        [pRowToggler]="ranking"
+                        [text]="true"
+                        [rounded]="true"
+                        [plain]="true"
+                        [icon]="
+                          expanded
+                            ? 'pi pi-chevron-down'
+                            : 'pi pi-chevron-right'
+                        " />
+                    </td>
+                    <td>{{ ranking.rank }}</td>
+                    <td class="flex items-center">
+                      <p-avatar
+                        [image]="ranking.avatar"
+                        styleClass="me-4"
+                        size="large"
+                        shape="circle" />
+                      <span>
+                        {{ ranking.name }}
+                      </span>
+                    </td>
+                    <td>{{ ranking.points }}</td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="rowexpansion" let-playerRanking>
+                  <tr>
+                    <td colspan="5" class="p-0">
+                      <p-table
+                        [value]="[playerRanking.stats]"
+                        [tableStyle]="{ 'min-width': '92rem' }">
+                        <ng-template pTemplate="header">
+                          <tr>
+                            <th>Parties</th>
+                            <th>Victoires (%)</th>
+                            <th>Série actuelle</th>
+                            <th>Meilleure serie</th>
+                            <th>1<sup>ère</sup> tentative</th>
+                            <th>2<sup>ème</sup> tentative</th>
+                            <th>3<sup>ème</sup> tentative</th>
+                            <th>4<sup>ème</sup> tentative</th>
+                            <th>5<sup>ème</sup> tentative</th>
+                            <th>6<sup>ème</sup> tentative</th>
+                            <th>Défaites</th>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-stats>
+                          <tr>
+                            <td>{{ stats.played }}</td>
+                            <td>
+                              {{ (stats.won * 100) / stats.played | round }}
+                            </td>
+                            <td>{{ stats.currentStreak }}</td>
+                            <td>{{ stats.maxStreak }}</td>
+                            <td>{{ stats.try1 }}</td>
+                            <td>{{ stats.try2 }}</td>
+                            <td>{{ stats.try3 }}</td>
+                            <td>{{ stats.try4 }}</td>
+                            <td>{{ stats.try5 }}</td>
+                            <td>{{ stats.try6 }}</td>
+                            <td>{{ stats.played - stats.won }}</td>
+                          </tr>
+                        </ng-template>
+                      </p-table>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </ng-container>
+          </ng-container>
+        </p-tabPanel>
+        <!-- Statistiques -->
+        <p-tabPanel>
+          <ng-template pTemplate="header">
+            <div class="flex align-items-center gap-2">
+              <span
+                class="flex items-center"
+                [innerHTML]="tabIcons.statistiques | svg: '18'"></span>
+              <span class="ms-2">Statistiques</span>
+            </div>
+          </ng-template>
+          <p-card styleClass="bg-transparent"></p-card>
+        </p-tabPanel>
+        <!-- Aide -->
+        <p-tabPanel>
+          <ng-template pTemplate="header">
+            <div class="flex align-items-center gap-2">
+              <span
+                class="flex items-center"
+                [innerHTML]="tabIcons.aide | svg: '18'"></span>
+              <span class="ms-2">Aide</span>
+            </div>
+          </ng-template>
+          <p-card styleClass="bg-transparent">
+            <h3 class="mt-0">Comment jouer ?</h3>
+            <ul>
+              <li>
+                Écoutez l'extrait audio, puis recherchez le titre correspondant
+                dans la liste
+              </li>
+              <li>
+                Si vous passez ou entrez un titre incorrect, cela étandra la
+                durée de l'extrait audio
+              </li>
+              <li>
+                Vous avez un total de 6 tentatives pour parvenir à trouver le
+                bon titre
+              </li>
+              <li>
+                Vous gagnez des points si vous parvenez à trouver le bon titre :
+              </li>
+            </ul>
+
+            <p-table [value]="[[]]" [tableStyle]="{ 'min-width': '60rem' }">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>1<sup>ère</sup> tentative</th>
+                  <th>2<sup>ème</sup> tentative</th>
+                  <th>3<sup>ème</sup> tentative</th>
+                  <th>4<sup>ème</sup> tentative</th>
+                  <th>5<sup>ème</sup> tentative</th>
+                  <th>6<sup>ème</sup> tentative</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body">
+                <tr>
+                  <td>8 points</td>
+                  <td>6 points</td>
+                  <td>4 points</td>
+                  <td>3 points</td>
+                  <td>2 points</td>
+                  <td>1 point</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </p-card>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
   </ng-template>
 </div>

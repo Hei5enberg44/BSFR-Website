@@ -4,6 +4,7 @@ import { AccueilComponent } from './components/accueil/accueil.component'
 import { YouTubeComponent } from './components/youtube/youtube.component'
 import { CarteInteractiveComponent } from './components/carte-interactive/carte-interactive.component'
 import { RankedleComponent } from './components/rankedle/rankedle.component'
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component'
 
 import { AuthGuard } from './guards/auth/auth.guard'
 import { LoginGuard } from './guards/login/login.guard'
@@ -44,5 +45,10 @@ export const routes: Routes = [
         title: `Rankedle • ${title}`,
         component: RankedleComponent,
         canActivate: [AuthGuard, LoginGuard]
+    },
+    {
+        path: '**',
+        component: PageNotFoundComponent,
+        canActivate: [LoginGuard]
     }
 ]

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core'
 import { NgIf } from '@angular/common'
 import { CardModule } from 'primeng/card'
+import { MessagesModule } from 'primeng/messages'
 import { MapService, MemberCity } from '../../services/map/map.service'
 import { MapOptions, Marker, Icon, icon, latLng, marker } from 'leaflet'
 import { LeafletModule } from '@asymmetrik/ngx-leaflet'
@@ -22,7 +23,13 @@ interface PopupData {
 @Component({
     selector: 'app-carteinteractive',
     standalone: true,
-    imports: [NgIf, CardModule, LeafletModule, NotBsfrMemberComponent],
+    imports: [
+        NgIf,
+        CardModule,
+        MessagesModule,
+        LeafletModule,
+        NotBsfrMemberComponent
+    ],
     templateUrl: './carte-interactive.component.html',
     styleUrl: './carte-interactive.component.scss'
 })
@@ -87,20 +94,25 @@ export class CarteInteractiveComponent {
             }
         }
 
-        for(const p of popups) {
+        for (const p of popups) {
             const coords = p.coords.split(',')
-            const m = marker({ lat: parseFloat(coords[0]), lng: parseFloat(coords[1]) }, {
-                icon: icon({
-                    ...Icon.Default.prototype.options,
-                    iconUrl: 'assets/marker-icon.png',
-                    iconRetinaUrl: 'assets/marker-icon-2x.png',
-                    shadowUrl: 'assets/marker-shadow.png'
-                })
-            })
-    
+            const m = marker(
+                { lat: parseFloat(coords[0]), lng: parseFloat(coords[1]) },
+                {
+                    icon: icon({
+                        ...Icon.Default.prototype.options,
+                        iconUrl: 'assets/marker-icon.png',
+                        iconRetinaUrl: 'assets/marker-icon-2x.png',
+                        shadowUrl: 'assets/marker-shadow.png'
+                    })
+                }
+            )
+
             const popupUsers = []
-            for(const u of p.users) {
-                popupUsers.push(`<table><tbody><tr><td><span class="block bg-cover w-12 h-12 me-2 rounded-full" style="background-image: url(${u.avatar})"></span></td><td><b>${u.username}</b><br>${p.cityName} (${p.countryName})</td></tr></tbody></table>`)
+            for (const u of p.users) {
+                popupUsers.push(
+                    `<table><tbody><tr><td><span class="block bg-cover w-12 h-12 me-2 rounded-full" style="background-image: url(${u.avatar})"></span></td><td><b>${u.username}</b><br>${p.cityName} (${p.countryName})</td></tr></tbody></table>`
+                )
             }
             m.bindPopup(popupUsers.join('<hr class="my-2">'))
             this.markers.push(m)

@@ -39,3 +39,37 @@ a:visited {
 .p-button {
     color: white;
 }
+
+.p-datatable .p-datatable-thead > tr > th {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.p-datatable .p-datatable-tbody > tr {
+    background: none;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.p-tabmenu .p-tabmenu-nav,
+.p-tabview .p-tabview-nav,
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link,
+.p-tabview .p-tabview-nav li .p-tabview-nav-link,
+.p-tabview .p-tabview-panels {
+    background: none;
+}
+
+.p-tabview .p-tabview-nav-btn.p-link,
+.p-paginator {
+    background: rgba(24, 24, 27, 0.5);
+}
+
+.p-paginator {
+    border-bottom: none;
+}
+
+.p-tabview .p-tabview-panels {
+    padding: 0;
+}

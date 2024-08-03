@@ -13,7 +13,7 @@ export const HttpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req).pipe(
         catchError((error: HttpErrorResponse) => {
             const reqError = error.error
-            if (!reqError?.error) {
+            if (!reqError?.message) {
                 switch (error.status) {
                     case 500:
                         if (error.statusText === 'Internal Server Error')
@@ -28,11 +28,11 @@ export const HttpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
             } else {
                 switch (error.status) {
                     case 500:
-                        toastService.showError(reqError.error)
+                        toastService.showError(reqError.message)
                         break
                     case 401:
                         authService.logout()
-                        toastService.showError(reqError.error)
+                        toastService.showError(reqError.message)
                         break
                 }
             }
