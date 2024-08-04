@@ -15,7 +15,7 @@ export class NotBsfrMemberComponent {
     notBSFRMessage: Message[] = [
         {
             closable: false,
-            severity: 'warn',
+            severity: 'error',
             detail: `Vous devez être membre du serveur Discord BSFR afin de pouvoir consulter cette page.<br />\
                     Vous pouvez nous rejoindre en cliquant sur ce lien d\'invitation :\
                     <a href="${this.discordInvite}" target="_blank">${this.discordInvite}</a><br /><br />\

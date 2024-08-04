@@ -8,7 +8,11 @@
     <p-card
       header="Localisation des membres de BSFR"
       styleClass="rounded-md bg-black/30 backdrop-blur-[64px] shadow-lg ring-1 ring-white/10">
-      <p-messages [enableService]="false" closable="false" severity="info">
+      <p-messages
+        [enableService]="false"
+        closable="false"
+        severity="info"
+        styleClass="mb-6">
         <ng-template pTemplate>
           Utilisez la commande /ville dans le salon #rôles-auto-assignable afin
           d'apparaître sur la carte.

@@ -15,10 +15,8 @@
         <p-tabPanel>
           <ng-template pTemplate="header">
             <div class="flex align-items-center gap-2">
-              <span
-                class="flex items-center"
-                [innerHTML]="tabIcons.jeu | svg: '18'"></span>
-              <span class="ms-2">Jeu</span>
+              <span class="pi pi-play"></span>
+              <span class="ms-1">Jeu</span>
             </div>
           </ng-template>
           <ng-container *ngIf="rankedle$ | withLoading | async as rankedle">
@@ -33,7 +31,8 @@
                 styleClass="bg-transparent">
                 <p-messages
                   [enableService]="false"
-                  [(value)]="noRankedleMessage" />
+                  [(value)]="noRankedleMessage"
+                  styleClass="mb-6" />
               </p-card>
             </ng-container>
             <ng-container *ngIf="rankedle.value">
@@ -54,10 +53,8 @@
         <p-tabPanel>
           <ng-template pTemplate="header">
             <div class="flex align-items-center gap-2">
-              <span
-                class="flex items-center"
-                [innerHTML]="tabIcons.classement | svg: '18'"></span>
-              <span class="ms-2">Classement</span>
+              <span class="pi pi-chart-bar"></span>
+              <span class="ms-1">Classement</span>
             </div>
           </ng-template>
           <ng-container *ngIf="ranking$ | withLoading | async as ranking">
@@ -65,8 +62,8 @@
               <p-table [value]="[[]]" [tableStyle]="{ 'min-width': '25rem' }">
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 5rem"></th>
-                    <th style="width: 1%">#</th>
+                    <th class="w-5"></th>
+                    <th class="w-2">#</th>
                     <th>Joueur</th>
                     <th style="width: 1%">Points</th>
                   </tr>
@@ -94,12 +91,13 @@
               <p-card styleClass="bg-transparent">
                 <p-messages
                   [enableService]="false"
-                  [(value)]="noRankingMessage" />
+                  [(value)]="noRankingMessage"
+                  styleClass="mb-6" />
               </p-card>
             </ng-container>
-            <ng-container *ngIf="ranking.value">
+            <ng-container *ngIf="ranking.value as r">
               <p-table
-                [value]="ranking.value"
+                [value]="r"
                 [paginator]="true"
                 [rows]="10"
                 [tableStyle]="{ 'min-width': '25rem' }"
@@ -202,22 +200,176 @@
         <p-tabPanel>
           <ng-template pTemplate="header">
             <div class="flex align-items-center gap-2">
-              <span
-                class="flex items-center"
-                [innerHTML]="tabIcons.statistiques | svg: '18'"></span>
-              <span class="ms-2">Statistiques</span>
+              <span class="pi pi-chart-pie"></span>
+              <span class="ms-1">Statistiques</span>
             </div>
           </ng-template>
-          <p-card styleClass="bg-transparent"></p-card>
+          <p-card styleClass="bg-transparent">
+            <ng-container
+              *ngIf="playerStats$ | withLoading | async as playerStats">
+              <ng-container *ngIf="playerStats?.value === null">
+                <p-messages
+                  [enableService]="false"
+                  [(value)]="noPlayerStatsMessage"
+                  styleClass="mb-6" />
+              </ng-container>
+              <div class="w-full text-center">
+                <div
+                  class="grid grid-cols-[repeat(auto-fit,140px)] gap-4 justify-center">
+                  <p-card
+                    styleClass="ring-1 ring-white/40 bg-white/20 rounded-md flex items-center">
+                    <div class="mb-4">Parties</div>
+                    <span class="text-3xl/none">
+                      <ng-container *ngIf="playerStats.value as stats">
+                        {{ stats.played }}
+                      </ng-container>
+                      <ng-container *ngIf="playerStats?.loading">
+                        <p-skeleton height="2rem" />
+                      </ng-container>
+                      <ng-container *ngIf="playerStats?.value === null"
+                        >0</ng-container
+                      >
+                    </span>
+                  </p-card>
+                  <p-card
+                    styleClass="ring-1 ring-white/40 bg-white/20 rounded-md flex items-center">
+                    <div class="mb-4">Victoires (%)</div>
+                    <span class="text-3xl/none">
+                      <ng-container *ngIf="playerStats.value as stats">
+                        {{ (stats.won * 100) / stats.played | round }}
+                      </ng-container>
+                      <ng-container *ngIf="playerStats?.loading">
+                        <p-skeleton height="2rem" />
+                      </ng-container>
+                      <ng-container *ngIf="playerStats?.value === null"
+                        >0</ng-container
+                      >
+                    </span>
+                  </p-card>
+                  <p-card
+                    styleClass="ring-1 ring-white/40 bg-white/20 rounded-md flex items-center">
+                    <div class="mb-4">Série actuelle</div>
+                    <span class="text-3xl/none">
+                      <ng-container *ngIf="playerStats.value as stats">
+                        {{ stats.currentStreak }}
+                      </ng-container>
+                      <ng-container *ngIf="playerStats?.loading">
+                        <p-skeleton height="2rem" />
+                      </ng-container>
+                      <ng-container *ngIf="playerStats?.value === null"
+                        >0</ng-container
+                      >
+                    </span>
+                  </p-card>
+                  <p-card
+                    styleClass="ring-1 ring-white/40 bg-white/20 rounded-md flex items-center">
+                    <div class="mb-4">Meilleure série</div>
+                    <span class="text-3xl/none">
+                      <ng-container *ngIf="playerStats.value as stats">
+                        {{ stats.maxStreak }}
+                      </ng-container>
+                      <ng-container *ngIf="playerStats?.loading">
+                        <p-skeleton height="2rem" />
+                      </ng-container>
+                      <ng-container *ngIf="playerStats?.value === null"
+                        >0</ng-container
+                      >
+                    </span>
+                  </p-card>
+                </div>
+              
+                <div>
+                  <h3>Performances</h3>
+
+                  
+                </div>
+              </div>
+            </ng-container>
+          </p-card>
+        </p-tabPanel>
+        <!-- Historique -->
+        <p-tabPanel>
+          <ng-template pTemplate="header">
+            <div class="flex align-items-center gap-2">
+              <span class="pi pi-history"></span>
+              <span class="ms-1">Historique</span>
+            </div>
+          </ng-template>
+          <p-table
+            [value]="historyData"
+            [paginator]="true"
+            [rows]="10"
+            [first]="historyFirst"
+            [lazy]="true"
+            [totalRecords]="historyTotal"
+            [tableStyle]="{ 'min-width': '70rem' }"
+            [loading]="historyLoading"
+            (onPage)="historyPageChange($event)"
+            dataKey="history.id">
+            <ng-template pTemplate="header">
+              <tr>
+                <th class="w-3">#</th>
+                <th class="max-w-[500px] w-[500px]">Map</th>
+                <th class="max-w-[200px] w-[200px]">Mapper</th>
+                <th style="width: 1%">Score</th>
+                <th style="width: 120px">Date</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="5">
+                  <p-messages
+                    [enableService]="false"
+                    [(value)]="noHistoryMessage" />
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="loadingbody">
+              <ng-container *ngFor="let i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]">
+                <tr style="height: 67px">
+                  <td class="w-3"><p-skeleton /></td>
+                  <td class="max-w-[500px] w-[500px] flex items-center">
+                    <p-avatar
+                      [image]=""
+                      styleClass="me-4 rounded-md overflow-hidden"
+                      size="large" />
+                    <p-skeleton />
+                  </td>
+                  <td class="max-w-[200px] w-[200px]"><p-skeleton /></td>
+                  <td><p-skeleton /></td>
+                  <td><p-skeleton /></td>
+                </tr>
+              </ng-container>
+            </ng-template>
+            <ng-template pTemplate="body" let-history>
+              <tr>
+                <td>{{ history.id }}</td>
+                <td class="flex items-center">
+                  <p-avatar
+                    [image]="history.cover"
+                    styleClass="me-4 rounded-md overflow-hidden"
+                    size="large" />
+                  <span
+                    class="max-w-[500px] w-[500px] text-ellipsis whitespace-nowrap overflow-hidden">
+                    {{ history.songName }}
+                  </span>
+                </td>
+                <td
+                  class="max-w-[200px] w-[200px] text-ellipsis whitespace-nowrap overflow-hidden">
+                  {{ history.levelAuthorName }}
+                </td>
+                <td></td>
+                <td>{{ history.date }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
         </p-tabPanel>
         <!-- Aide -->
         <p-tabPanel>
           <ng-template pTemplate="header">
             <div class="flex align-items-center gap-2">
-              <span
-                class="flex items-center"
-                [innerHTML]="tabIcons.aide | svg: '18'"></span>
-              <span class="ms-2">Aide</span>
+              <span class="pi pi-question-circle"></span>
+              <span class="ms-1">Aide</span>
             </div>
           </ng-template>
           <p-card styleClass="bg-transparent">

@@ -4,9 +4,10 @@ import { WithLoadingPipe } from '../../pipes/with-loading.pipe'
 import { CardModule } from 'primeng/card'
 import { TabViewModule, TabViewChangeEvent } from 'primeng/tabview'
 import { SkeletonModule } from 'primeng/skeleton'
-import { TableModule, TableRowExpandEvent } from 'primeng/table'
+import { TableModule, TableRowExpandEvent, TablePageEvent } from 'primeng/table'
 import { ButtonModule } from 'primeng/button'
 import { AvatarModule } from 'primeng/avatar'
+import { ProgressBarModule } from 'primeng/progressbar'
 import { MessagesModule } from 'primeng/messages'
 import { Message } from 'primeng/api'
 
@@ -14,10 +15,14 @@ import feather from 'feather-icons'
 import { svgPipe } from '../../pipes/svg.pipe'
 import { roundPipe } from '../../pipes/round.pipe'
 
-import { RankedleService } from '../../services/rankedle/rankedle.service'
+import {
+    RankedleHistory,
+    RankedleService
+} from '../../services/rankedle/rankedle.service'
 
 import { NotBsfrMemberComponent } from '../not-bsfr-member/not-bsfr-member.component'
 import { UserService } from '../../services/user/user.service'
+import { finalize } from 'rxjs'
 
 @Component({
     selector: 'app-rankedle',
@@ -34,6 +39,7 @@ import { UserService } from '../../services/user/user.service'
         TableModule,
         ButtonModule,
         AvatarModule,
+        ProgressBarModule,
         MessagesModule,
         svgPipe,
         roundPipe,
@@ -70,6 +76,22 @@ export class RankedleComponent implements OnInit {
         }
     ]
 
+    noPlayerStatsMessage: Message[] = [
+        {
+            severity: 'info',
+            closable: false,
+            detail: 'Veuillez jouer à au moins un Rankedle cette saison pour voir vos statistiques.'
+        }
+    ]
+
+    noHistoryMessage: Message[] = [
+        {
+            severity: 'info',
+            closable: false,
+            detail: "Il n'y a pas eu de Rankedle pour le moment."
+        }
+    ]
+
     tabIcons = {
         jeu: feather.icons.play,
         classement: feather.icons['bar-chart-2'],
@@ -77,17 +99,25 @@ export class RankedleComponent implements OnInit {
         aide: feather.icons['help-circle']
     }
 
-    activeTab: number = 1
+    activeTab: number = 0
 
     rankedle$ = this.rankedleService.rankedle$
     ranking$ = this.rankedleService.ranking$
+    playerStats$ = this.rankedleService.playerStats$
+    historyData: RankedleHistory[] = []
+    historyFirst = 0
+    historyTotal = 0
+    historyLoading = false
 
     ngOnInit(): void {
         this.rankedle$ = this.rankedleService.getCurrent()
-        this.ranking$ = this.rankedleService.getRanking()
+        // this.playerStats$ = this.rankedleService.getPlayerStats()
+        // this.history$ = this.rankedleService.getHistory()
+        // this.getHistory()
     }
 
     onTabChange(event: TabViewChangeEvent) {
+        this.rankingExpandedRows = {}
         switch (event.index) {
             case 0:
                 this.rankedle$ = this.rankedleService.getCurrent()
@@ -95,14 +125,40 @@ export class RankedleComponent implements OnInit {
             case 1:
                 this.ranking$ = this.rankedleService.getRanking()
                 break
+            case 2:
+                this.playerStats$ = this.rankedleService.getPlayerStats()
+                break
+            case 3:
+                this.getHistory()
+                break
         }
     }
 
     rankingExpandedRows: { [key: string]: any } = {}
-    playerStats = 1
 
     onRankingRowExpand(event: TableRowExpandEvent) {
         this.rankingExpandedRows = {}
         this.rankingExpandedRows[event.data.memberId] = true
+    }
+
+    getHistory(first: number = 0, rows: number = 10) {
+        this.historyData = []
+        this.historyLoading = true
+        this.rankedleService
+            .getHistory(first, rows)
+            .pipe(
+                finalize(() => {
+                    this.historyLoading = false
+                })
+            )
+            .subscribe((res) => {
+                this.historyData = res.history
+                this.historyFirst = res.first
+                this.historyTotal = res.total
+            })
+    }
+
+    historyPageChange(event: TablePageEvent) {
+        this.getHistory(event.first, event.rows)
     }
 }
