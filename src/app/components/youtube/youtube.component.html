@@ -3,7 +3,7 @@
   <div class="text-white">
     <h2>YouTube</h2>
   </div>
-  <app-not-bsfr-member *ngIf="!isBSFR; else page" />
+  <!-- <app-not-bsfr-member *ngIf="!isBSFR; else page" /> -->
   <ng-template #page>
     <p-card
       header="Publier une run"
@@ -60,7 +60,7 @@
             <div *ngIf="!lastVideoLoading; else videoLoading">
               <div *ngIf="lastVideo !== null; else noVideo">
                 <iframe
-                  class="aspect-video w-full"
+                  class="aspect-video w-full rounded-md"
                   [src]="
                     'https://www.youtube-nocookie.com/embed/' +
                       lastVideo.videoId | trustResUrl

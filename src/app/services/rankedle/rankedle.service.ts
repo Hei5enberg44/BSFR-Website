@@ -40,7 +40,7 @@ export interface RankedleHistory {
     date: string
 }
 
-export interface RankedleHistoryData {
+interface RankedleHistoryData {
     history: RankedleHistory[]
     first: number
     total: number

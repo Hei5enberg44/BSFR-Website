@@ -14,6 +14,6 @@ export class YoutubeService {
     constructor(private http: HttpClient) {}
 
     getLastVideo() {
-        return this.http.get<YouTubeVideo>('/api/youtube/getLastVideo')
+        return this.http.get<YouTubeVideo>('/api/youtube/lastVideo')
     }
 }

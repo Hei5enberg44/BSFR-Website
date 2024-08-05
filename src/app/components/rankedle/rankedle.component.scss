@@ -9,3 +9,44 @@
 .ranking-third {
     background: rgba(205, 127, 50, 0.2) !important;
 }
+
+.stats-progress-bar {
+    position: relative;
+    width: 100%;
+    min-height: 2rem;
+    color: #ffffff;
+    place-self: end center;
+    place-content: end;
+    padding-bottom: .42rem;
+    border-radius: .25rem;
+    font-weight: bold;
+    text-shadow: 0 0 5px black;
+}
+
+.stats-progress-bar-1 {
+    background: #45d01b;
+}
+
+.stats-progress-bar-2 {
+    background: #7cbd00;
+}
+
+.stats-progress-bar-3 {
+    background: #9fa700;
+}
+
+.stats-progress-bar-4 {
+    background: #ba8f00;
+}
+
+.stats-progress-bar-5 {
+    background: #cf7300;
+}
+
+.stats-progress-bar-6 {
+    background: #de5100;
+}
+
+.stats-progress-bar-7 {
+    background: #e51f1f;
+}

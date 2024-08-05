@@ -11,13 +11,11 @@ import { ProgressBarModule } from 'primeng/progressbar'
 import { MessagesModule } from 'primeng/messages'
 import { Message } from 'primeng/api'
 
-import feather from 'feather-icons'
-import { svgPipe } from '../../pipes/svg.pipe'
 import { roundPipe } from '../../pipes/round.pipe'
 
 import {
     RankedleHistory,
-    RankedleService
+    RankedleService,
 } from '../../services/rankedle/rankedle.service'
 
 import { NotBsfrMemberComponent } from '../not-bsfr-member/not-bsfr-member.component'
@@ -41,7 +39,6 @@ import { finalize } from 'rxjs'
         AvatarModule,
         ProgressBarModule,
         MessagesModule,
-        svgPipe,
         roundPipe,
         NotBsfrMemberComponent
     ],
@@ -60,6 +57,7 @@ export class RankedleComponent implements OnInit {
         })
     }
 
+    // Messages
     noRankedleMessage: Message[] = [
         {
             severity: 'info',
@@ -76,14 +74,6 @@ export class RankedleComponent implements OnInit {
         }
     ]
 
-    noPlayerStatsMessage: Message[] = [
-        {
-            severity: 'info',
-            closable: false,
-            detail: 'Veuillez jouer à au moins un Rankedle cette saison pour voir vos statistiques.'
-        }
-    ]
-
     noHistoryMessage: Message[] = [
         {
             severity: 'info',
@@ -91,15 +81,6 @@ export class RankedleComponent implements OnInit {
             detail: "Il n'y a pas eu de Rankedle pour le moment."
         }
     ]
-
-    tabIcons = {
-        jeu: feather.icons.play,
-        classement: feather.icons['bar-chart-2'],
-        statistiques: feather.icons['pie-chart'],
-        aide: feather.icons['help-circle']
-    }
-
-    activeTab: number = 0
 
     rankedle$ = this.rankedleService.rankedle$
     ranking$ = this.rankedleService.ranking$
@@ -110,11 +91,13 @@ export class RankedleComponent implements OnInit {
     historyLoading = false
 
     ngOnInit(): void {
-        this.rankedle$ = this.rankedleService.getCurrent()
-        // this.playerStats$ = this.rankedleService.getPlayerStats()
-        // this.history$ = this.rankedleService.getHistory()
+        // this.rankedle$ = this.rankedleService.getCurrent()
+        this.playerStats$ = this.rankedleService.getPlayerStats()
         // this.getHistory()
     }
+
+    // Onglets
+    activeTab: number = 2
 
     onTabChange(event: TabViewChangeEvent) {
         this.rankingExpandedRows = {}
@@ -134,6 +117,7 @@ export class RankedleComponent implements OnInit {
         }
     }
 
+    // Classement
     rankingExpandedRows: { [key: string]: any } = {}
 
     onRankingRowExpand(event: TableRowExpandEvent) {
@@ -141,6 +125,7 @@ export class RankedleComponent implements OnInit {
         this.rankingExpandedRows[event.data.memberId] = true
     }
 
+    // Historique
     getHistory(first: number = 0, rows: number = 10) {
         this.historyData = []
         this.historyLoading = true
