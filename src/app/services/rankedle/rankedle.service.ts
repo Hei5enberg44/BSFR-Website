@@ -22,7 +22,7 @@ interface RankedlePlayerStats {
     maxStreak: number
 }
 
-interface RankedlePlayer {
+export interface RankedlePlayerRankingData {
     memberId: string
     name: string
     avatar: string
@@ -31,12 +31,18 @@ interface RankedlePlayer {
     stats: RankedlePlayerStats
 }
 
+interface RankedleScore {
+    success: boolean
+    skips: number
+    steps: Array<'skip' | 'fail' | 'success' | null>
+}
+
 export interface RankedleHistory {
     id: number
     cover: string
     songName: string
     levelAuthorName: string
-    score: string[]
+    score: RankedleScore | null
     date: string
 }
 
@@ -56,9 +62,10 @@ export class RankedleService {
         new BehaviorSubject<Rankedle | null>(null)
     rankedle$: Observable<Rankedle | null> = this.rankedle.asObservable()
 
-    public ranking: BehaviorSubject<RankedlePlayer[] | null> =
-        new BehaviorSubject<RankedlePlayer[] | null>(null)
-    ranking$: Observable<RankedlePlayer[] | null> = this.ranking.asObservable()
+    public ranking: BehaviorSubject<RankedlePlayerRankingData[] | null> =
+        new BehaviorSubject<RankedlePlayerRankingData[] | null>(null)
+    ranking$: Observable<RankedlePlayerRankingData[] | null> =
+        this.ranking.asObservable()
 
     public playerStats: BehaviorSubject<RankedlePlayerStats | null> =
         new BehaviorSubject<RankedlePlayerStats | null>(null)
@@ -70,7 +77,9 @@ export class RankedleService {
     }
 
     getRanking() {
-        return this.http.get<RankedlePlayer[]>('/api/rankedle/ranking')
+        return this.http.get<RankedlePlayerRankingData[]>(
+            '/api/rankedle/ranking'
+        )
     }
 
     getPlayerStats() {

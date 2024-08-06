@@ -10,6 +10,7 @@
     background: rgba(205, 127, 50, 0.2) !important;
 }
 
+/* Statistiques */
 .stats-progress-bar {
     position: relative;
     width: 100%;
@@ -17,8 +18,8 @@
     color: #ffffff;
     place-self: end center;
     place-content: end;
-    padding-bottom: .42rem;
-    border-radius: .25rem;
+    padding-bottom: 0.42rem;
+    border-radius: 0.25rem;
     font-weight: bold;
     text-shadow: 0 0 5px black;
 }
@@ -49,4 +50,21 @@
 
 .stats-progress-bar-7 {
     background: #e51f1f;
+}
+
+/* Score */
+.step-skip {
+    color: #444444;
+}
+
+.step-fail {
+    color: #ef4444;
+}
+
+.step-success {
+    color: #22c55e;
+}
+
+.step-empty {
+    color: #ededed;
 }

@@ -5,247 +5,242 @@
   </div>
   <!-- <app-not-bsfr-member *ngIf="!isBSFR; else page" /> -->
   <!-- <ng-template #page> -->
-    <p-card
-      header="Publier une run"
-      styleClass="rounded-md bg-black/30 backdrop-blur-[64px] shadow-lg ring-1 ring-white/10">
-      <div
-        class="grid md:grid-cols-[1fr_auto] md:gap-16 grid-cols-1 gap-8 items-center">
-        <div>
-          <p>
-            Tu es fier/fière d'un score sur une map et tu voudrais le partager
-            au plus grand monde ?<br />
-            Soumet-le nous alors via ce formulaire.<br />
-            Il sera ensuite soumis à validation de notre part et qui sait,
-            pourra être publié sur la chaîne YouTube de Beat Saber FR !
-          </p>
-          <h3>Critères à respecter :</h3>
-          <ul>
-            <li>Les enregistrements doivent être minimum en 720p30</li>
-            <li>
-              Utilisez le plugin
-              <a href="https://github.com/Snow1226/CameraPlus" taget="_blank"
-                >Camera+</a
-              >
-              /
-              <a href="https://github.com/Snow1226/CameraPlus" taget="_blank"
-                >Camera2</a
-              >
-              en 1ère personne
-            </li>
-            <li>
-              Les overlays ne sont pas acceptés (sauf exceptions: swing cam et
-              camera ortho de taille raisonnable)
-            </li>
-            <li>
-              Évitez de nous envoyer des runs que vous avez déjà posté sur votre
-              chaîne
-            </li>
-            <li>
-              Merci de donner uniquement des liens Google Drive, Dropbox ou
-              OneDrive
-            </li>
-            <li>La vidéo soumise ne doit pas avoir été éditée</li>
-            <li>Fichier de 2 Go maximum accepté</li>
-          </ul>
-          <span class="italic"
-            >Paramètres d'enregistrement recommandés :
-            <a href="https://imgur.com/a/fswBbJe" target="_blank"
-              >Lien Imgur</a
-            ></span
-          >
-        </div>
-        <div>
-          <h3>Dernière vidéo sur la chaîne :</h3>
-          <div class="aspect-video md:w-[480px] w-full">
-            <div *ngIf="!lastVideoLoading; else videoLoading">
-              <div *ngIf="lastVideo !== null; else noVideo">
-                <iframe
-                  class="aspect-video w-full rounded-md"
-                  [src]="
-                    'https://www.youtube-nocookie.com/embed/' +
-                      lastVideo.videoId | trustResUrl
-                  "
-                  title="YouTube video player"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen></iframe>
-              </div>
-              <ng-template #noVideo>
-                <p-messages
-                  [value]="lastVideoNotFound"
-                  [enableService]="false" />
-              </ng-template>
+  <p-card
+    header="Publier une run"
+    styleClass="rounded-md bg-black/30 backdrop-blur-[64px] shadow-lg ring-1 ring-white/10">
+    <div
+      class="grid md:grid-cols-[1fr_auto] md:gap-16 grid-cols-1 gap-8 items-center">
+      <div>
+        <p>
+          Tu es fier/fière d'un score sur une map et tu voudrais le partager au
+          plus grand monde ?<br />
+          Soumet-le nous alors via ce formulaire.<br />
+          Il sera ensuite soumis à validation de notre part et qui sait, pourra
+          être publié sur la chaîne YouTube de Beat Saber FR !
+        </p>
+        <h3>Critères à respecter :</h3>
+        <ul>
+          <li>Les enregistrements doivent être minimum en 720p30</li>
+          <li>
+            Utilisez le plugin
+            <a href="https://github.com/Snow1226/CameraPlus" taget="_blank"
+              >Camera+</a
+            >
+            /
+            <a href="https://github.com/Snow1226/CameraPlus" taget="_blank"
+              >Camera2</a
+            >
+            en 1ère personne
+          </li>
+          <li>
+            Les overlays ne sont pas acceptés (sauf exceptions: swing cam et
+            camera ortho de taille raisonnable)
+          </li>
+          <li>
+            Évitez de nous envoyer des runs que vous avez déjà posté sur votre
+            chaîne
+          </li>
+          <li>
+            Merci de donner uniquement des liens Google Drive, Dropbox ou
+            OneDrive
+          </li>
+          <li>La vidéo soumise ne doit pas avoir été éditée</li>
+          <li>Fichier de 2 Go maximum accepté</li>
+        </ul>
+        <span class="italic"
+          >Paramètres d'enregistrement recommandés :
+          <a href="https://imgur.com/a/fswBbJe" target="_blank"
+            >Lien Imgur</a
+          ></span
+        >
+      </div>
+      <div>
+        <h3>Dernière vidéo sur la chaîne :</h3>
+        <div class="aspect-video md:w-[480px] w-full">
+          <div *ngIf="!lastVideoLoading; else videoLoading">
+            <div *ngIf="lastVideo !== null; else noVideo">
+              <iframe
+                class="aspect-video w-full rounded-md"
+                [src]="
+                  'https://www.youtube-nocookie.com/embed/' + lastVideo.videoId
+                    | trustResUrl
+                "
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
             </div>
-            <ng-template #videoLoading>
-              <p-skeleton width="100%" height="100%" />
+            <ng-template #noVideo>
+              <p-messages [value]="lastVideoNotFound" [enableService]="false" />
             </ng-template>
           </div>
+          <ng-template #videoLoading>
+            <p-skeleton width="100%" height="100%" />
+          </ng-template>
         </div>
       </div>
-      <div class="my-8">
-        <p-divider />
-      </div>
-      <div class="grid grid-cols-[1fr_auto] items-center">
-        <h3>Formulaire :</h3>
-        <span>
-          <sup class="text-red-600 font-bold">*</sup> = Champ requis
-        </span>
-      </div>
-      <div class="grid md:grid-cols-2 grid-cols-1 gap-8">
-        <div class="flex flex-col gap-2">
-          <label for="url"
-            >Lien vers la vidéo
-            <sup class="text-red-600 font-bold">*</sup></label
-          >
-          <p-iconField iconPosition="left">
-            <p-inputIcon styleClass="pi pi-link" />
-            <input
-              pInputText
-              id="url"
-              class="w-full"
-              aria-describedby="url-help"
-              [(ngModel)]="url"
-              placeholder="https://drive.bsaber.fr/index.php/s/R9m2wL7JrtrG3H3" />
-          </p-iconField>
-          <small id="url-help" class="italic">
-            Liens acceptés : OneDrive, Google Drive, Dropbox | .mp4 conseillé,
-            .mkv refusé
-          </small>
-        </div>
-        <div class="flex flex-col gap-2">
-          <label for="description"
-            >Description de la vidéo
-            <sup class="text-red-600 font-bold">*</sup></label
-          >
+    </div>
+    <div class="my-8">
+      <p-divider />
+    </div>
+    <div class="grid grid-cols-[1fr_auto] items-center">
+      <h3>Formulaire :</h3>
+      <span> <sup class="text-red-600 font-bold">*</sup> = Champ requis </span>
+    </div>
+    <div class="grid md:grid-cols-2 grid-cols-1 gap-8">
+      <div class="flex flex-col gap-2">
+        <label for="url"
+          >Lien vers la vidéo <sup class="text-red-600 font-bold">*</sup></label
+        >
+        <p-iconField iconPosition="left">
+          <p-inputIcon styleClass="pi pi-link" />
           <input
             pInputText
-            id="description"
-            aria-describedby="description-help"
-            [(ngModel)]="description" />
-          <small id="description-help" class="italic">
-            Artiste - Nom de la map, Difficulté, Précision, FC/Miss
-          </small>
-        </div>
-        <div class="flex flex-col gap-2">
-          <label for="ldProfile"
-            >Profil ScoreSaber ou BeatLeader
-            <sup class="text-red-600 font-bold">*</sup></label
-          >
-          <p-iconField iconPosition="left">
-            <p-inputIcon styleClass="pi pi-link" />
-            <input
-              pInputText
-              id="ldProfile"
-              class="w-full"
-              [(ngModel)]="ldProfile"
-              placeholder="https://scoresaber.com/u/76561198796531407" />
-          </p-iconField>
-        </div>
-        <div class="flex flex-col gap-2">
-          <label for="mapLd"
-            >Leaderboard de la map
-            <sup class="text-red-600 font-bold">*</sup></label
-          >
-          <p-iconField iconPosition="left">
-            <p-inputIcon styleClass="pi pi-link" />
-            <input
-              pInputText
-              id="mapLd"
-              class="w-full"
-              aria-describedby="mapLd-help"
-              [(ngModel)]="mapLd"
-              placeholder="https://scoresaber.com/leaderboard/6286" />
-          </p-iconField>
-          <small id="mapLd-help" class="italic">
-            Ajoutez le lien ScoreSaber ou BeatLeader de la map que vous avez
-            joué dans votre vidéo
-          </small>
-        </div>
-        <div class="flex flex-col gap-2">
-          <label for="beatsaverUrl"
-            >Lien BeatSaver <sup class="text-red-600 font-bold">*</sup></label
-          >
-          <p-iconField iconPosition="left">
-            <p-inputIcon styleClass="pi pi-link" />
-            <input
-              pInputText
-              id="beatsaverUrl"
-              class="w-full"
-              aria-describedby="beatsaverUrl-help"
-              [(ngModel)]="beatsaverUrl"
-              placeholder="https://beatsaver.com/maps/3b5" />
-          </p-iconField>
-          <small id="beatsaverUrl-help" class="italic">
-            Ajoutez le lien BeatSaver de la map que vous avez joué dans votre
-            vidéo
-          </small>
-        </div>
-        <div class="flex flex-col gap-2">
-          <label for="headset"
-            >Votre casque VR <sup class="text-red-600 font-bold">*</sup></label
-          >
-          <p-dropdown
-            styleClass="w-full"
-            [options]="headsets"
-            [(ngModel)]="headset"
-            [group]="true"
-            appendTo="body"
-            placeholder="Sélectionnez votre casque VR">
-            <ng-template let-group pTemplate="group">
-              <div class="flex items-center">
-                <span>{{ group.label }}</span>
-              </div>
-            </ng-template>
-          </p-dropdown>
-        </div>
-        <div class="flex flex-col gap-2">
-          <label for="ldProfile"
-            >Votre grip <sup class="text-red-600 font-bold">*</sup></label
-          >
-          <p-dropdown
-            styleClass="w-full"
-            [options]="grips"
-            [(ngModel)]="grip"
-            [editable]="true"
-            appendTo="body" />
-        </div>
-        <div class="flex flex-col gap-2">
-          <label for="twitchUrl">Votre chaîne Twitch</label>
-          <p-iconField iconPosition="left">
-            <p-inputIcon styleClass="pi pi-link" />
-            <input
-              pInputText
-              id="twitchUrl"
-              class="w-full"
-              [(ngModel)]="twitchUrl"
-              placeholder="https://twitch.tv/beatsaberfr" />
-          </p-iconField>
-        </div>
-        <div class="flex flex-col gap-2">
-          <label for="comment"
-            >Commentaire (apparaîtra en description de la vidéo)</label
-          >
-          <textarea
-            rows="5"
-            cols="30"
-            pInputTextarea
-            aria-describedby="comment-help"
-            [(ngModel)]="comment"
-            [autoResize]="true"
-            [maxlength]="commentMaxLength"
-            (keyup)="commentChange($event)">
-          </textarea>
-          <small id="comment-help" class="italic">
-            {{ commentMaxLength }} caractères max. ({{
-              commentMaxLength - commentCurrentLength
-            }}
-            restants)
-          </small>
-        </div>
-        <div class="md:col-span-2 text-right">
-          <p-button label="Envoyer"></p-button>
-        </div>
+            id="url"
+            class="w-full"
+            aria-describedby="url-help"
+            [(ngModel)]="url"
+            placeholder="https://drive.bsaber.fr/index.php/s/R9m2wL7JrtrG3H3" />
+        </p-iconField>
+        <small id="url-help" class="italic">
+          Liens acceptés : OneDrive, Google Drive, Dropbox | .mp4 conseillé,
+          .mkv refusé
+        </small>
       </div>
-    </p-card>
+      <div class="flex flex-col gap-2">
+        <label for="description"
+          >Description de la vidéo
+          <sup class="text-red-600 font-bold">*</sup></label
+        >
+        <input
+          pInputText
+          id="description"
+          aria-describedby="description-help"
+          [(ngModel)]="description" />
+        <small id="description-help" class="italic">
+          Artiste - Nom de la map, Difficulté, Précision, FC/Miss
+        </small>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="ldProfile"
+          >Profil ScoreSaber ou BeatLeader
+          <sup class="text-red-600 font-bold">*</sup></label
+        >
+        <p-iconField iconPosition="left">
+          <p-inputIcon styleClass="pi pi-link" />
+          <input
+            pInputText
+            id="ldProfile"
+            class="w-full"
+            [(ngModel)]="ldProfile"
+            placeholder="https://scoresaber.com/u/76561198796531407" />
+        </p-iconField>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="mapLd"
+          >Leaderboard de la map
+          <sup class="text-red-600 font-bold">*</sup></label
+        >
+        <p-iconField iconPosition="left">
+          <p-inputIcon styleClass="pi pi-link" />
+          <input
+            pInputText
+            id="mapLd"
+            class="w-full"
+            aria-describedby="mapLd-help"
+            [(ngModel)]="mapLd"
+            placeholder="https://scoresaber.com/leaderboard/6286" />
+        </p-iconField>
+        <small id="mapLd-help" class="italic">
+          Ajoutez le lien ScoreSaber ou BeatLeader de la map que vous avez joué
+          dans votre vidéo
+        </small>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="beatsaverUrl"
+          >Lien BeatSaver <sup class="text-red-600 font-bold">*</sup></label
+        >
+        <p-iconField iconPosition="left">
+          <p-inputIcon styleClass="pi pi-link" />
+          <input
+            pInputText
+            id="beatsaverUrl"
+            class="w-full"
+            aria-describedby="beatsaverUrl-help"
+            [(ngModel)]="beatsaverUrl"
+            placeholder="https://beatsaver.com/maps/3b5" />
+        </p-iconField>
+        <small id="beatsaverUrl-help" class="italic">
+          Ajoutez le lien BeatSaver de la map que vous avez joué dans votre
+          vidéo
+        </small>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="headset"
+          >Votre casque VR <sup class="text-red-600 font-bold">*</sup></label
+        >
+        <p-dropdown
+          styleClass="w-full"
+          [options]="headsets"
+          [(ngModel)]="headset"
+          [group]="true"
+          appendTo="body"
+          placeholder="Sélectionnez votre casque VR">
+          <ng-template let-group pTemplate="group">
+            <div class="flex items-center">
+              <span>{{ group.label }}</span>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="ldProfile"
+          >Votre grip <sup class="text-red-600 font-bold">*</sup></label
+        >
+        <p-dropdown
+          styleClass="w-full"
+          [options]="grips"
+          [(ngModel)]="grip"
+          [editable]="true"
+          appendTo="body" />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="twitchUrl">Votre chaîne Twitch</label>
+        <p-iconField iconPosition="left">
+          <p-inputIcon styleClass="pi pi-link" />
+          <input
+            pInputText
+            id="twitchUrl"
+            class="w-full"
+            [(ngModel)]="twitchUrl"
+            placeholder="https://twitch.tv/beatsaberfr" />
+        </p-iconField>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="comment"
+          >Commentaire (apparaîtra en description de la vidéo)</label
+        >
+        <textarea
+          rows="5"
+          cols="30"
+          pInputTextarea
+          aria-describedby="comment-help"
+          [(ngModel)]="comment"
+          [autoResize]="true"
+          [maxlength]="commentMaxLength"
+          (keyup)="commentChange($event)">
+        </textarea>
+        <small id="comment-help" class="italic">
+          {{ commentMaxLength }} caractères max. ({{
+            commentMaxLength - commentCurrentLength
+          }}
+          restants)
+        </small>
+      </div>
+      <div class="md:col-span-2 text-right">
+        <p-button label="Envoyer"></p-button>
+      </div>
+    </div>
+  </p-card>
   <!-- </ng-template> -->
 </div>

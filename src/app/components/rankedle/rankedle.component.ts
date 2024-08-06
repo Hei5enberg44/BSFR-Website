@@ -15,7 +15,8 @@ import { roundPipe } from '../../pipes/round.pipe'
 
 import {
     RankedleHistory,
-    RankedleService,
+    RankedlePlayerRankingData,
+    RankedleService
 } from '../../services/rankedle/rankedle.service'
 
 import { NotBsfrMemberComponent } from '../not-bsfr-member/not-bsfr-member.component'
@@ -83,21 +84,14 @@ export class RankedleComponent implements OnInit {
     ]
 
     rankedle$ = this.rankedleService.rankedle$
-    ranking$ = this.rankedleService.ranking$
     playerStats$ = this.rankedleService.playerStats$
-    historyData: RankedleHistory[] = []
-    historyFirst = 0
-    historyTotal = 0
-    historyLoading = false
 
     ngOnInit(): void {
-        // this.rankedle$ = this.rankedleService.getCurrent()
-        this.playerStats$ = this.rankedleService.getPlayerStats()
-        // this.getHistory()
+        this.rankedle$ = this.rankedleService.getCurrent()
     }
 
     // Onglets
-    activeTab: number = 2
+    activeTab: number = 0
 
     onTabChange(event: TabViewChangeEvent) {
         this.rankingExpandedRows = {}
@@ -106,7 +100,7 @@ export class RankedleComponent implements OnInit {
                 this.rankedle$ = this.rankedleService.getCurrent()
                 break
             case 1:
-                this.ranking$ = this.rankedleService.getRanking()
+                this.getRanking()
                 break
             case 2:
                 this.playerStats$ = this.rankedleService.getPlayerStats()
@@ -126,6 +120,30 @@ export class RankedleComponent implements OnInit {
     }
 
     // Historique
+    rankingData: RankedlePlayerRankingData[] = []
+    rankingLoading = false
+
+    getRanking() {
+        this.rankingData = []
+        this.rankingLoading = true
+        this.rankedleService
+            .getRanking()
+            .pipe(
+                finalize(() => {
+                    this.rankingLoading = false
+                })
+            )
+            .subscribe((res) => {
+                this.rankingData = res
+            })
+    }
+
+    // Historique
+    historyData: RankedleHistory[] = []
+    historyFirst = 0
+    historyTotal = 0
+    historyLoading = false
+
     getHistory(first: number = 0, rows: number = 10) {
         this.historyData = []
         this.historyLoading = true

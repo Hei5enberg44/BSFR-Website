@@ -5,25 +5,25 @@
   </div>
   <!-- <app-not-bsfr-member *ngIf="!isBSFR; else page" /> -->
   <!-- <ng-template #page> -->
-    <p-card
-      header="Localisation des membres de BSFR"
-      styleClass="rounded-md bg-black/30 backdrop-blur-[64px] shadow-lg ring-1 ring-white/10">
-      <p-messages
-        [enableService]="false"
-        closable="false"
-        severity="info"
-        styleClass="mb-6">
-        <ng-template pTemplate>
-          Utilisez la commande /ville dans le salon #rôles-auto-assignable afin
-          d'apparaître sur la carte.
-        </ng-template>
-      </p-messages>
-      <div
-        style="height: 600px; outline: none"
-        leaflet
-        [leafletOptions]="options">
-        <div [leafletLayers]="markers"></div>
-      </div>
-    </p-card>
+  <p-card
+    header="Localisation des membres de BSFR"
+    styleClass="rounded-md bg-black/30 backdrop-blur-[64px] shadow-lg ring-1 ring-white/10">
+    <p-messages
+      [enableService]="false"
+      closable="false"
+      severity="info"
+      styleClass="mb-6">
+      <ng-template pTemplate>
+        Utilisez la commande /ville dans le salon #rôles-auto-assignable afin
+        d'apparaître sur la carte.
+      </ng-template>
+    </p-messages>
+    <div
+      style="height: 600px; outline: none"
+      leaflet
+      [leafletOptions]="options">
+      <div [leafletLayers]="markers"></div>
+    </div>
+  </p-card>
   <!-- </ng-template> -->
 </div>

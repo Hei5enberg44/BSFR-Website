@@ -82,12 +82,19 @@ a:visited {
     border-color: rgba(255, 255, 255, 0.2);
 }
 
-.p-datatable .p-datatable-tbody > tr {
+.p-datatable .p-datatable-tbody > tr,
+.p-paginator {
     background: none;
 }
 
 .p-datatable .p-datatable-tbody > tr > td {
     border-color: rgba(255, 255, 255, 0.2);
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+    background: #60a5fa;
+    border-color: #60a5fa;
+    color: var(--text-color);
 }
 
 .p-tabmenu .p-tabmenu-nav,
@@ -108,8 +115,7 @@ a:visited {
     padding: 1px;
 }
 
-.p-tabview .p-tabview-nav-btn.p-link,
-.p-paginator {
+.p-tabview .p-tabview-nav-btn.p-link {
     background: rgba(24, 24, 27, 0.5);
 }
 
