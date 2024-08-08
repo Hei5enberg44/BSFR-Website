@@ -4,6 +4,7 @@ import { AccueilComponent } from './components/accueil/accueil.component'
 import { YouTubeComponent } from './components/youtube/youtube.component'
 import { CarteInteractiveComponent } from './components/carte-interactive/carte-interactive.component'
 import { RankedleComponent } from './components/rankedle/rankedle.component'
+import { ProfilComponent } from './components/profil/profil.component'
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component'
 
 import { AuthGuard } from './guards/auth/auth.guard'
@@ -15,7 +16,8 @@ export const routes: Routes = [
     {
         path: 'login',
         title: `Connexion • ${title}`,
-        component: LoginComponent
+        component: LoginComponent,
+        canActivate: [LoginGuard]
     },
     {
         path: '',
@@ -44,6 +46,12 @@ export const routes: Routes = [
         path: 'rankedle',
         title: `Rankedle • ${title}`,
         component: RankedleComponent,
+        canActivate: [AuthGuard, LoginGuard]
+    },
+    {
+        path: 'profile',
+        title: `Mon profil • ${title}`,
+        component: ProfilComponent,
         canActivate: [AuthGuard, LoginGuard]
     },
     {
