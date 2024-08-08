@@ -18,10 +18,10 @@ export class AuthService {
         private router: Router
     ) {}
 
-    public logged: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-        this.isLogged
+    public isLogged: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+        false
     )
-    logged$: Observable<boolean> = this.logged.asObservable()
+    isLogged$: Observable<boolean> = this.isLogged.asObservable()
 
     private getState() {
         const validChars =
@@ -33,22 +33,6 @@ export class AuthService {
         )
         const state = String.fromCharCode.apply(null, random)
         return state
-    }
-
-    getSessionId() {
-        return this.cookieService.get('sessionId')
-    }
-
-    setSessionId(sessionId: string) {
-        this.cookieService.set(
-            'sessionId',
-            sessionId,
-            365,
-            '/',
-            undefined,
-            true,
-            'Lax'
-        )
     }
 
     removeSessionId() {
@@ -69,32 +53,24 @@ export class AuthService {
     }
 
     callback(code: string, state: string) {
-        return this.http.post<{ sessionId: string }>('/api/discord/login', {
+        return this.http.post('/api/discord/login', {
             code,
             state
         })
     }
 
-    checkLogin() {
-        return this.userService.getUser()
-    }
-
-    get isLogged(): boolean {
-        return this.getSessionId() !== ''
-    }
-
     login() {
         const requestedRoute = this.router.url.toString()
         localStorage.setItem('requested_uri', requestedRoute)
-
         this.authorize()
     }
 
     logout() {
-        this.removeSessionId()
-        this.userService.user.next(null)
-        this.logged.next(false)
-        this.router.navigate(['home'])
-        this.toastService.showSuccess('Vous avez été déconnecté')
+        return this.http.post('/api/discord/logout', {}).subscribe(() => {
+            this.userService.user.next(null)
+            this.isLogged.next(false)
+            this.router.navigate(['home'])
+            this.toastService.showSuccess('Vous avez été déconnecté')
+        })
     }
 }

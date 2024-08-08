@@ -23,7 +23,7 @@
         [routerLinkActiveOptions]="{ exact: true }"
         #rla="routerLinkActive" />
     }
-    <div *ngIf="logged$ | async as logged; else userNotLogged">
+    <div *ngIf="isLogged$ | async as logged; else userNotLogged">
       <div *ngIf="user$ | async as user; else userLoading">
         <p-avatar
           [image]="user.avatarURL"
@@ -37,8 +37,7 @@
               <a
                 [routerLink]="item.route"
                 [href]="item.href"
-                class="p-menuitem-link py-3"
-                (click)="item.action()">
+                class="p-menuitem-link py-3">
                 <span
                   [innerHTML]="item.featherIcon | svg: '16'"
                   class="flex items-center"></span>

@@ -40,7 +40,7 @@ export class NavbarComponent {
     ) {}
 
     user$ = this.userService.user$
-    logged$ = this.authService.logged$
+    isLogged$ = this.authService.isLogged$
     isOpen = false
 
     login() {
@@ -69,6 +69,7 @@ export class NavbarComponent {
     userMenuItems: (MenuItem | { featherIcon: string })[] = [
         {
             label: 'Mon profil',
+            route: 'profile',
             featherIcon: feather.icons.user
         },
         {

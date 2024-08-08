@@ -21,6 +21,6 @@ export class UserService {
     user$: Observable<User | null> = this.user.asObservable()
 
     getUser() {
-        return this.http.get<User>('/api/discord/@me')
+        return this.http.get<User | null>('/api/discord/@me')
     }
 }

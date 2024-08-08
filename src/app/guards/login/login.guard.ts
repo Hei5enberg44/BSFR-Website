@@ -8,15 +8,11 @@ export const LoginGuard: CanActivateFn = (route, state) => {
     const userService = inject(UserService)
     const authService = inject(AuthService)
 
-    if (authService.isLogged) {
-        return new Observable<boolean>((observer) => {
-            authService.checkLogin().subscribe((res) => {
-                userService.user.next(res)
-                authService.logged.next(true)
-                observer.next(true)
-            })
+    return new Observable<boolean>((observer) => {
+        userService.getUser().subscribe((user) => {
+            userService.user.next(user)
+            authService.isLogged.next(user !== null)
+            observer.next(true)
         })
-    } else {
-        return true
-    }
+    })
 }
