@@ -1,0 +1,111 @@
+<p-table
+  [value]="ranking"
+  [paginator]="true"
+  [rows]="10"
+  [tableStyle]="{ 'min-width': '70rem' }"
+  [loading]="loading"
+  [expandedRowKeys]="rankingExpandedRows"
+  (onRowExpand)="onRankingRowExpand($event)"
+  dataKey="memberId">
+  <ng-template pTemplate="header">
+    <tr>
+      <th class="w-[65px]"></th>
+      <th class="w-[80px]">#</th>
+      <th>Joueur</th>
+      <th class="w-[100px]">Points</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="5">
+        <p-messages [enableService]="false" [(value)]="noRankingMessage" />
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="loadingbody">
+    <ng-container *ngFor="let i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]">
+      <tr style="height: 64px">
+        <td><p-skeleton /></td>
+        <td><p-skeleton /></td>
+        <td class="flex items-center">
+          <p-skeleton shape="circle" size="42px" styleClass="me-4" />
+          <p-skeleton width="10rem" />
+        </td>
+        <td><p-skeleton /></td>
+      </tr>
+    </ng-container>
+  </ng-template>
+  <ng-template pTemplate="body" let-ranking let-expanded="expanded">
+    <tr
+      style="height: 64px"
+      [ngClass]="{
+        'ranking-first': ranking.rank === 1,
+        'ranking-second': ranking.rank === 2,
+        'ranking-third': ranking.rank === 3
+      }">
+      <td>
+        <p-button
+          type="button"
+          [pRowToggler]="ranking"
+          [text]="true"
+          [rounded]="true"
+          [plain]="true"
+          [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+      </td>
+      <td>{{ ranking.rank }}</td>
+      <td class="flex items-center">
+        <p-avatar
+          [image]="ranking.avatar"
+          styleClass="flex me-4"
+          size="large"
+          shape="circle" />
+        <span>
+          {{ ranking.name }}
+        </span>
+      </td>
+      <td>{{ ranking.points }}</td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="rowexpansion" let-playerRanking>
+    <tr>
+      <td colspan="5" class="p-0">
+        <p-table
+          [value]="[playerRanking.stats]"
+          [tableStyle]="{ 'min-width': '92rem' }">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Parties</th>
+              <th>Victoires (%)</th>
+              <th>Série actuelle</th>
+              <th>Meilleure serie</th>
+              <th>1<sup>ère</sup> tentative</th>
+              <th>2<sup>ème</sup> tentative</th>
+              <th>3<sup>ème</sup> tentative</th>
+              <th>4<sup>ème</sup> tentative</th>
+              <th>5<sup>ème</sup> tentative</th>
+              <th>6<sup>ème</sup> tentative</th>
+              <th>Défaites</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-stats>
+            <tr>
+              <td>{{ stats.played }}</td>
+              <td>
+                {{ (stats.won * 100) / stats.played | round }}
+              </td>
+              <td>{{ stats.currentStreak }}</td>
+              <td>{{ stats.maxStreak }}</td>
+              <td>{{ stats.try1 }}</td>
+              <td>{{ stats.try2 }}</td>
+              <td>{{ stats.try3 }}</td>
+              <td>{{ stats.try4 }}</td>
+              <td>{{ stats.try5 }}</td>
+              <td>{{ stats.try6 }}</td>
+              <td>{{ stats.played - stats.won }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

@@ -9,7 +9,7 @@ export interface Rankedle {
     date: Date
 }
 
-interface RankedlePlayerStats {
+export interface RankedlePlayerStats {
     try1: number
     try2: number
     try3: number

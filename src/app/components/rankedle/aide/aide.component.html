@@ -1,0 +1,38 @@
+<h3 class="mt-0">Comment jouer ?</h3>
+<ul>
+  <li>
+    Écoutez l'extrait audio, puis recherchez le titre correspondant dans la
+    liste
+  </li>
+  <li>
+    Si vous passez ou entrez un titre incorrect, cela étandra la durée de
+    l'extrait audio
+  </li>
+  <li>
+    Vous avez un total de 6 tentatives pour parvenir à trouver le bon titre
+  </li>
+  <li>Vous gagnez des points si vous parvenez à trouver le bon titre :</li>
+</ul>
+
+<p-table [value]="[[]]" [tableStyle]="{ 'min-width': '60rem' }">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>1<sup>ère</sup> tentative</th>
+      <th>2<sup>ème</sup> tentative</th>
+      <th>3<sup>ème</sup> tentative</th>
+      <th>4<sup>ème</sup> tentative</th>
+      <th>5<sup>ème</sup> tentative</th>
+      <th>6<sup>ème</sup> tentative</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body">
+    <tr>
+      <td>8 points</td>
+      <td>6 points</td>
+      <td>4 points</td>
+      <td>3 points</td>
+      <td>2 points</td>
+      <td>1 point</td>
+    </tr>
+  </ng-template>
+</p-table>

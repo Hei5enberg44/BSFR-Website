@@ -1,27 +1,29 @@
 import { Component, OnInit } from '@angular/core'
-import { NgIf, AsyncPipe, NgFor, NgClass } from '@angular/common'
+import { NgIf, AsyncPipe } from '@angular/common'
 import { WithLoadingPipe } from '../../pipes/with-loading.pipe'
 import { CardModule } from 'primeng/card'
 import { TabViewModule, TabViewChangeEvent } from 'primeng/tabview'
 import { SkeletonModule } from 'primeng/skeleton'
-import { TableModule, TableRowExpandEvent, TablePageEvent } from 'primeng/table'
+import { TablePageEvent } from 'primeng/table'
 import { ButtonModule } from 'primeng/button'
-import { AvatarModule } from 'primeng/avatar'
-import { ProgressBarModule } from 'primeng/progressbar'
 import { MessagesModule } from 'primeng/messages'
 import { Message } from 'primeng/api'
-
-import { roundPipe } from '../../pipes/round.pipe'
 
 import {
     RankedleHistory,
     RankedlePlayerRankingData,
+    RankedlePlayerStats,
     RankedleService
 } from '../../services/rankedle/rankedle.service'
+import { finalize } from 'rxjs'
+
+import { RankedleClassementComponent } from './classement/classement.component'
+import { RankedleStatistiquesComponent } from './statistiques/statistiques.component'
+import { RankedleHistoriqueComponent } from './historique/historique.component'
+import { RankedleAideComponent } from './aide/aide.component'
 
 import { NotBsfrMemberComponent } from '../not-bsfr-member/not-bsfr-member.component'
 import { UserService } from '../../services/user/user.service'
-import { finalize } from 'rxjs'
 
 @Component({
     selector: 'app-rankedle',
@@ -29,18 +31,16 @@ import { finalize } from 'rxjs'
     imports: [
         NgIf,
         AsyncPipe,
-        NgFor,
-        NgClass,
         WithLoadingPipe,
         CardModule,
         TabViewModule,
         SkeletonModule,
-        TableModule,
         ButtonModule,
-        AvatarModule,
-        ProgressBarModule,
         MessagesModule,
-        roundPipe,
+        RankedleClassementComponent,
+        RankedleStatistiquesComponent,
+        RankedleHistoriqueComponent,
+        RankedleAideComponent,
         NotBsfrMemberComponent
     ],
     templateUrl: './rankedle.component.html',
@@ -67,25 +67,6 @@ export class RankedleComponent implements OnInit {
         }
     ]
 
-    noRankingMessage: Message[] = [
-        {
-            severity: 'info',
-            closable: false,
-            detail: "Il n'y a pas de classement pour le moment."
-        }
-    ]
-
-    noHistoryMessage: Message[] = [
-        {
-            severity: 'info',
-            closable: false,
-            detail: "Il n'y a pas eu de Rankedle pour le moment."
-        }
-    ]
-
-    rankedle$ = this.rankedleService.rankedle$
-    playerStats$ = this.rankedleService.playerStats$
-
     ngOnInit(): void {
         this.rankedle$ = this.rankedleService.getCurrent()
     }
@@ -103,7 +84,7 @@ export class RankedleComponent implements OnInit {
                 this.getRanking()
                 break
             case 2:
-                this.playerStats$ = this.rankedleService.getPlayerStats()
+                this.getPlayerStats()
                 break
             case 3:
                 this.getHistory()
@@ -111,17 +92,32 @@ export class RankedleComponent implements OnInit {
         }
     }
 
-    // Classement
-    rankingExpandedRows: { [key: string]: any } = {}
+    // Jeu
+    rankedle$ = this.rankedleService.rankedle$
 
-    onRankingRowExpand(event: TableRowExpandEvent) {
-        this.rankingExpandedRows = {}
-        this.rankingExpandedRows[event.data.memberId] = true
+    // Statistiques
+    playerStatsData: RankedlePlayerStats | null = null
+    playerStatsLoading = false
+
+    getPlayerStats() {
+        this.playerStatsData = null
+        this.playerStatsLoading = true
+        this.rankedleService
+            .getPlayerStats()
+            .pipe(
+                finalize(() => {
+                    this.playerStatsLoading = false
+                })
+            )
+            .subscribe((res) => {
+                this.playerStatsData = res
+            })
     }
 
-    // Historique
+    // Classement
     rankingData: RankedlePlayerRankingData[] = []
     rankingLoading = false
+    rankingExpandedRows: { [key: string]: any } = {}
 
     getRanking() {
         this.rankingData = []
