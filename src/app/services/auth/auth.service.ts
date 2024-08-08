@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Router } from '@angular/router'
-import { CookieService } from 'ngx-cookie-service'
 import { UserService } from '../user/user.service'
 import { ToastService } from '../toast/toast.service'
 import { BehaviorSubject, Observable } from 'rxjs'
@@ -12,7 +11,6 @@ import { BehaviorSubject, Observable } from 'rxjs'
 export class AuthService {
     constructor(
         private http: HttpClient,
-        private cookieService: CookieService,
         private userService: UserService,
         private toastService: ToastService,
         private router: Router
@@ -33,10 +31,6 @@ export class AuthService {
         )
         const state = String.fromCharCode.apply(null, random)
         return state
-    }
-
-    removeSessionId() {
-        this.cookieService.delete('sessionId')
     }
 
     authorize() {
