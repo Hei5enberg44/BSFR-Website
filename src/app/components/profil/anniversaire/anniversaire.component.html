@@ -1,0 +1,39 @@
+<p-card styleClass="bg-transparent">
+  <p-messages
+    [enableService]="false"
+    [value]="helpMessage"
+    escape="false"
+    styleClass="mb-6" />
+
+  <label for="birth_date" class="font-bold block mb-2"
+    >Votre date de naissance</label
+  >
+  <p-calendar
+    [(ngModel)]="birthDate"
+    dateFormat="dd/mm/yy"
+    [defaultDate]="defaultDate"
+    [maxDate]="maxDate"
+    [iconDisplay]="'input'"
+    [showIcon]="true"
+    inputId="birth_date"
+    [readonlyInput]="true"
+    [showButtonBar]="true"
+    todayButtonStyleClass="hidden"
+    clearButtonStyleClass="p-button-text ms-auto"
+    [touchUI]="touchUI"
+    appendTo="body"
+    (onSelect)="birthDateUpdated()"
+    (onClearClick)="birthDateUpdated()"
+    [disabled]="loading" />
+
+  <div class="flex items-center mt-6">
+    <p-button
+      label="Sauvegarder"
+      severity="success"
+      class="ms-auto"
+      icon="pi pi-save"
+      [disabled]="!canSave"
+      [loading]="saving"
+      (onClick)="save()" />
+  </div>
+</p-card>

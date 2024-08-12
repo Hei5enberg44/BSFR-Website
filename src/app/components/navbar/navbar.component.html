@@ -36,6 +36,7 @@
             <ng-container *ngIf="item.route; else withoutRoute">
               <a
                 [routerLink]="item.route"
+                routerLinkActive="!text-[var(--primary-color)]"
                 [href]="item.href"
                 class="p-menuitem-link py-3">
                 <span
@@ -138,7 +139,14 @@
     <div
       class="grid grid-cols-[1fr_auto] gap-2"
       *ngIf="user$ | async as user; else userNotLoggedMobile">
-      <p-button [text]="true" styleClass="w-full p-4">
+      <p-button
+        [text]="!rla.isActive"
+        styleClass="w-full p-4"
+        routerLink="/profile"
+        routerLinkActive=""
+        [routerLinkActiveOptions]="{ exact: true }"
+        #rla="routerLinkActive"
+        (click)="setIsOpen(false)">
         <p-avatar
           [image]="user.avatarURL"
           styleClass="me-4 flex items-center"

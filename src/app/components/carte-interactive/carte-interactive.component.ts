@@ -2,6 +2,7 @@ import { Component } from '@angular/core'
 import { NgIf } from '@angular/common'
 import { CardModule } from 'primeng/card'
 import { MessagesModule } from 'primeng/messages'
+import { Message } from 'primeng/api'
 import { MapService, MemberCity } from '../../services/map/map.service'
 import { MapOptions, Marker, Icon, icon, latLng, marker } from 'leaflet'
 import { LeafletModule } from '@asymmetrik/ngx-leaflet'
@@ -44,6 +45,15 @@ export class CarteInteractiveComponent {
             this.isBSFR = user?.isBSFR ?? false
         })
     }
+
+    helpMessage: Message[] = [
+        {
+            closable: false,
+            icon: 'pi pi-info-circle',
+            severity: 'info',
+            detail: 'Utilisez la commande <span class="code">/ville</span> dans le salon <strong>#rôles-auto-assignable</strong> afin d\'apparaître sur la carte.'
+        }
+    ]
 
     layer = esri.vectorBasemapLayer('arcgis/navigation', {
         apikey: 'AAPKbd80a71eb7694e0cad9f29fea06b27b7YKFdaFPfA5lECHP8_qvqG5b0eyJW4TbpP5ndaM1QvNkj1Oya5z9Oxx5ShArwhraE',

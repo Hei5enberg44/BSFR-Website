@@ -32,6 +32,7 @@ export class RankedleHistoriqueComponent {
     noHistoryMessage: Message[] = [
         {
             severity: 'info',
+            icon: 'pi pi-info-circle',
             closable: false,
             detail: "Il n'y a pas eu de Rankedle pour le moment."
         }

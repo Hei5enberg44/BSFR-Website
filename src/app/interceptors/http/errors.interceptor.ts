@@ -2,12 +2,12 @@ import { inject } from '@angular/core'
 import { Router } from '@angular/router'
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http'
 import { catchError, throwError } from 'rxjs'
-import { AuthService } from '../../services/auth/auth.service'
+import { UserService } from '../../services/user/user.service'
 import { ToastService } from '../../services/toast/toast.service'
 
 export const HttpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
     const router = inject(Router)
-    const authService = inject(AuthService)
+    const userService = inject(UserService)
     const toastService = inject(ToastService)
 
     return next(req).pipe(
@@ -21,7 +21,7 @@ export const HttpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
                         else toastService.showError('Une erreur est survenue')
                         break
                     case 401:
-                        authService.logout()
+                        userService.logout()
                         toastService.showError('Session utilisateur invalide')
                         break
                 }
@@ -31,7 +31,7 @@ export const HttpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
                         toastService.showError(reqError.message)
                         break
                     case 401:
-                        authService.logout()
+                        userService.logout()
                         toastService.showError(reqError.message)
                         break
                 }

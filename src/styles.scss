@@ -40,6 +40,10 @@ a:visited {
     color: white;
 }
 
+.p-menuitem-link:visited {
+    color: inherit;
+}
+
 .p-messages .p-message {
     margin: 0;
 }
@@ -75,6 +79,13 @@ a:visited {
     color: #ffffff;
     display: flex;
     align-items: center;
+}
+
+.p-message .p-message-detail .code {
+    padding: 2px 5px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 0.5rem;
 }
 
 .p-datatable .p-datatable-thead > tr > th {

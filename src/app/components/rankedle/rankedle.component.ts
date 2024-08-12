@@ -62,6 +62,7 @@ export class RankedleComponent implements OnInit {
     noRankedleMessage: Message[] = [
         {
             severity: 'info',
+            icon: 'pi pi-info-circle',
             closable: false,
             detail: "Il n'y a pas de Rankedle en cours. Revenez plus tard."
         }

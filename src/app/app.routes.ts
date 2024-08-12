@@ -34,25 +34,25 @@ export const routes: Routes = [
         path: 'youtube',
         title: `YouTube • ${title}`,
         component: YouTubeComponent,
-        canActivate: [AuthGuard, LoginGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'interactive-map',
         title: `Carte Interactive • ${title}`,
         component: CarteInteractiveComponent,
-        canActivate: [AuthGuard, LoginGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'rankedle',
         title: `Rankedle • ${title}`,
         component: RankedleComponent,
-        canActivate: [AuthGuard, LoginGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'profile',
         title: `Mon profil • ${title}`,
         component: ProfilComponent,
-        canActivate: [AuthGuard, LoginGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: '**',

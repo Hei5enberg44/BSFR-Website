@@ -37,6 +37,7 @@ export class RankedleClassementComponent {
     noRankingMessage: Message[] = [
         {
             severity: 'info',
+            icon: 'pi pi-info-circle',
             closable: false,
             detail: "Il n'y a pas de classement pour le moment."
         }

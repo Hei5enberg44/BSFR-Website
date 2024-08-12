@@ -9,7 +9,6 @@ import { AvatarModule } from 'primeng/avatar'
 import { TieredMenuModule } from 'primeng/tieredmenu'
 import { MenuItem } from 'primeng/api'
 import { MenuService } from '../../services/menu/menu.service'
-import { AuthService } from '../../services/auth/auth.service'
 import { UserService } from '../../services/user/user.service'
 import feather from 'feather-icons'
 import { svgPipe } from '../../pipes/svg.pipe'
@@ -34,22 +33,19 @@ import { svgPipe } from '../../pipes/svg.pipe'
     styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
-    constructor(
-        private authService: AuthService,
-        private userService: UserService
-    ) {}
+    constructor(private userService: UserService) {}
 
     user$ = this.userService.user$
-    isLogged$ = this.authService.isLogged$
+    isLogged$ = this.userService.isLogged$
     isOpen = false
 
     login() {
-        this.authService.login()
+        this.userService.login()
         this.setIsOpen(false)
     }
 
     logout() {
-        this.authService.logout()
+        this.userService.logout()
         this.setIsOpen(false)
     }
 

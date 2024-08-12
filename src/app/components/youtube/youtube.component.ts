@@ -130,6 +130,7 @@ export class YouTubeComponent {
     lastVideoNotFound: Message[] = [
         {
             severity: 'error',
+            icon: 'pi pi-times-circle',
             detail: 'Pas de vidéo trouvée',
             closable: false
         }
