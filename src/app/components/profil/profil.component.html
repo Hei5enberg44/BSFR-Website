@@ -26,8 +26,7 @@
         </ng-template>
         <app-profil-roles
           [roles]="roles"
-          [selectedSingle]="rolesSelectedSingle"
-          [selectedMultiple]="rolesSelectedMultiple"
+          [selected]="rolesSelected"
           [loading]="rolesLoading" />
       </p-tabPanel>
       <p-tabPanel>
@@ -40,6 +39,7 @@
         <ng-template pTemplate="header">
           <span class="whitespace-nowrap">Twitch</span>
         </ng-template>
+        <app-profil-twitch [channelName]="channelName" [loading]="twitchLoading" />
       </p-tabPanel>
       <p-tabPanel>
         <ng-template pTemplate="header">

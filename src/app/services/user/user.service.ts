@@ -13,17 +13,23 @@ export interface User {
 }
 
 export interface UserRole {
+    id: number
+    name: string
+    multiple: boolean
+    checked: boolean
+}
+
+export interface UserRoleCategory {
     categoryName: string
-    roles: {
-        id: number
-        name: string
-        multiple: boolean
-        checked: boolean
-    }[]
+    roles: UserRole[]
 }
 
 export interface City {
     id: number
+    name: string
+}
+
+export interface UserTwitchChannel {
     name: string
 }
 
@@ -119,7 +125,7 @@ export class UserService {
 
     // Récupère les rôles de l'utilisateur
     getRoles() {
-        return this.http.get<UserRole[]>('/api/user/getRoles')
+        return this.http.get<UserRoleCategory[]>('/api/user/getRoles')
     }
 
     // Enregistre les rôles de l'utilisateur
@@ -158,5 +164,21 @@ export class UserService {
                 s
             }
         })
+    }
+
+    getTwitchChannel() {
+        return this.http.get<UserTwitchChannel | null>('/api/user/getTwitchChannel')
+    }
+
+    setTwitchChannel(channelName: string | null) {
+        return this.http.post(
+            '/api/user/setTwitchChannel',
+            { channelName },
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        )
     }
 }

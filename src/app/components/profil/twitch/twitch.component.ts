@@ -1,33 +1,39 @@
 import { Component, Input } from '@angular/core'
 import { FormsModule } from '@angular/forms'
+import { NgIf, NgFor } from '@angular/common'
 import { CardModule } from 'primeng/card'
 import { ButtonModule } from 'primeng/button'
-import { CalendarModule } from 'primeng/calendar'
+import { InputTextModule } from 'primeng/inputtext'
+import { InputGroupModule } from 'primeng/inputgroup'
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon'
+
 import { MessagesModule } from 'primeng/messages'
 import { Message } from 'primeng/api'
 
 import { ToastService } from '../../../services/toast/toast.service'
-import { DeviceDetectorService } from 'ngx-device-detector'
 import { UserService } from '../../../services/user/user.service'
 import { catchError } from 'rxjs'
 
 @Component({
-    selector: 'app-profil-anniversaire',
+    selector: 'app-profil-twitch',
     standalone: true,
     imports: [
+        FormsModule,
+        NgIf,
+        NgFor,
         CardModule,
         ButtonModule,
-        FormsModule,
-        CalendarModule,
+        InputTextModule,
+        InputGroupModule,
+        InputGroupAddonModule,
         MessagesModule
     ],
-    templateUrl: './anniversaire.component.html',
-    styleUrl: './anniversaire.component.scss'
+    templateUrl: './twitch.component.html',
+    styleUrl: './twitch.component.scss'
 })
-export class ProfilAnniversaireComponent {
+export class ProfilTwitchComponent {
     constructor(
         private toastService: ToastService,
-        private deviceService: DeviceDetectorService,
         private userService: UserService
     ) {}
 
@@ -36,31 +42,24 @@ export class ProfilAnniversaireComponent {
             closable: false,
             icon: 'pi pi-info-circle',
             severity: 'info',
-            detail: "Indiquez votre date de naissance afin qu'<strong>@Agent</strong> vous souhaite votre anniversaire sur le serveur Discord."
+            detail: "Indiquer le nom votre chaîne Twitch afin qu'une notification soit envoyée sur le serveur pour prévenir que vous êtes en live."
         }
     ]
 
-    @Input() birthDate: Date | null = null
-    private date = new Date()
-    maxDate = new Date(this.date.setFullYear(this.date.getFullYear() - 13))
-    defaultDate = new Date(2000, 0)
+    @Input() channelName: string | null = null
 
-    get touchUI() {
-        return this.deviceService.isMobile() || this.deviceService.isTablet()
+    channelNameUpdated() {
+        this.canSave = true
     }
 
     @Input() loading = true
     canSave = false
     saving = false
 
-    birthDateUpdated() {
-        this.canSave = true
-    }
-
     save() {
         this.saving = true
         this.userService
-            .setBirthday(this.birthDate)
+            .setTwitchChannel(this.channelName || null)
             .pipe(
                 catchError((error) => {
                     this.saving = false
@@ -71,7 +70,7 @@ export class ProfilAnniversaireComponent {
                 this.saving = false
                 this.canSave = false
                 this.toastService.showSuccess(
-                    'Votre date de naissance a bien été sauvegardée'
+                    'Votre chaîne Twitch a bien été sauvegardée'
                 )
             })
     }

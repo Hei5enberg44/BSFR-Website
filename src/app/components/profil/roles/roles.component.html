@@ -14,22 +14,11 @@
           </div>
           <div class="grid gap-y-3">
             <div *ngFor="let role of roleCategory.roles">
-              <ng-container *ngIf="!role.multiple">
-                <p-checkbox
-                  [(ngModel)]="selectedSingle[roleCategory.categoryName]"
-                  [label]="role.name"
-                  [name]="roleCategory.categoryName"
-                  [value]="role.name"
-                  (onChange)="singleRolesUpdated($event)" />
-              </ng-container>
-              <ng-container *ngIf="role.multiple">
-                <p-checkbox
-                  [(ngModel)]="selectedMultiple[roleCategory.categoryName]"
-                  [label]="role.name"
-                  [name]="roleCategory.categoryName"
-                  [value]="role.name"
-                  (onChange)="rolesUpdated()" />
-              </ng-container>
+              <p-checkbox
+                [(ngModel)]="selected[role.name]"
+                [label]="role.name"
+                [binary]="true"
+                (onChange)="rolesUpdated($event, roleCategory.categoryName, role)" />
             </div>
           </div>
         </div>

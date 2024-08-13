@@ -6,9 +6,10 @@ import { TabViewModule, TabViewChangeEvent } from 'primeng/tabview'
 import { ProfilAnniversaireComponent } from './anniversaire/anniversaire.component'
 import { ProfilRolesComponent } from './roles/roles.component'
 import { ProfilVilleComponent } from './ville/ville.component'
+import { ProfilTwitchComponent } from './twitch/twitch.component'
 
 import { NotBsfrMemberComponent } from '../not-bsfr-member/not-bsfr-member.component'
-import { UserService, UserRole, City } from '../../services/user/user.service'
+import { UserService, UserRoleCategory, City } from '../../services/user/user.service'
 
 @Component({
     selector: 'app-profil',
@@ -20,6 +21,7 @@ import { UserService, UserRole, City } from '../../services/user/user.service'
         ProfilAnniversaireComponent,
         ProfilRolesComponent,
         ProfilVilleComponent,
+        ProfilTwitchComponent,
         NotBsfrMemberComponent
     ],
     templateUrl: './profil.component.html',
@@ -35,10 +37,10 @@ export class ProfilComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.getBirthday()
+        this.getRoles()
     }
 
-    activeTab: number = 0
+    activeTab: number = 1
 
     onTabChange(event: TabViewChangeEvent) {
         switch (event.index) {
@@ -50,6 +52,9 @@ export class ProfilComponent implements OnInit {
                 break
             case 2:
                 this.getCity()
+                break
+            case 3:
+                this.getTwitchChannel()
                 break
         }
     }
@@ -68,31 +73,20 @@ export class ProfilComponent implements OnInit {
     }
 
     // Rôles
-    roles: UserRole[] = []
-    rolesSelectedSingle: Record<string, string[]> = {}
-    rolesSelectedMultiple: Record<string, string[]> = {}
+    roles: UserRoleCategory[] = []
+    rolesSelected: Record<string, boolean> = {}
     rolesLoading = true
 
     getRoles() {
         this.roles = []
-        this.rolesSelectedSingle = {}
-        this.rolesSelectedMultiple = {}
+        this.rolesSelected = {}
         this.rolesLoading = true
         this.userService.getRoles().subscribe((res) => {
             this.roles = res
             for (const roleCategory of res) {
-                const selectedSingle = roleCategory.roles.filter(
-                    (r) => r.checked && !r.multiple
-                )
-                if (selectedSingle.length > 0)
-                    this.rolesSelectedSingle[roleCategory.categoryName] =
-                        selectedSingle.map((s) => s.name)
-                const selectedMultiple = roleCategory.roles.filter(
-                    (r) => r.checked && r.multiple
-                )
-                if (selectedMultiple.length > 0)
-                    this.rolesSelectedMultiple[roleCategory.categoryName] =
-                        selectedMultiple.map((s) => s.name)
+                for (const ss of roleCategory.roles) {
+                    this.rolesSelected[ss.name] = ss.checked
+                }
             }
             this.rolesLoading = false
         })
@@ -108,6 +102,19 @@ export class ProfilComponent implements OnInit {
         this.userService.getCity().subscribe((city) => {
             this.city = city
             this.cityLoading = false
+        })
+    }
+
+    // Twitch
+    channelName: string | null = null
+    twitchLoading = true
+
+    getTwitchChannel() {
+        this.channelName = null
+        this.twitchLoading = true
+        this.userService.getTwitchChannel().subscribe((twitchChannel) => {
+            this.channelName = twitchChannel?.name || null
+            this.twitchLoading = false
         })
     }
 }

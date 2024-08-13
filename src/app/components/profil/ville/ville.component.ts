@@ -6,8 +6,7 @@ import { CardModule } from 'primeng/card'
 import { ButtonModule } from 'primeng/button'
 import {
     AutoCompleteModule,
-    AutoCompleteCompleteEvent,
-    AutoCompleteSelectEvent
+    AutoCompleteCompleteEvent
 } from 'primeng/autocomplete'
 import { MessagesModule } from 'primeng/messages'
 import { Message } from 'primeng/api'
@@ -83,7 +82,7 @@ export class ProfilVilleComponent {
                 this.saving = false
                 this.canSave = false
                 this.toastService.showSuccess(
-                    'Votre ville a bien été enregistrée'
+                    'Votre ville a bien été sauvegardée'
                 )
             })
     }

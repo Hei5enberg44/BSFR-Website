@@ -8,7 +8,7 @@ import { CheckboxModule, CheckboxChangeEvent } from 'primeng/checkbox'
 import { RadioButtonModule } from 'primeng/radiobutton'
 
 import { ToastService } from '../../../services/toast/toast.service'
-import { UserService, UserRole } from '../../../services/user/user.service'
+import { UserService, UserRoleCategory, UserRole } from '../../../services/user/user.service'
 import { catchError } from 'rxjs'
 
 @Component({
@@ -33,47 +33,46 @@ export class ProfilRolesComponent {
         private userService: UserService
     ) {}
 
-    @Input() roles: UserRole[] = []
-    @Input() selectedSingle: Record<string, string[]> = {}
-    @Input() selectedMultiple: Record<string, string[]> = {}
+    @Input() roles: UserRoleCategory[] = []
+    @Input() selected: Record<string, boolean> = {}
     @Input() loading = true
 
     canSave = false
     saving = false
 
-    singleRolesUpdated(event: CheckboxChangeEvent) {
+    rolesUpdated(event: CheckboxChangeEvent, categoryName: string, role: UserRole) {
         this.canSave = true
-        console.log(event.checked, this.selectedSingle)
-    }
 
-    rolesUpdated() {
-        this.canSave = true
+        if(event.checked && !role.multiple) {
+            const roleCategory = this.roles.find(rc => rc.categoryName === categoryName)
+            if(roleCategory) {
+                for(const r of roleCategory.roles) {
+                    if(!r.multiple && r.name !== role.name) this.selected[r.name] = false
+                }
+            }
+        }
     }
 
     save() {
         let selectedRoles = []
-        for (const [, roleName] of Object.entries(this.selectedSingle))
-            selectedRoles.push(roleName)
-        for (const [, roles] of Object.entries(this.selectedMultiple))
-            selectedRoles = [...selectedRoles, ...roles]
+        for (const [roleName, checked] of Object.entries(this.selected))
+            if(checked) selectedRoles.push(roleName)
 
-        console.log(this.selectedSingle, this.selectedMultiple)
-
-        // this.saving = true
-        // this.userService
-        //     .setBirthday(this.birthDate)
-        //     .pipe(
-        //         catchError((error) => {
-        //             this.saving = false
-        //             throw error
-        //         })
-        //     )
-        //     .subscribe(() => {
-        //         this.saving = false
-        //         this.canSave = false
-        //         this.toastService.showSuccess(
-        //             'Votre date de naissance a bien été enregistrée'
-        //         )
-        //     })
+        this.saving = true
+        this.userService
+            .setRoles(selectedRoles)
+            .pipe(
+                catchError((error) => {
+                    this.saving = false
+                    throw error
+                })
+            )
+            .subscribe(() => {
+                this.saving = false
+                this.canSave = false
+                this.toastService.showSuccess(
+                    'Vos rôles ont bien été sauvegardés'
+                )
+            })
     }
 }
