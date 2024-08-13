@@ -11,7 +11,13 @@
 
   <p-inputGroup>
     <p-inputGroupAddon>https://www.twitch.tv/</p-inputGroupAddon>
-    <input type="text" pInputText id="twitch_channel" [(ngModel)]="channelName" (keyup)="channelNameUpdated()" />
+    <input
+      type="text"
+      pInputText
+      id="twitch_channel"
+      autocomplete="off"
+      [(ngModel)]="channelName"
+      (keyup)="channelNameUpdated()" />
   </p-inputGroup>
 
   <div class="flex items-center mt-6">

@@ -18,7 +18,9 @@
         </ng-template>
         <app-profil-anniversaire
           [birthDate]="birthDate"
-          [loading]="birthdayLoading" />
+          [loading]="birthdayLoading"
+          [canSave]="birthdayCanSave"
+          (onChange)="birthDateUpdated($event)" />
       </p-tabPanel>
       <p-tabPanel>
         <ng-template pTemplate="header">
@@ -27,19 +29,29 @@
         <app-profil-roles
           [roles]="roles"
           [selected]="rolesSelected"
-          [loading]="rolesLoading" />
+          [loading]="rolesLoading"
+          [canSave]="rolesCanSave"
+          (onChange)="rolesUpdated($event)" />
       </p-tabPanel>
       <p-tabPanel>
         <ng-template pTemplate="header">
           <span class="whitespace-nowrap">Ville</span>
         </ng-template>
-        <app-profil-ville [city]="city" [loading]="cityLoading" />
+        <app-profil-ville
+          [city]="city"
+          [loading]="cityLoading"
+          [canSave]="cityCanSave"
+          (onChange)="cityUpdated($event)" />
       </p-tabPanel>
       <p-tabPanel>
         <ng-template pTemplate="header">
           <span class="whitespace-nowrap">Twitch</span>
         </ng-template>
-        <app-profil-twitch [channelName]="channelName" [loading]="twitchLoading" />
+        <app-profil-twitch
+          [channelName]="channelName"
+          [loading]="twitchLoading"
+          [canSave]="twitchCanSave"
+          (onChange)="channelNameUpdated($event)" />
       </p-tabPanel>
       <p-tabPanel>
         <ng-template pTemplate="header">

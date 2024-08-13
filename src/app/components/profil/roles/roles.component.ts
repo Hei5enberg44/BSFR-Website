@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { NgIf, NgFor } from '@angular/common'
 import { CardModule } from 'primeng/card'
@@ -8,7 +8,11 @@ import { CheckboxModule, CheckboxChangeEvent } from 'primeng/checkbox'
 import { RadioButtonModule } from 'primeng/radiobutton'
 
 import { ToastService } from '../../../services/toast/toast.service'
-import { UserService, UserRoleCategory, UserRole } from '../../../services/user/user.service'
+import {
+    UserService,
+    UserRoleCategory,
+    UserRole
+} from '../../../services/user/user.service'
 import { catchError } from 'rxjs'
 
 @Component({
@@ -36,18 +40,26 @@ export class ProfilRolesComponent {
     @Input() roles: UserRoleCategory[] = []
     @Input() selected: Record<string, boolean> = {}
     @Input() loading = true
-
-    canSave = false
+    @Input() canSave = false
     saving = false
 
-    rolesUpdated(event: CheckboxChangeEvent, categoryName: string, role: UserRole) {
-        this.canSave = true
+    @Output() onChange = new EventEmitter<boolean>()
 
-        if(event.checked && !role.multiple) {
-            const roleCategory = this.roles.find(rc => rc.categoryName === categoryName)
-            if(roleCategory) {
-                for(const r of roleCategory.roles) {
-                    if(!r.multiple && r.name !== role.name) this.selected[r.name] = false
+    rolesUpdated(
+        event: CheckboxChangeEvent,
+        categoryName: string,
+        role: UserRole
+    ) {
+        this.onChange.emit(true)
+
+        if (event.checked && !role.multiple) {
+            const roleCategory = this.roles.find(
+                (rc) => rc.categoryName === categoryName
+            )
+            if (roleCategory) {
+                for (const r of roleCategory.roles) {
+                    if (!r.multiple && r.name !== role.name)
+                        this.selected[r.name] = false
                 }
             }
         }
@@ -56,7 +68,7 @@ export class ProfilRolesComponent {
     save() {
         let selectedRoles = []
         for (const [roleName, checked] of Object.entries(this.selected))
-            if(checked) selectedRoles.push(roleName)
+            if (checked) selectedRoles.push(roleName)
 
         this.saving = true
         this.userService
@@ -69,7 +81,7 @@ export class ProfilRolesComponent {
             )
             .subscribe(() => {
                 this.saving = false
-                this.canSave = false
+                this.onChange.emit(false)
                 this.toastService.showSuccess(
                     'Vos rôles ont bien été sauvegardés'
                 )

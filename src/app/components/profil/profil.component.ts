@@ -9,7 +9,11 @@ import { ProfilVilleComponent } from './ville/ville.component'
 import { ProfilTwitchComponent } from './twitch/twitch.component'
 
 import { NotBsfrMemberComponent } from '../not-bsfr-member/not-bsfr-member.component'
-import { UserService, UserRoleCategory, City } from '../../services/user/user.service'
+import {
+    UserService,
+    UserRoleCategory,
+    City
+} from '../../services/user/user.service'
 
 @Component({
     selector: 'app-profil',
@@ -62,25 +66,33 @@ export class ProfilComponent implements OnInit {
     // Anniversaire
     birthDate: Date | null = null
     birthdayLoading = true
+    birthdayCanSave = false
 
     getBirthday() {
         this.birthDate = null
         this.birthdayLoading = true
+        this.birthdayCanSave = false
         this.userService.getBirthday().subscribe((res) => {
             this.birthDate = res.date
             this.birthdayLoading = false
         })
     }
 
+    birthDateUpdated(canSave: boolean) {
+        this.birthdayCanSave = canSave
+    }
+
     // Rôles
     roles: UserRoleCategory[] = []
     rolesSelected: Record<string, boolean> = {}
     rolesLoading = true
+    rolesCanSave = false
 
     getRoles() {
         this.roles = []
         this.rolesSelected = {}
         this.rolesLoading = true
+        this.rolesCanSave = false
         this.userService.getRoles().subscribe((res) => {
             this.roles = res
             for (const roleCategory of res) {
@@ -92,29 +104,45 @@ export class ProfilComponent implements OnInit {
         })
     }
 
+    rolesUpdated(canSave: boolean) {
+        this.rolesCanSave = canSave
+    }
+
     // Ville
     city: City | null = null
     cityLoading = true
+    cityCanSave = false
 
     getCity() {
         this.city = null
         this.cityLoading = true
+        this.cityCanSave = false
         this.userService.getCity().subscribe((city) => {
             this.city = city
             this.cityLoading = false
         })
     }
 
+    cityUpdated(canSave: boolean) {
+        this.cityCanSave = canSave
+    }
+
     // Twitch
     channelName: string | null = null
     twitchLoading = true
+    twitchCanSave = false
 
     getTwitchChannel() {
         this.channelName = null
         this.twitchLoading = true
+        this.twitchCanSave = false
         this.userService.getTwitchChannel().subscribe((twitchChannel) => {
             this.channelName = twitchChannel?.name || null
             this.twitchLoading = false
         })
+    }
+
+    channelNameUpdated(canSave: boolean) {
+        this.twitchCanSave = canSave
     }
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { Router } from '@angular/router'
 import { NgIf, NgFor } from '@angular/common'
@@ -37,6 +37,11 @@ export class ProfilVilleComponent {
         private router: Router
     ) {}
 
+    @Input() city: City | null = null
+    @Input() loading = true
+    @Input() canSave = false
+    saving = false
+
     helpMessage: Message[] = [
         {
             closable: false,
@@ -51,7 +56,6 @@ export class ProfilVilleComponent {
         this.router.navigate(['interactive-map'])
     }
 
-    @Input() city: City | null = null
     suggestions: City[] = []
 
     search(event: AutoCompleteCompleteEvent) {
@@ -60,13 +64,11 @@ export class ProfilVilleComponent {
         })
     }
 
-    cityUpdated() {
-        this.canSave = true
-    }
+    @Output() onChange = new EventEmitter<boolean>()
 
-    @Input() loading = true
-    canSave = false
-    saving = false
+    cityUpdated() {
+        this.onChange.emit(true)
+    }
 
     save() {
         this.saving = true
@@ -80,7 +82,7 @@ export class ProfilVilleComponent {
             )
             .subscribe(() => {
                 this.saving = false
-                this.canSave = false
+                this.onChange.emit(false)
                 this.toastService.showSuccess(
                     'Votre ville a bien été sauvegardée'
                 )

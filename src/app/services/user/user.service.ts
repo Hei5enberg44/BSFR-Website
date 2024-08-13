@@ -167,7 +167,9 @@ export class UserService {
     }
 
     getTwitchChannel() {
-        return this.http.get<UserTwitchChannel | null>('/api/user/getTwitchChannel')
+        return this.http.get<UserTwitchChannel | null>(
+            '/api/user/getTwitchChannel'
+        )
     }
 
     setTwitchChannel(channelName: string | null) {

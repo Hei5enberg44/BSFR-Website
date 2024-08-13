@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { CardModule } from 'primeng/card'
 import { ButtonModule } from 'primeng/button'
@@ -31,6 +31,11 @@ export class ProfilAnniversaireComponent {
         private userService: UserService
     ) {}
 
+    @Input() birthDate: Date | null = null
+    @Input() loading = true
+    @Input() canSave = false
+    saving = false
+
     helpMessage: Message[] = [
         {
             closable: false,
@@ -40,7 +45,6 @@ export class ProfilAnniversaireComponent {
         }
     ]
 
-    @Input() birthDate: Date | null = null
     private date = new Date()
     maxDate = new Date(this.date.setFullYear(this.date.getFullYear() - 13))
     defaultDate = new Date(2000, 0)
@@ -49,12 +53,10 @@ export class ProfilAnniversaireComponent {
         return this.deviceService.isMobile() || this.deviceService.isTablet()
     }
 
-    @Input() loading = true
-    canSave = false
-    saving = false
+    @Output() onChange = new EventEmitter<boolean>()
 
     birthDateUpdated() {
-        this.canSave = true
+        this.onChange.emit(true)
     }
 
     save() {
@@ -69,7 +71,7 @@ export class ProfilAnniversaireComponent {
             )
             .subscribe(() => {
                 this.saving = false
-                this.canSave = false
+                this.onChange.emit(false)
                 this.toastService.showSuccess(
                     'Votre date de naissance a bien été sauvegardée'
                 )

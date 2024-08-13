@@ -18,7 +18,9 @@
                 [(ngModel)]="selected[role.name]"
                 [label]="role.name"
                 [binary]="true"
-                (onChange)="rolesUpdated($event, roleCategory.categoryName, role)" />
+                (onChange)="
+                  rolesUpdated($event, roleCategory.categoryName, role)
+                " />
             </div>
           </div>
         </div>

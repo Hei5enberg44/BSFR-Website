@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { NgIf, NgFor } from '@angular/common'
 import { CardModule } from 'primeng/card'
@@ -37,6 +37,11 @@ export class ProfilTwitchComponent {
         private userService: UserService
     ) {}
 
+    @Input() channelName: string | null = null
+    @Input() loading = true
+    @Input() canSave = false
+    saving = false
+
     helpMessage: Message[] = [
         {
             closable: false,
@@ -46,15 +51,11 @@ export class ProfilTwitchComponent {
         }
     ]
 
-    @Input() channelName: string | null = null
+    @Output() onChange = new EventEmitter<boolean>()
 
     channelNameUpdated() {
-        this.canSave = true
+        this.onChange.emit(true)
     }
-
-    @Input() loading = true
-    canSave = false
-    saving = false
 
     save() {
         this.saving = true
@@ -68,7 +69,7 @@ export class ProfilTwitchComponent {
             )
             .subscribe(() => {
                 this.saving = false
-                this.canSave = false
+                this.onChange.emit(false)
                 this.toastService.showSuccess(
                     'Votre chaîne Twitch a bien été sauvegardée'
                 )
