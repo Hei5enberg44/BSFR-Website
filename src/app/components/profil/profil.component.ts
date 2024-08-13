@@ -37,10 +37,10 @@ export class ProfilComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.getRoles()
+        this.getBirthday()
     }
 
-    activeTab: number = 1
+    activeTab: number = 0
 
     onTabChange(event: TabViewChangeEvent) {
         switch (event.index) {
