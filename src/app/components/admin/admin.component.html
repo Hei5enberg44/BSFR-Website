@@ -1,0 +1,13 @@
+<div class="py-6">
+  <!-- Page title -->
+  <h2>Administration</h2>
+
+  <!-- <app-not-bsfr-member *ngIf="!isBSFR; else page" />
+    <ng-template #page> -->
+  <div
+    class="rounded-md bg-black/30 backdrop-blur-[64px] shadow-lg ring-1 ring-white/10">
+    <p-tabMenu [model]="items" [scrollable]="true"> </p-tabMenu>
+    <router-outlet></router-outlet>
+  </div>
+  <!-- </ng-template> -->
+</div>

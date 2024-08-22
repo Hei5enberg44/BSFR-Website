@@ -4,7 +4,7 @@ import {
     importProvidersFrom
 } from '@angular/core'
 import { provideAnimations } from '@angular/platform-browser/animations'
-import { provideRouter } from '@angular/router'
+import { provideRouter, withComponentInputBinding } from '@angular/router'
 import {
     HttpClient,
     provideHttpClient,
@@ -14,7 +14,7 @@ import {
 import { HttpErrorsInterceptor } from './interceptors/http/errors.interceptor'
 
 import { routes } from './app.routes'
-import { MessageService } from 'primeng/api'
+import { ConfirmationService, MessageService } from 'primeng/api'
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core'
 import { TranslateHttpLoader } from '@ngx-translate/http-loader'
 
@@ -33,8 +33,9 @@ export const provideTranslation = () => ({
 export const appConfig: ApplicationConfig = {
     providers: [
         MessageService,
+        ConfirmationService,
         provideZoneChangeDetection({ eventCoalescing: true }),
-        provideRouter(routes),
+        provideRouter(routes, withComponentInputBinding()),
         provideAnimations(),
         provideHttpClient(
             withFetch(),

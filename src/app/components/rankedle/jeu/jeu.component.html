@@ -1,0 +1,20 @@
+<ng-container *ngIf="loading; else jeu">
+  <p-card styleClass="bg-transparent">
+    <p-skeleton height="2rem" width="16rem" styleClass="mb-2" />
+  </p-card>
+</ng-container>
+<ng-template #jeu>
+  <ng-container *ngIf="rankedle">
+    <p-card
+      [header]="
+        'Saison ' + rankedle.seasonId + ' — ' + 'Rankedle #' + rankedle.id
+      "
+      styleClass="bg-transparent">
+    </p-card>
+  </ng-container>
+  <ng-container *ngIf="!rankedle">
+    <p-card header="Pas de Rankedle en cours" styleClass="bg-transparent">
+      <p-messages [enableService]="false" [(value)]="noRankedleMessage" />
+    </p-card>
+  </ng-container>
+</ng-template>

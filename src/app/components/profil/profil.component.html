@@ -1,71 +1,13 @@
 <div class="py-6">
   <!-- Page title -->
-  <div class="text-white">
-    <h2>Mon profil</h2>
-  </div>
+  <h2>Mon profil</h2>
+
   <!-- <app-not-bsfr-member *ngIf="!isBSFR; else page" />
   <ng-template #page> -->
   <div
     class="rounded-md bg-black/30 backdrop-blur-[64px] shadow-lg ring-1 ring-white/10">
-    <p-tabView
-      [(activeIndex)]="activeTab"
-      [scrollable]="true"
-      (onChange)="onTabChange($event)">
-      <!-- Jeu -->
-      <p-tabPanel>
-        <ng-template pTemplate="header">
-          <span class="whitespace-nowrap">Anniversaire</span>
-        </ng-template>
-        <app-profil-anniversaire
-          [birthDate]="birthDate"
-          [loading]="birthdayLoading"
-          [canSave]="birthdayCanSave"
-          (onChange)="birthDateUpdated($event)" />
-      </p-tabPanel>
-      <p-tabPanel>
-        <ng-template pTemplate="header">
-          <span class="whitespace-nowrap">Rôles</span>
-        </ng-template>
-        <app-profil-roles
-          [roles]="roles"
-          [selected]="rolesSelected"
-          [loading]="rolesLoading"
-          [canSave]="rolesCanSave"
-          (onChange)="rolesUpdated($event)" />
-      </p-tabPanel>
-      <p-tabPanel>
-        <ng-template pTemplate="header">
-          <span class="whitespace-nowrap">Ville</span>
-        </ng-template>
-        <app-profil-ville
-          [city]="city"
-          [loading]="cityLoading"
-          [canSave]="cityCanSave"
-          (onChange)="cityUpdated($event)" />
-      </p-tabPanel>
-      <p-tabPanel>
-        <ng-template pTemplate="header">
-          <span class="whitespace-nowrap">Twitch</span>
-        </ng-template>
-        <app-profil-twitch
-          [channelName]="channelName"
-          [loading]="twitchLoading"
-          [canSave]="twitchCanSave"
-          (onChange)="channelNameUpdated($event)" />
-      </p-tabPanel>
-      <p-tabPanel>
-        <ng-template pTemplate="header">
-          <div class="flex items-center">
-            <img
-              src="/images/nitro.png"
-              width="17px"
-              height="17px"
-              class="me-3" />
-            <span class="whitespace-nowrap">Image de carte Cube-Stalker</span>
-          </div>
-        </ng-template>
-      </p-tabPanel>
-    </p-tabView>
+    <p-tabMenu [model]="items" [scrollable]="true"> </p-tabMenu>
+    <router-outlet></router-outlet>
   </div>
   <!-- </ng-template> -->
 </div>

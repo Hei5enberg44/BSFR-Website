@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { NgIf, AsyncPipe, NgFor, NgClass } from '@angular/common'
 import { TableModule, TableRowExpandEvent } from 'primeng/table'
 import { SkeletonModule } from 'primeng/skeleton'
@@ -9,7 +9,11 @@ import { Message } from 'primeng/api'
 
 import { roundPipe } from '../../../pipes/round.pipe'
 
-import { RankedlePlayerRankingData } from '../../../services/rankedle/rankedle.service'
+import {
+    RankedlePlayerRankingData,
+    RankedleService
+} from '../../../services/rankedle/rankedle.service'
+import { finalize } from 'rxjs'
 
 @Component({
     selector: 'app-rankedle-classement',
@@ -29,10 +33,16 @@ import { RankedlePlayerRankingData } from '../../../services/rankedle/rankedle.s
     templateUrl: './classement.component.html',
     styleUrl: './classement.component.scss'
 })
-export class RankedleClassementComponent {
-    @Input() ranking: RankedlePlayerRankingData[] = []
-    @Input() loading: boolean = false
-    @Input() rankingExpandedRows: { [key: string]: any } = {}
+export class RankedleClassementComponent implements OnInit {
+    constructor(private rankedleService: RankedleService) {}
+
+    ngOnInit(): void {
+        this.getRanking()
+    }
+
+    ranking: RankedlePlayerRankingData[] = []
+    loading: boolean = false
+    rankingExpandedRows: { [key: string]: any } = {}
 
     noRankingMessage: Message[] = [
         {
@@ -42,6 +52,21 @@ export class RankedleClassementComponent {
             detail: "Il n'y a pas de classement pour le moment."
         }
     ]
+
+    getRanking() {
+        this.ranking = []
+        this.loading = true
+        this.rankedleService
+            .getRanking()
+            .pipe(
+                finalize(() => {
+                    this.loading = false
+                })
+            )
+            .subscribe((res) => {
+                this.ranking = res
+            })
+    }
 
     onRankingRowExpand(event: TableRowExpandEvent) {
         this.rankingExpandedRows = {}

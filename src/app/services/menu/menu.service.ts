@@ -19,7 +19,7 @@ export class MenuService {
     private menuItems = [
         {
             label: 'Accueil',
-            path: '/home',
+            path: '/accueil',
             icon: this.icons.home
         },
         {
@@ -29,7 +29,7 @@ export class MenuService {
         },
         {
             label: 'Carte interactive',
-            path: '/interactive-map',
+            path: '/carte-interactive',
             icon: this.icons.map
         },
         {
@@ -39,7 +39,24 @@ export class MenuService {
         }
     ]
 
+    private adminMenuItems = [
+        {
+            label: 'Admininistration',
+            path: 'admin',
+            icon: 'pi pi-shield'
+        },
+        {
+            label: 'Agent',
+            path: 'agent',
+            icon: 'pi pi-wrench'
+        }
+    ]
+
     getMenuItems() {
         return this.menuItems
+    }
+
+    getAdminMenuItems() {
+        return this.adminMenuItems
     }
 }

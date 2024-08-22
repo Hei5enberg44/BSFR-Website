@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { HttpClient, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http'
 import { Router } from '@angular/router'
 import { ToastService } from '../toast/toast.service'
 import { BehaviorSubject, Observable } from 'rxjs'
@@ -10,6 +10,13 @@ export interface User {
     avatarURL: string
     isBSFR: boolean
     isAdmin: boolean
+    isNitroBooster: boolean
+}
+
+interface Member {
+    id: string
+    name: string
+    avatar: string
 }
 
 export interface UserRole {
@@ -32,6 +39,25 @@ export interface City {
 export interface UserTwitchChannel {
     name: string
 }
+
+export interface UploadedFile extends File {
+    objectURL: string
+}
+
+export enum MemberCardStatus {
+    Preview = 0,
+    Pending = 1,
+    Approved = 2,
+    Denied = 3
+}
+
+export interface CardPreview {
+    member: Member
+    preview: string
+    status: MemberCardStatus
+}
+
+export type CardPreviewResponse = HttpResponse<CardPreview>
 
 @Injectable({
     providedIn: 'root'
@@ -91,12 +117,14 @@ export class UserService {
         this.authorize()
     }
 
-    logout() {
+    logout(redirect: boolean = true) {
         return this.http.post('/api/user/logout', {}).subscribe(() => {
             this.user.next(null)
             this.isLogged.next(false)
-            this.router.navigate(['home'])
-            this.toastService.showSuccess('Vous avez été déconnecté')
+            if (redirect) {
+                this.router.navigate(['accueil'])
+                this.toastService.showSuccess('Vous avez été déconnecté')
+            }
         })
     }
 
@@ -107,55 +135,31 @@ export class UserService {
 
     // Récupère la date de naissance de l'utilisateur
     getBirthday() {
-        return this.http.get<{ date: Date | null }>('/api/user/getBirthday')
+        return this.http.get<{ date: Date | null }>('/api/user/birthday')
     }
 
     // Enregistre la date de naissance de l'utilisateur
     setBirthday(date: Date | null) {
-        return this.http.post(
-            '/api/user/setBirthday',
-            { date },
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        )
+        return this.http.post('/api/user/birthday', { date })
     }
 
     // Récupère les rôles de l'utilisateur
     getRoles() {
-        return this.http.get<UserRoleCategory[]>('/api/user/getRoles')
+        return this.http.get<UserRoleCategory[]>('/api/user/roles')
     }
 
     // Enregistre les rôles de l'utilisateur
     setRoles(roles: string[]) {
-        return this.http.post(
-            '/api/user/setRoles',
-            { roles },
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        )
+        return this.http.post('/api/user/roles', { roles })
     }
 
     getCity() {
-        return this.http.get<City>('/api/user/getCity')
+        return this.http.get<City>('/api/user/city')
     }
 
     // Enregistre la ville de l'utilisateur
     setCity(city: City | null) {
-        return this.http.post(
-            '/api/user/setCity',
-            { city },
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        )
+        return this.http.post('/api/user/city', { city })
     }
 
     searchCity(s: string) {
@@ -168,19 +172,29 @@ export class UserService {
 
     getTwitchChannel() {
         return this.http.get<UserTwitchChannel | null>(
-            '/api/user/getTwitchChannel'
+            '/api/user/twitchChannel'
         )
     }
 
     setTwitchChannel(channelName: string | null) {
-        return this.http.post(
-            '/api/user/setTwitchChannel',
-            { channelName },
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        )
+        return this.http.post('/api/user/twitchChannel', { channelName })
+    }
+
+    getCardPreview(memberId?: string) {
+        return this.http.get<CardPreview>('/api/user/cardPreview', {
+            params: memberId
+                ? {
+                      memberId
+                  }
+                : {}
+        })
+    }
+
+    setCard() {
+        return this.http.post('/api/user/card', null)
+    }
+
+    removeCard() {
+        return this.http.delete('/api/user/card')
     }
 }

@@ -11,32 +11,36 @@ export const HttpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
     const toastService = inject(ToastService)
 
     return next(req).pipe(
-        catchError((error: HttpErrorResponse) => {
-            const reqError = error.error
+        catchError((errorResponse: HttpErrorResponse) => {
+            const reqError = errorResponse.error
             if (!reqError?.message) {
-                switch (error.status) {
+                switch (errorResponse.status) {
                     case 500:
-                        if (error.statusText === 'Internal Server Error')
+                        if (
+                            errorResponse.statusText === 'Internal Server Error'
+                        )
                             toastService.showError('Serveur injoignable')
                         else toastService.showError('Une erreur est survenue')
                         break
                     case 401:
-                        userService.logout()
-                        toastService.showError('Session utilisateur invalide')
+                        userService.logout(false)
+                        userService.login()
                         break
                 }
             } else {
-                switch (error.status) {
-                    case 500:
-                        toastService.showError(reqError.message)
-                        break
+                switch (errorResponse.status) {
                     case 401:
-                        userService.logout()
-                        toastService.showError(reqError.message)
+                        userService.logout(false)
+                        userService.login()
                         break
+                    default:
+                        toastService.showError(
+                            reqError.message,
+                            'Une erreur est survenue'
+                        )
                 }
             }
-            return throwError(() => error)
+            return throwError(() => errorResponse)
         })
     )
 }

@@ -1,0 +1,72 @@
+<p-card styleClass="bg-transparent">
+  <div class="mb-5">
+    <p-button
+      label="Retour"
+      icon="pi pi-arrow-left"
+      [text]="true"
+      routerLink="../" />
+  </div>
+  <ng-container *ngIf="!requestLoading && invalidRequest; else request">
+    <p-messages [value]="unkownRequestMessage" [enableService]="false" />
+  </ng-container>
+  <ng-template #request>
+    <div class="mb-5">
+      <h3 class="mt-0">Auteur·rice de la demande</h3>
+      @if (requestLoading) {
+        <div class="flex items-center">
+          <p-skeleton shape="circle" size="42px" styleClass="me-4" />
+          <p-skeleton width="10rem" />
+        </div>
+      } @else {
+        <div class="flex items-center">
+          <p-avatar
+            [image]="cardRequest.member.avatar"
+            styleClass="flex me-4"
+            size="large"
+            shape="circle" />
+          <span>
+            {{ cardRequest.member.name }}
+          </span>
+        </div>
+      }
+    </div>
+    <div class="mb-5">
+      <h3 class="mt-0">Status de la demande</h3>
+      @if (requestLoading) {
+        <p-skeleton width="5rem" height="1.5rem"></p-skeleton>
+      } @else {
+        <p-tag
+          [value]="getStatusName(cardRequest.status)"
+          [severity]="getStatusSeverity(cardRequest.status)" />
+      }
+    </div>
+    <div>
+      <h3 class="mt-0">Aperçu</h3>
+      <div class="w-full aspect-[5_/_2] pointer-events-none">
+        <p-skeleton width="100%" height="100%" *ngIf="cardLoading" />
+        <img
+          [src]="'data:image/webp;base64,' + memberCard.preview"
+          class="w-full h-full"
+          *ngIf="!cardLoading && memberCard" />
+      </div>
+    </div>
+    <div class="flex items-center gap-x-4 mt-6">
+      <p-button
+        label="Refuser"
+        severity="danger"
+        class="ms-auto"
+        icon="pi pi-ban"
+        [disabled]="!canSave"
+        [loading]="saving"
+        (onClick)="confirmDeny($event, cardRequest.member.id)" />
+      <p-button
+        label="Approuver"
+        severity="success"
+        icon="pi pi-verified"
+        [disabled]="!canSave"
+        [loading]="saving"
+        (onClick)="confirmApproval($event, cardRequest.member.id)" />
+    </div>
+  </ng-template>
+</p-card>
+<p-confirmDialog />

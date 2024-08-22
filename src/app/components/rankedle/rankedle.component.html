@@ -1,108 +1,13 @@
 <div class="py-6">
   <!-- Page title -->
-  <div class="text-white">
-    <h2>Rankedle</h2>
-  </div>
+  <h2>Rankedle</h2>
+
   <!-- <app-not-bsfr-member *ngIf="!isBSFR; else page" /> -->
   <!-- <ng-template #page> -->
   <div
     class="rounded-md bg-black/30 backdrop-blur-[64px] shadow-lg ring-1 ring-white/10">
-    <p-tabView
-      [(activeIndex)]="activeTab"
-      [scrollable]="true"
-      (onChange)="onTabChange($event)">
-      <!-- Jeu -->
-      <p-tabPanel>
-        <ng-template pTemplate="header">
-          <div class="flex align-items-center gap-2">
-            <span class="pi pi-play"></span>
-            <span class="ms-1">Jeu</span>
-          </div>
-        </ng-template>
-        <ng-container *ngIf="rankedle$ | withLoading | async as rankedle">
-          <ng-container *ngIf="rankedle?.loading">
-            <p-card styleClass="bg-transparent">
-              <p-skeleton height="2rem" width="16rem" styleClass="mb-2" />
-            </p-card>
-          </ng-container>
-          <ng-container *ngIf="rankedle?.value === null">
-            <p-card
-              header="Pas de Rankedle en cours"
-              styleClass="bg-transparent">
-              <p-messages
-                [enableService]="false"
-                [(value)]="noRankedleMessage" />
-            </p-card>
-          </ng-container>
-          <ng-container *ngIf="rankedle.value">
-            <p-card
-              [header]="
-                'Saison ' +
-                rankedle.value.seasonId +
-                ' — ' +
-                'Rankedle #' +
-                rankedle.value.id
-              "
-              styleClass="bg-transparent">
-            </p-card>
-          </ng-container>
-        </ng-container>
-      </p-tabPanel>
-      <!-- Classement -->
-      <p-tabPanel>
-        <ng-template pTemplate="header">
-          <div class="flex align-items-center gap-2">
-            <span class="pi pi-chart-bar"></span>
-            <span class="ms-1">Classement</span>
-          </div>
-        </ng-template>
-        <app-rankedle-classement
-          [ranking]="rankingData"
-          [loading]="rankingLoading"
-          [rankingExpandedRows]="rankingExpandedRows" />
-      </p-tabPanel>
-      <!-- Statistiques -->
-      <p-tabPanel>
-        <ng-template pTemplate="header">
-          <div class="flex align-items-center gap-2">
-            <span class="pi pi-chart-pie"></span>
-            <span class="ms-1">Statistiques</span>
-          </div>
-        </ng-template>
-        <p-card styleClass="bg-transparent">
-          <app-rankedle-statistiques
-            [stats]="playerStatsData"
-            [loading]="playerStatsLoading" />
-        </p-card>
-      </p-tabPanel>
-      <!-- Historique -->
-      <p-tabPanel>
-        <ng-template pTemplate="header">
-          <div class="flex align-items-center gap-2">
-            <span class="pi pi-history"></span>
-            <span class="ms-1">Historique</span>
-          </div>
-        </ng-template>
-        <app-rankedle-historique
-          [history]="historyData"
-          [first]="historyFirst"
-          [total]="historyTotal"
-          [loading]="historyLoading"
-          (onPage)="historyPageChange($event)" />
-      </p-tabPanel>
-      <!-- Aide -->
-      <p-tabPanel>
-        <ng-template pTemplate="header">
-          <div class="flex align-items-center gap-2">
-            <span class="pi pi-question-circle"></span>
-            <span class="ms-1">Aide</span>
-          </div>
-        </ng-template>
-        <p-card styleClass="bg-transparent">
-          <app-rankedle-aide />
-        </p-card>
-      </p-tabPanel>
-    </p-tabView>
+    <p-tabMenu [model]="items" [scrollable]="true"> </p-tabMenu>
+    <router-outlet></router-outlet>
   </div>
   <!-- </ng-template> -->
 </div>

@@ -1,147 +1,149 @@
-<div class="w-full text-center">
-  <div
-    class="grid grid-cols-[repeat(auto-fit,140px)] gap-4 justify-center mb-12">
-    <p-card
-      styleClass="ring-1 ring-white/25 bg-white/10 rounded-md flex items-center">
-      <div class="mb-4">Parties</div>
-      <span class="text-3xl/none">
-        <ng-container *ngIf="loading">
-          <p-skeleton height="2rem" />
-        </ng-container>
-        <ng-container *ngIf="!loading">
-          {{ stats ? stats.played : 0 }}
-        </ng-container>
-      </span>
-    </p-card>
-    <p-card
-      styleClass="ring-1 ring-white/25 bg-white/10 rounded-md flex items-center">
-      <div class="mb-4">Victoires (%)</div>
-      <span class="text-3xl/none">
-        <ng-container *ngIf="loading">
-          <p-skeleton height="2rem" />
-        </ng-container>
-        <ng-container *ngIf="!loading">
-          {{ stats ? ((stats.won * 100) / stats.played | round) : 0 }}
-        </ng-container>
-      </span>
-    </p-card>
-    <p-card
-      styleClass="ring-1 ring-white/25 bg-white/10 rounded-md flex items-center">
-      <div class="mb-4">Série actuelle</div>
-      <span class="text-3xl/none">
-        <ng-container *ngIf="loading">
-          <p-skeleton height="2rem" />
-        </ng-container>
-        <ng-container *ngIf="!loading">
-          {{ stats ? stats.currentStreak : 0 }}
-        </ng-container>
-      </span>
-    </p-card>
-    <p-card
-      styleClass="ring-1 ring-white/25 bg-white/10 rounded-md flex items-center">
-      <div class="mb-4">Meilleure série</div>
-      <span class="text-3xl/none">
-        <ng-container *ngIf="loading">
-          <p-skeleton height="2rem" />
-        </ng-container>
-        <ng-container *ngIf="!loading">
-          {{ stats ? stats.maxStreak : 0 }}
-        </ng-container>
-      </span>
-    </p-card>
-  </div>
-  <div class="max-w-fit m-auto">
-    <h3>Performances</h3>
+<p-card styleClass="bg-transparent">
+  <div class="w-full text-center">
     <div
-      class="grid grid-cols-[repeat(7,28px)] grid-rows-[180px_auto] gap-x-5 gap-y-2 justify-center justify-items-center">
-      <!-- Bars -->
-      <ng-container *ngIf="stats">
-        <div
-          class="stats-progress-bar stats-progress-bar-1"
-          [style]="{
-            height: (stats.try1 * 100) / stats.played + '%'
-          }">
-          {{ stats.try1 }}
-        </div>
-        <div
-          class="stats-progress-bar stats-progress-bar-2"
-          [style]="{
-            height: (stats.try2 * 100) / stats.played + '%'
-          }">
-          {{ stats.try2 }}
-        </div>
-        <div
-          class="stats-progress-bar stats-progress-bar-3"
-          [style]="{
-            height: (stats.try3 * 100) / stats.played + '%'
-          }">
-          {{ stats.try3 }}
-        </div>
-        <div
-          class="stats-progress-bar stats-progress-bar-4"
-          [style]="{
-            height: (stats.try4 * 100) / stats.played + '%'
-          }">
-          {{ stats.try4 }}
-        </div>
-        <div
-          class="stats-progress-bar stats-progress-bar-5"
-          [style]="{
-            height: (stats.try5 * 100) / stats.played + '%'
-          }">
-          {{ stats.try5 }}
-        </div>
-        <div
-          class="stats-progress-bar stats-progress-bar-6"
-          [style]="{
-            height: (stats.try6 * 100) / stats.played + '%'
-          }">
-          {{ stats.try6 }}
-        </div>
-        <div
-          class="stats-progress-bar stats-progress-bar-7"
-          [style]="{
-            height: ((stats.played - stats.won) * 100) / stats.played + '%'
-          }">
-          {{ stats.played - stats.won }}
-        </div>
-      </ng-container>
-      <ng-container *ngIf="loading">
-        <ng-container *ngFor="let i of [0, 1, 2, 3, 4, 5, 6]">
-          <p-skeleton class="w-full" height="100%" />
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="!loading && stats === null">
-        <ng-container *ngFor="let i of [0, 1, 2, 3, 4, 5, 6]">
-          <div [class]="'stats-progress-bar stats-progress-bar-' + (i + 1)">
-            0
+      class="grid grid-cols-[repeat(auto-fit,140px)] gap-4 justify-center mb-12">
+      <p-card
+        styleClass="ring-1 ring-white/25 bg-white/10 rounded-md flex items-center">
+        <div class="mb-4">Parties</div>
+        <span class="text-3xl/none">
+          <ng-container *ngIf="loading">
+            <p-skeleton height="2rem" />
+          </ng-container>
+          <ng-container *ngIf="!loading">
+            {{ stats ? stats.played : 0 }}
+          </ng-container>
+        </span>
+      </p-card>
+      <p-card
+        styleClass="ring-1 ring-white/25 bg-white/10 rounded-md flex items-center">
+        <div class="mb-4">Victoires (%)</div>
+        <span class="text-3xl/none">
+          <ng-container *ngIf="loading">
+            <p-skeleton height="2rem" />
+          </ng-container>
+          <ng-container *ngIf="!loading">
+            {{ stats ? ((stats.won * 100) / stats.played | round) : 0 }}
+          </ng-container>
+        </span>
+      </p-card>
+      <p-card
+        styleClass="ring-1 ring-white/25 bg-white/10 rounded-md flex items-center">
+        <div class="mb-4">Série actuelle</div>
+        <span class="text-3xl/none">
+          <ng-container *ngIf="loading">
+            <p-skeleton height="2rem" />
+          </ng-container>
+          <ng-container *ngIf="!loading">
+            {{ stats ? stats.currentStreak : 0 }}
+          </ng-container>
+        </span>
+      </p-card>
+      <p-card
+        styleClass="ring-1 ring-white/25 bg-white/10 rounded-md flex items-center">
+        <div class="mb-4">Meilleure série</div>
+        <span class="text-3xl/none">
+          <ng-container *ngIf="loading">
+            <p-skeleton height="2rem" />
+          </ng-container>
+          <ng-container *ngIf="!loading">
+            {{ stats ? stats.maxStreak : 0 }}
+          </ng-container>
+        </span>
+      </p-card>
+    </div>
+    <div class="max-w-fit m-auto">
+      <h3>Performances</h3>
+      <div
+        class="grid grid-cols-[repeat(7,28px)] grid-rows-[180px_auto] gap-x-5 gap-y-2 justify-center justify-items-center">
+        <!-- Bars -->
+        <ng-container *ngIf="stats">
+          <div
+            class="stats-progress-bar stats-progress-bar-1"
+            [style]="{
+              height: (stats.try1 * 100) / stats.played + '%'
+            }">
+            {{ stats.try1 }}
+          </div>
+          <div
+            class="stats-progress-bar stats-progress-bar-2"
+            [style]="{
+              height: (stats.try2 * 100) / stats.played + '%'
+            }">
+            {{ stats.try2 }}
+          </div>
+          <div
+            class="stats-progress-bar stats-progress-bar-3"
+            [style]="{
+              height: (stats.try3 * 100) / stats.played + '%'
+            }">
+            {{ stats.try3 }}
+          </div>
+          <div
+            class="stats-progress-bar stats-progress-bar-4"
+            [style]="{
+              height: (stats.try4 * 100) / stats.played + '%'
+            }">
+            {{ stats.try4 }}
+          </div>
+          <div
+            class="stats-progress-bar stats-progress-bar-5"
+            [style]="{
+              height: (stats.try5 * 100) / stats.played + '%'
+            }">
+            {{ stats.try5 }}
+          </div>
+          <div
+            class="stats-progress-bar stats-progress-bar-6"
+            [style]="{
+              height: (stats.try6 * 100) / stats.played + '%'
+            }">
+            {{ stats.try6 }}
+          </div>
+          <div
+            class="stats-progress-bar stats-progress-bar-7"
+            [style]="{
+              height: ((stats.played - stats.won) * 100) / stats.played + '%'
+            }">
+            {{ stats.played - stats.won }}
           </div>
         </ng-container>
-      </ng-container>
-      <!-- Tries -->
-      <ng-container *ngFor="let i of [0, 1, 2, 3, 4, 5]">
-        <span class="self-center place-self-center">{{ i + 1 }}</span>
-      </ng-container>
-      <span class="self-center flex items-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="#ffffff"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round">
-          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-          <path
-            d="M12 4c4.418 0 8 3.358 8 7.5c0 1.901 -.755 3.637 -2 4.96l0 2.54a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1v-2.54c-1.245 -1.322 -2 -3.058 -2 -4.96c0 -4.142 3.582 -7.5 8 -7.5z"></path>
-          <path d="M10 17v3"></path>
-          <path d="M14 17v3"></path>
-          <path d="M9 11m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
-          <path d="M15 11m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
-        </svg>
-      </span>
+        <ng-container *ngIf="loading">
+          <ng-container *ngFor="let i of [0, 1, 2, 3, 4, 5, 6]">
+            <p-skeleton class="w-full" height="100%" />
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="!loading && stats === null">
+          <ng-container *ngFor="let i of [0, 1, 2, 3, 4, 5, 6]">
+            <div [class]="'stats-progress-bar stats-progress-bar-' + (i + 1)">
+              0
+            </div>
+          </ng-container>
+        </ng-container>
+        <!-- Tries -->
+        <ng-container *ngFor="let i of [0, 1, 2, 3, 4, 5]">
+          <span class="self-center place-self-center">{{ i + 1 }}</span>
+        </ng-container>
+        <span class="self-center flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="#ffffff"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path
+              d="M12 4c4.418 0 8 3.358 8 7.5c0 1.901 -.755 3.637 -2 4.96l0 2.54a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1v-2.54c-1.245 -1.322 -2 -3.058 -2 -4.96c0 -4.142 3.582 -7.5 8 -7.5z"></path>
+            <path d="M10 17v3"></path>
+            <path d="M14 17v3"></path>
+            <path d="M9 11m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
+            <path d="M15 11m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
+          </svg>
+        </span>
+      </div>
     </div>
   </div>
-</div>
+</p-card>

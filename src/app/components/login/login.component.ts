@@ -32,7 +32,7 @@ export class LoginComponent {
                     .callback(paramCode, paramState)
                     .pipe(
                         catchError((error: HttpErrorResponse) => {
-                            this.router.navigate(['home'])
+                            this.router.navigate(['accueil'])
                             return throwError(() => error)
                         })
                     )
@@ -45,11 +45,11 @@ export class LoginComponent {
                         localStorage.removeItem('state')
                     })
             } else {
-                this.router.navigate(['home'])
+                this.router.navigate(['accueil'])
                 this.toastService.showError('Requête invalide')
             }
         } else {
-            this.router.navigate(['home'])
+            this.router.navigate(['accueil'])
         }
     }
 }

@@ -27,9 +27,11 @@
       <tr style="height: 64px">
         <td><p-skeleton /></td>
         <td><p-skeleton /></td>
-        <td class="flex items-center">
-          <p-skeleton shape="circle" size="42px" styleClass="me-4" />
-          <p-skeleton width="10rem" />
+        <td>
+          <div class="flex items-center">
+            <p-skeleton shape="circle" size="42px" styleClass="me-4" />
+            <p-skeleton width="10rem" />
+          </div>
         </td>
         <td><p-skeleton /></td>
       </tr>
@@ -53,15 +55,17 @@
           [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
       </td>
       <td>{{ ranking.rank }}</td>
-      <td class="flex items-center">
-        <p-avatar
-          [image]="ranking.avatar"
-          styleClass="flex me-4"
-          size="large"
-          shape="circle" />
-        <span>
-          {{ ranking.name }}
-        </span>
+      <td>
+        <div class="flex items-center">
+          <p-avatar
+            [image]="ranking.avatar"
+            styleClass="flex me-4"
+            size="large"
+            shape="circle" />
+          <span>
+            {{ ranking.name }}
+          </span>
+        </div>
       </td>
       <td>{{ ranking.points }}</td>
     </tr>

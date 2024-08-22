@@ -20,7 +20,6 @@
         [text]="!rla.isActive"
         [routerLink]="menuItem.path"
         routerLinkActive=""
-        [routerLinkActiveOptions]="{ exact: true }"
         #rla="routerLinkActive" />
     }
     <div *ngIf="isLogged$ | async as logged; else userNotLogged">
@@ -31,7 +30,10 @@
           shape="circle"
           class="ms-3 cursor-pointer"
           (click)="avatarMenu.toggle($event)" />
-        <p-tieredMenu #avatarMenu [model]="userMenuItems" [popup]="true">
+        <p-tieredMenu
+          #avatarMenu
+          [model]="user.isAdmin ? adminMenuItems : userMenuItems"
+          [popup]="true">
           <ng-template pTemplate="item" let-item let-hasSubmenu="hasSubmenu">
             <ng-container *ngIf="item.route; else withoutRoute">
               <a
@@ -39,9 +41,7 @@
                 routerLinkActive="!text-[var(--primary-color)]"
                 [href]="item.href"
                 class="p-menuitem-link py-3">
-                <span
-                  [innerHTML]="item.featherIcon | svg: '16'"
-                  class="flex items-center"></span>
+                <span [class]="item.icon" class="me-2"></span>
                 <span class="ml-2">{{ item.label }}</span>
               </a>
             </ng-container>
@@ -51,9 +51,7 @@
                   [href]="item.url"
                   [target]="item.target"
                   class="p-menuitem-link py-3">
-                  <span
-                    [innerHTML]="item.featherIcon | svg: '16'"
-                    class="flex items-center"></span>
+                  <span [class]="item.icon" class="me-2"></span>
                   <span class="ml-2">{{ item.label }}</span>
                   <span
                     *ngIf="hasSubmenu"
@@ -62,9 +60,7 @@
               </ng-container>
               <ng-template #withoutUrl>
                 <a class="p-menuitem-link py-3">
-                  <span
-                    [innerHTML]="item.featherIcon | svg: '16'"
-                    class="flex items-center"></span>
+                  <span [class]="item.icon" class="me-2"></span>
                   <span class="ml-2">{{ item.label }}</span>
                   <span
                     *ngIf="hasSubmenu"
@@ -116,8 +112,25 @@
       height="64" />
   </div>
   <ul class="list-none p-0 m-0">
-    <li>
-      @for (menuItem of menuItems; track menuItem.label) {
+    <li *ngFor="let menuItem of menuItems">
+      <p-button
+        styleClass="w-full p-4"
+        [text]="!rla.isActive"
+        [routerLink]="menuItem.path"
+        routerLinkActive=""
+        [routerLinkActiveOptions]="{ exact: true }"
+        #rla="routerLinkActive"
+        (click)="setIsOpen(false)">
+        <span
+          [innerHTML]="menuItem.icon | svg: '16'"
+          class="me-3 flex items-center"></span>
+        <span>{{ menuItem.label }}</span>
+      </p-button>
+    </li>
+  </ul>
+  <ng-container *ngIf="user$ | async as user">
+    <ul class="list-none p-0 m-0" *ngIf="user.isAdmin">
+      <li *ngFor="let menuItem of mobileAdminMenuItems">
         <p-button
           styleClass="w-full p-4"
           [text]="!rla.isActive"
@@ -126,14 +139,12 @@
           [routerLinkActiveOptions]="{ exact: true }"
           #rla="routerLinkActive"
           (click)="setIsOpen(false)">
-          <span
-            [innerHTML]="menuItem.icon | svg: '16'"
-            class="me-3 flex items-center"></span>
+          <span [class]="menuItem.icon" class="me-3"></span>
           <span>{{ menuItem.label }}</span>
         </p-button>
-      }
-    </li>
-  </ul>
+      </li>
+    </ul>
+  </ng-container>
   <div>
     <p-divider />
     <div
@@ -142,7 +153,7 @@
       <p-button
         [text]="!rla.isActive"
         styleClass="w-full p-4"
-        routerLink="/profile"
+        routerLink="/profil"
         routerLinkActive=""
         [routerLinkActiveOptions]="{ exact: true }"
         #rla="routerLinkActive"
@@ -157,7 +168,7 @@
         }}</span>
       </p-button>
       <p-button [text]="true" styleClass="w-full h-full p-4" (click)="logout()">
-        <span [innerHTML]="icons.logout | svg" class="flex items-center"></span>
+        <span class="pi pi-sign-out"></span>
       </p-button>
     </div>
     <ng-template #userNotLoggedMobile>
@@ -166,9 +177,7 @@
         styleClass="w-full p-4 flex justify-between"
         (click)="login()">
         <span>Connexion</span>
-        <span
-          [innerHTML]="icons.login | svg"
-          class="me-3 flex items-center"></span>
+        <span class="pi pi-sign-in"></span>
       </p-button>
     </ng-template>
   </div>

@@ -1,0 +1,152 @@
+<p-card styleClass="bg-transparent">
+  <ng-container *ngIf="user$ | async as user">
+    <ng-container
+      *ngIf="user.isNitroBooster || user.isAdmin; else requireNitro">
+      <div class="mb-5" *ngIf="canUpload">
+        <h3 class="mt-0">Importer une image</h3>
+        <p-fileUpload
+          #fileInput
+          name="memberCardImage"
+          url="/api/user/cardPreview"
+          (onUpload)="onUpload($event)"
+          (onSelect)="onSelect($event)"
+          (onError)="onError($event)"
+          [multiple]="false"
+          accept=".jpg,.png,.webp"
+          maxFileSize="5242880"
+          invalidFileSizeMessageSummary=""
+          invalidFileSizeMessageDetail="Fichier trop lourd, la taille maximale autorisée est de {0}"
+          invalidFileTypeMessageSummary=""
+          invalidFileTypeMessageDetail="Type de fichier invalide, types de fichier autorisés: {0}"
+          class="select-none">
+          <ng-template pTemplate="header" let-chooseCallback="chooseCallback">
+            <p-button
+              label="Choisir"
+              (onClick)="choose($event, chooseCallback)"
+              icon="pi pi-plus" />
+          </ng-template>
+          <ng-template pTemplate="file"> </ng-template>
+          <ng-template
+            pTemplate="content"
+            let-uploadedFiles="uploadedFile"
+            let-removeUploadedFileCallback="removeUploadedFileCallback">
+            <div
+              class="flex items-center justify-between"
+              *ngIf="file && errorMessages.length === 0">
+              <img
+                role="presentation"
+                [alt]="file.name"
+                [src]="file.objectURL"
+                width="100"
+                height="auto"
+                class="pointer-events-none" />
+              <div *ngIf="uploadedFile">
+                <p-button
+                  icon="pi pi-times"
+                  severity="danger"
+                  (onClick)="remove(removeUploadedFileCallback)" />
+              </div>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="empty">
+            <div class="flex items-center justify-content-center flex-col p-5">
+              <i
+                class="pi pi-cloud-upload border-2 border-circle text-8xl !font-bold"></i>
+              <p class="mt-4 mb-0">Glissez votre image ici</p>
+              <p class="mt-2 mb-0 text-sm text-white/50">
+                <em>Types de fichier autorisés: .jpg, .png, .webp</em><br />
+              </p>
+            </div>
+            <div class="mt-3">
+              <p-messages [enableService]="false" [value]="errorMessages" />
+            </div>
+          </ng-template>
+        </p-fileUpload>
+      </div>
+
+      <div>
+        <h3 class="mt-0">Aperçu</h3>
+        <div class="mb-3" *ngIf="status">
+          <p-confirmDialog />
+          @switch (status) {
+            @case (1) {
+              <p-messages severity="info">
+                <ng-template pTemplate>
+                  <div class="flex flex-col">
+                    <span class="font-bold mb-2">
+                      Image de carte en attente d'approbation
+                    </span>
+                    <span class="leading-6">
+                      Votre image de carte Cube-Stalker est en attente
+                      d'approbation de la part d'un
+                      administrateur/modérateur.<br />
+                      Vous serez avertis lorsque celle-ci aura été approuvée ou
+                      non.<br />
+                      Vous pouvez annuler cette demande d'approbation en
+                      <a href="#" (click)="cancelConfirm($event)"
+                        >cliquant ici</a
+                      >.
+                    </span>
+                  </div>
+                </ng-template>
+              </p-messages>
+            }
+            @case (2) {
+              <p-messages severity="success">
+                <ng-template pTemplate>
+                  <div class="flex flex-col">
+                    <span class="font-bold mb-2">
+                      Image de carte approuvée
+                    </span>
+                    <span class="leading-6">
+                      Votre image de carte Cube-Stalker a été approuvée par un
+                      administrateur/modérateur.<br />
+                      Vous pouvez revenir à la carte par défaut à tout moment en
+                      <a href="#" (click)="removeConfirm($event)"
+                        >cliquant ici</a
+                      >.
+                    </span>
+                  </div>
+                </ng-template>
+              </p-messages>
+            }
+            @case (3) {
+              <p-messages severity="error">
+                <ng-template pTemplate>
+                  <div class="flex flex-col">
+                    <span class="font-bold mb-2"> Image de carte refusée </span>
+                    <span class="leading-6">
+                      Votre image de carte Cube-Stalker a été refusée par un
+                      administrateur/modérateur.
+                    </span>
+                  </div>
+                </ng-template>
+              </p-messages>
+            }
+          }
+        </div>
+        <div class="w-full aspect-[5_/_2] pointer-events-none">
+          <p-skeleton width="100%" height="100%" *ngIf="loading" />
+          <img
+            [src]="'data:image/webp;base64,' + card"
+            class="w-full h-full"
+            *ngIf="!loading" />
+        </div>
+      </div>
+
+      <div class="flex items-center mt-6" *ngIf="canUpload">
+        <p-button
+          label="Sauvegarder"
+          severity="success"
+          class="ms-auto"
+          icon="pi pi-save"
+          [disabled]="!canSave"
+          [loading]="saving"
+          (onClick)="save()" />
+      </div>
+    </ng-container>
+    <ng-template #requireNitro>
+      <p-messages [value]="requireNitroMessage" [enableService]="false" />
+    </ng-template>
+  </ng-container>
+</p-card>

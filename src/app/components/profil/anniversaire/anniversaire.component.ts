@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { CardModule } from 'primeng/card'
 import { ButtonModule } from 'primeng/button'
@@ -24,16 +24,20 @@ import { catchError } from 'rxjs'
     templateUrl: './anniversaire.component.html',
     styleUrl: './anniversaire.component.scss'
 })
-export class ProfilAnniversaireComponent {
+export class ProfilAnniversaireComponent implements OnInit {
     constructor(
         private toastService: ToastService,
         private deviceService: DeviceDetectorService,
         private userService: UserService
     ) {}
 
-    @Input() birthDate: Date | null = null
-    @Input() loading = true
-    @Input() canSave = false
+    ngOnInit(): void {
+        this.getBirthday()
+    }
+
+    birthDate!: Date | null
+    loading = true
+    canSave = false
     saving = false
 
     helpMessage: Message[] = [
@@ -53,10 +57,18 @@ export class ProfilAnniversaireComponent {
         return this.deviceService.isMobile() || this.deviceService.isTablet()
     }
 
-    @Output() onChange = new EventEmitter<boolean>()
+    getBirthday() {
+        this.birthDate = null
+        this.loading = true
+        this.canSave = false
+        this.userService.getBirthday().subscribe((res) => {
+            this.birthDate = res.date
+            this.loading = false
+        })
+    }
 
     birthDateUpdated() {
-        this.onChange.emit(true)
+        this.canSave = true
     }
 
     save() {
@@ -71,7 +83,7 @@ export class ProfilAnniversaireComponent {
             )
             .subscribe(() => {
                 this.saving = false
-                this.onChange.emit(false)
+                this.canSave = false
                 this.toastService.showSuccess(
                     'Votre date de naissance a bien été sauvegardée'
                 )

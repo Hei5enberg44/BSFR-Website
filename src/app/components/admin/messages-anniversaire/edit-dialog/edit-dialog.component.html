@@ -1,0 +1,25 @@
+<textarea
+  rows="5"
+  pInputTextarea
+  [autoResize]="true"
+  [(ngModel)]="message"
+  (input)="onChange()"
+  maxlength="1000"
+  class="w-full"
+  aria-describedby="help-message"></textarea>
+<small id="help-message"
+  >Utilisez !p pour insérer le pseudo de l'utilisateur</small
+>
+
+<div class="flex flex-row mt-3">
+  <p-button
+    label="Annuler"
+    [text]="true"
+    class="ms-auto me-2"
+    (onClick)="closeDialog()" />
+  <p-button
+    label="Sauvegarder"
+    severity="success"
+    (onClick)="saveMessage()"
+    [disabled]="!canSave" />
+</div>

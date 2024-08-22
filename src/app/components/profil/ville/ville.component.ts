@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { Router } from '@angular/router'
-import { NgIf, NgFor } from '@angular/common'
 import { CardModule } from 'primeng/card'
 import { ButtonModule } from 'primeng/button'
 import {
@@ -20,8 +19,6 @@ import { catchError } from 'rxjs'
     standalone: true,
     imports: [
         FormsModule,
-        NgIf,
-        NgFor,
         CardModule,
         ButtonModule,
         AutoCompleteModule,
@@ -30,16 +27,20 @@ import { catchError } from 'rxjs'
     templateUrl: './ville.component.html',
     styleUrl: './ville.component.scss'
 })
-export class ProfilVilleComponent {
+export class ProfilVilleComponent implements OnInit {
     constructor(
         private toastService: ToastService,
         private userService: UserService,
         private router: Router
     ) {}
 
-    @Input() city: City | null = null
-    @Input() loading = true
-    @Input() canSave = false
+    ngOnInit(): void {
+        this.getCity()
+    }
+
+    city: City | null = null
+    loading = true
+    canSave = false
     saving = false
 
     helpMessage: Message[] = [
@@ -53,7 +54,7 @@ export class ProfilVilleComponent {
 
     navigateToInteractiveMap(event: MouseEvent) {
         event.preventDefault()
-        this.router.navigate(['interactive-map'])
+        this.router.navigate(['carte-interactive'])
     }
 
     suggestions: City[] = []
@@ -64,10 +65,18 @@ export class ProfilVilleComponent {
         })
     }
 
-    @Output() onChange = new EventEmitter<boolean>()
+    getCity() {
+        this.city = null
+        this.loading = true
+        this.canSave = false
+        this.userService.getCity().subscribe((city) => {
+            this.city = city
+            this.loading = false
+        })
+    }
 
     cityUpdated() {
-        this.onChange.emit(true)
+        this.canSave = true
     }
 
     save() {
@@ -82,7 +91,7 @@ export class ProfilVilleComponent {
             )
             .subscribe(() => {
                 this.saving = false
-                this.onChange.emit(false)
+                this.canSave = false
                 this.toastService.showSuccess(
                     'Votre ville a bien été sauvegardée'
                 )

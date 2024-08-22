@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { NgIf, NgFor } from '@angular/common'
 import { CardModule } from 'primeng/card'
@@ -31,26 +31,44 @@ import { catchError } from 'rxjs'
     templateUrl: './roles.component.html',
     styleUrl: './roles.component.scss'
 })
-export class ProfilRolesComponent {
+export class ProfilRolesComponent implements OnInit {
     constructor(
         private toastService: ToastService,
         private userService: UserService
     ) {}
 
-    @Input() roles: UserRoleCategory[] = []
-    @Input() selected: Record<string, boolean> = {}
-    @Input() loading = true
-    @Input() canSave = false
+    ngOnInit(): void {
+        this.getRoles()
+    }
+
+    roles: UserRoleCategory[] = []
+    selected: Record<string, boolean> = {}
+    loading = true
+    canSave = false
     saving = false
 
-    @Output() onChange = new EventEmitter<boolean>()
+    getRoles() {
+        this.roles = []
+        this.selected = {}
+        this.loading = true
+        this.canSave = false
+        this.userService.getRoles().subscribe((res) => {
+            this.roles = res
+            for (const roleCategory of res) {
+                for (const ss of roleCategory.roles) {
+                    this.selected[ss.name] = ss.checked
+                }
+            }
+            this.loading = false
+        })
+    }
 
     rolesUpdated(
         event: CheckboxChangeEvent,
         categoryName: string,
         role: UserRole
     ) {
-        this.onChange.emit(true)
+        this.canSave = true
 
         if (event.checked && !role.multiple) {
             const roleCategory = this.roles.find(
@@ -81,7 +99,7 @@ export class ProfilRolesComponent {
             )
             .subscribe(() => {
                 this.saving = false
-                this.onChange.emit(false)
+                this.canSave = false
                 this.toastService.showSuccess(
                     'Vos rôles ont bien été sauvegardés'
                 )

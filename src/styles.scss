@@ -32,11 +32,13 @@ body {
     background-position-x: center;
 }
 
-a:visited {
+a:not(.p-menuitem-link),
+a:not(.p-menuitem-link):visited {
     color: var(--primary-color);
+    text-decoration: none;
 }
 
-.p-button {
+.p-button:not(.p-button-text) {
     color: white;
 }
 
@@ -88,6 +90,14 @@ a:visited {
     border-radius: 0.5rem;
 }
 
+.p-toast .p-toast-message .p-toast-message-icon {
+    margin-top: 0.2rem;
+}
+
+.p-datatable .p-datatable-header {
+    background: none;
+}
+
 .p-datatable .p-datatable-thead > tr > th {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.2);
@@ -116,12 +126,20 @@ a:visited {
     background: none;
 }
 
-.p-tabview .pi {
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem:not(.p-highlight) .p-menuitem-link,
+.p-tabmenu
+    .p-tabmenu-nav
+    .p-tabmenuitem:not(.p-highlight)
+    .p-menuitem-link:visited {
+    color: #a1a1aa;
+}
+
+.p-tabview .p-tabview-nav .pi {
     display: flex;
     align-items: center;
 }
 
-.p-tabview .pi::before {
+.p-tabview .p-tabview-nav .pi::before {
     font-size: 16px;
     padding: 1px;
 }
@@ -140,4 +158,12 @@ a:visited {
 
 .p-inputgroup {
     width: auto;
+}
+
+.p-fileupload .p-progressbar {
+    display: none;
+}
+
+.p-dialog .p-dialog-header-icons .p-dialog-header-close {
+    margin-left: 1rem;
 }

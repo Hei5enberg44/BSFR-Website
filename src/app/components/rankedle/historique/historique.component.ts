@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { NgIf, NgFor, NgClass } from '@angular/common'
 import { TableModule, TablePageEvent } from 'primeng/table'
 import { SkeletonModule } from 'primeng/skeleton'
@@ -6,7 +6,11 @@ import { AvatarModule } from 'primeng/avatar'
 import { MessagesModule } from 'primeng/messages'
 import { Message } from 'primeng/api'
 
-import { RankedleHistory } from '../../../services/rankedle/rankedle.service'
+import {
+    RankedleHistory,
+    RankedleService
+} from '../../../services/rankedle/rankedle.service'
+import { finalize } from 'rxjs'
 
 @Component({
     selector: 'app-rankedle-historique',
@@ -23,11 +27,17 @@ import { RankedleHistory } from '../../../services/rankedle/rankedle.service'
     templateUrl: './historique.component.html',
     styleUrl: './historique.component.scss'
 })
-export class RankedleHistoriqueComponent {
-    @Input() history: RankedleHistory[] = []
-    @Input() first = 0
-    @Input() total = 0
-    @Input() loading = false
+export class RankedleHistoriqueComponent implements OnInit {
+    constructor(private rankedleService: RankedleService) {}
+
+    ngOnInit(): void {
+        this.getHistory()
+    }
+
+    history: RankedleHistory[] = []
+    first = 0
+    total = 0
+    loading = false
 
     noHistoryMessage: Message[] = [
         {
@@ -38,9 +48,23 @@ export class RankedleHistoriqueComponent {
         }
     ]
 
-    @Output() onPage = new EventEmitter<TablePageEvent>()
+    getHistory(first: number = 0, rows: number = 10) {
+        this.loading = true
+        this.rankedleService
+            .getHistory(first, rows)
+            .pipe(
+                finalize(() => {
+                    this.loading = false
+                })
+            )
+            .subscribe((res) => {
+                this.history = res.history
+                this.first = res.first
+                this.total = res.total
+            })
+    }
 
-    historyPageChange(event: TablePageEvent) {
-        this.onPage.emit(event)
+    pageChange(event: TablePageEvent) {
+        this.getHistory(event.first, event.rows)
     }
 }

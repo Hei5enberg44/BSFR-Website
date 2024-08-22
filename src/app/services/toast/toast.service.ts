@@ -6,8 +6,7 @@ import { MessageService } from 'primeng/api'
 })
 export class ToastService {
     config = {
-        life: 3000,
-        position: 'bottom-right'
+        life: 3000
     }
 
     constructor(private messageService: MessageService) {}

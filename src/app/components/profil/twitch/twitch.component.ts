@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { NgIf, NgFor } from '@angular/common'
 import { CardModule } from 'primeng/card'
@@ -31,15 +31,19 @@ import { catchError } from 'rxjs'
     templateUrl: './twitch.component.html',
     styleUrl: './twitch.component.scss'
 })
-export class ProfilTwitchComponent {
+export class ProfilTwitchComponent implements OnInit {
     constructor(
         private toastService: ToastService,
         private userService: UserService
     ) {}
 
-    @Input() channelName: string | null = null
-    @Input() loading = true
-    @Input() canSave = false
+    ngOnInit(): void {
+        this.getTwitchChannel()
+    }
+
+    channelName: string = ''
+    loading = true
+    canSave = false
     saving = false
 
     helpMessage: Message[] = [
@@ -51,10 +55,18 @@ export class ProfilTwitchComponent {
         }
     ]
 
-    @Output() onChange = new EventEmitter<boolean>()
+    getTwitchChannel() {
+        this.channelName = ''
+        this.loading = true
+        this.canSave = false
+        this.userService.getTwitchChannel().subscribe((twitchChannel) => {
+            this.channelName = twitchChannel?.name ?? ''
+            this.loading = false
+        })
+    }
 
     channelNameUpdated() {
-        this.onChange.emit(true)
+        this.canSave = true
     }
 
     save() {
@@ -69,7 +81,7 @@ export class ProfilTwitchComponent {
             )
             .subscribe(() => {
                 this.saving = false
-                this.onChange.emit(false)
+                this.canSave = false
                 this.toastService.showSuccess(
                     'Votre chaîne Twitch a bien été sauvegardée'
                 )

@@ -7,7 +7,7 @@
   [totalRecords]="total"
   [tableStyle]="{ 'min-width': '70rem' }"
   [loading]="loading"
-  (onPage)="historyPageChange($event)"
+  (onPage)="pageChange($event)"
   dataKey="history.id">
   <ng-template pTemplate="header">
     <tr>
@@ -26,30 +26,36 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="loadingbody">
-    <ng-container *ngFor="let i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]">
-      <tr style="height: 64px">
-        <td><p-skeleton /></td>
-        <td class="flex items-center">
-          <p-skeleton size="42px" styleClass="me-4" />
-          <p-skeleton width="30rem" />
-        </td>
-        <td><p-skeleton /></td>
-        <td><p-skeleton /></td>
-        <td><p-skeleton /></td>
-      </tr>
+    <ng-container *ngIf="history.length === 0">
+      <ng-container *ngFor="let i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]">
+        <tr style="height: 64px">
+          <td><p-skeleton /></td>
+          <td>
+            <div class="flex items-center">
+              <p-skeleton size="42px" styleClass="me-4" />
+              <p-skeleton width="30rem" />
+            </div>
+          </td>
+          <td><p-skeleton /></td>
+          <td><p-skeleton /></td>
+          <td><p-skeleton /></td>
+        </tr>
+      </ng-container>
     </ng-container>
   </ng-template>
   <ng-template pTemplate="body" let-history>
     <tr>
       <td>{{ history.id }}</td>
-      <td class="flex items-center">
-        <p-avatar
-          [image]="history.cover"
-          styleClass="flex me-4 rounded-md overflow-hidden"
-          size="large" />
-        <span class="text-ellipsis whitespace-nowrap overflow-hidden">
-          {{ history.songName }}
-        </span>
+      <td>
+        <div class="flex items-center">
+          <p-avatar
+            [image]="history.cover"
+            styleClass="flex me-4 rounded-md overflow-hidden"
+            size="large" />
+          <span class="text-ellipsis whitespace-nowrap overflow-hidden">
+            {{ history.songName }}
+          </span>
+        </div>
       </td>
       <td class="text-ellipsis whitespace-nowrap overflow-hidden">
         {{ history.levelAuthorName }}
