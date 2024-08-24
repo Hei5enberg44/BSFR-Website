@@ -79,6 +79,13 @@ interface CubeStalkerRequestData extends PaginationResponse {
     requests: CubeStalkerRequest[]
 }
 
+export interface GuildEmoji {
+    id: string
+    name: string
+    identifier: `<:_:${string}>` | `<a:_:${string}>`
+    iconURL: string
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -241,5 +248,9 @@ export class AdminService {
         return this.http.post('/api/admin/approveCubeStalkerRequest', {
             memberId
         })
+    }
+
+    getGuildEmojis() {
+        return this.http.get<GuildEmoji[]>('/api/admin/guildEmojis')
     }
 }

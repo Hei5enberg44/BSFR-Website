@@ -35,7 +35,7 @@
                             }
                         ],
                         "styles": ["src/styles.scss"],
-                        "scripts": []
+                        "scripts": ["./node_modules/emoji-mart/dist/browser.js"]
                     },
                     "configurations": {
                         "production": {
@@ -102,7 +102,7 @@
                             }
                         ],
                         "styles": ["src/styles.scss"],
-                        "scripts": []
+                        "scripts": ["./node_modules/emoji-mart/dist/browser.js"]
                     }
                 }
             }

@@ -1,14 +1,24 @@
-<textarea
-  rows="5"
-  pInputTextarea
-  [autoResize]="true"
-  [(ngModel)]="message"
-  (input)="onChange()"
-  maxlength="1000"
-  class="w-full"
-  aria-describedby="help-message"></textarea>
+<p-inputGroup>
+  <textarea
+    #ta
+    rows="5"
+    pInputTextarea
+    [autoResize]="true"
+    [(ngModel)]="message"
+    (selectionchange)="onSelectionChange($event)"
+    (input)="onChange($event)"
+    maxlength="1000"
+    class="w-full"
+    aria-describedby="help-message"></textarea>
+  <p-inputGroupAddon>
+    <app-em-emoji-picker
+      theme="dark"
+      (onEmoji)="onEmoji($event)"
+      [updatePreview]="false" />
+  </p-inputGroupAddon>
+</p-inputGroup>
 <small id="help-message"
-  >Utilisez !p pour insérer le pseudo de l'utilisateur</small
+  >Utilisez <strong>!p</strong> pour insérer le pseudo de l'utilisateur</small
 >
 
 <div class="flex flex-row mt-3">

@@ -156,14 +156,37 @@ a:not(.p-menuitem-link):visited {
     padding: 0;
 }
 
-.p-inputgroup {
-    width: auto;
-}
-
 .p-fileupload .p-progressbar {
     display: none;
 }
 
 .p-dialog .p-dialog-header-icons .p-dialog-header-close {
     margin-left: 1rem;
+}
+
+.p-selectbutton .p-button.p-highlight::before {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.p-selectbutton .p-button.p-highlight.p-disabled::before {
+    background: #27272a;
+    border-color: #27272a;
+}
+
+.emoji-overlay.p-overlaypanel {
+    margin-left: -1.15rem;
+}
+
+.emoji-overlay.p-overlaypanel .p-overlaypanel-content {
+    padding: 0;
+}
+
+em-emoji-picker {
+    --border-radius: 5px;
+    --category-icon-size: 20px;
+}
+
+.emoji-mart-emoji {
+    vertical-align: top;
 }

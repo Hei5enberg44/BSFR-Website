@@ -1,8 +1,14 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog'
 import { FormsModule } from '@angular/forms'
+import { InputGroupModule } from 'primeng/inputgroup'
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon'
 import { InputTextareaModule } from 'primeng/inputtextarea'
 import { ButtonModule } from 'primeng/button'
+import {
+    EmEmojiPickerComponent,
+    Emoji
+} from '../../../em-emoji-picker/em-emoji-picker.component'
 
 import { BirthdayMessage } from '../../../../services/admin/admin.service'
 import { ToastService } from '../../../../services/toast/toast.service'
@@ -12,7 +18,14 @@ type Action = 'add' | 'modify'
 @Component({
     selector: 'app-edit-dialog',
     standalone: true,
-    imports: [FormsModule, InputTextareaModule, ButtonModule],
+    imports: [
+        FormsModule,
+        InputGroupModule,
+        InputGroupAddonModule,
+        InputTextareaModule,
+        ButtonModule,
+        EmEmojiPickerComponent
+    ],
     templateUrl: './edit-dialog.component.html',
     styleUrl: './edit-dialog.component.scss'
 })
@@ -27,6 +40,10 @@ export class EditDialogComponent implements OnInit {
     message: string = ''
     canSave = false
 
+    @ViewChild('ta') textarea!: ElementRef<HTMLTextAreaElement>
+    selectionStart = 0
+    selectionEnd = 0
+
     ngOnInit(): void {
         const data = this.dynamicDialogConfig.data
         this.action = data.action as Action
@@ -35,8 +52,36 @@ export class EditDialogComponent implements OnInit {
         }
     }
 
-    onChange() {
+    onSelectionChange(event: Event) {
+        this.selectionStart = (
+            event.target as HTMLTextAreaElement
+        ).selectionStart
+        this.selectionEnd = (event.target as HTMLTextAreaElement).selectionEnd
+    }
+
+    onChange(event: Event) {
         this.canSave = true
+    }
+
+    onEmoji(event: { emoji: Emoji; event: PointerEvent }) {
+        const emoji = event.emoji
+        let content = ''
+        if (emoji.native) {
+            content = `${emoji.native} `
+        } else if (emoji.keywords && emoji.keywords.length === 1) {
+            const identifier = emoji.keywords[0]
+            content = `${identifier} `
+        }
+        this.message =
+            this.message.substring(0, this.selectionStart) +
+            content +
+            this.message.substring(this.selectionEnd)
+        const textarea = this.textarea.nativeElement
+        const selectionStart = textarea.selectionStart + content.length
+        setTimeout(() => {
+            textarea.focus()
+            textarea.setSelectionRange(selectionStart, selectionStart)
+        }, 100)
     }
 
     saveMessage() {

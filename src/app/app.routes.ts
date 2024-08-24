@@ -23,6 +23,8 @@ import { AdminMessagesAnniversaireComponent } from './components/admin/messages-
 import { AdminTwitchComponent } from './components/admin/twitch/twitch.component'
 import { AdminCubeStalkerComponent } from './components/admin/cube-stalker/cube-stalker.component'
 import { AdminCubeStalkerRequestComponent } from './components/admin/cube-stalker/request/request.component'
+import { AgentComponent } from './components/agent/agent.component'
+import { AgentMessageComponent } from './components/agent/message/message.component'
 import { PageNotFoundComponent } from './components/errors/page-not-found/page-not-found.component'
 import { UnauthorizedComponent } from './components/errors/unauthorized/unauthorized.component'
 
@@ -179,6 +181,29 @@ export const routes: Routes = [
                 },
                 component: AdminCubeStalkerRequestComponent
             }
+        ]
+    },
+    {
+        path: 'agent',
+        title: `Agent • ${title}`,
+        component: AgentComponent,
+        canActivate: [AdminGuard],
+        children: [
+            {
+                path: '',
+                redirectTo: 'message',
+                pathMatch: 'full'
+            },
+            {
+                path: 'message',
+                component: AgentMessageComponent
+            }
+            // {
+            //     path: 'reaction',
+            // },
+            // {
+            //     path: 'parametres',
+            // }
         ]
     },
     {
