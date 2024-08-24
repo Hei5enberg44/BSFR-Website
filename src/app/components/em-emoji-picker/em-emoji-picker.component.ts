@@ -4,16 +4,21 @@ import {
     Output,
     EventEmitter,
     OnInit,
-    ViewChild
+    ViewChild,
+    SimpleChanges
 } from '@angular/core'
 import { NgIf } from '@angular/common'
 import { ButtonModule } from 'primeng/button'
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel'
+import { ConfirmDialogModule } from 'primeng/confirmdialog'
+import { ConfirmationService } from 'primeng/api'
+
 import emojisData from '@emoji-mart/data/sets/15/twitter.json'
 import fr from '@emoji-mart/data/i18n/fr.json'
 declare var EmojiMart: any
 
 import { AdminService, GuildEmoji } from '../../services/admin/admin.service'
+import { DeviceDetectorService } from 'ngx-device-detector'
 import { trustHTML } from '../../pipes/trustHTML.pipe'
 
 export interface Emoji {
@@ -26,14 +31,28 @@ export interface Emoji {
 }
 
 @Component({
+    selector: 'em-emoji',
+    standalone: true,
+    template: ''
+})
+export class EmEmojiComponent {}
+
+@Component({
     selector: 'app-em-emoji-picker',
     standalone: true,
-    imports: [NgIf, ButtonModule, OverlayPanelModule, trustHTML],
+    imports: [
+        NgIf,
+        EmEmojiComponent,
+        ButtonModule,
+        OverlayPanelModule,
+        ConfirmDialogModule,
+        trustHTML
+    ],
     templateUrl: './em-emoji-picker.component.html',
     styleUrl: './em-emoji-picker.component.scss'
 })
 export class EmEmojiPickerComponent implements OnInit {
-    constructor(private adminService: AdminService) {}
+    constructor(private adminService: AdminService, private confirmationService: ConfirmationService, private deviceService: DeviceDetectorService) {}
 
     loading = true
     guildEmojis: GuildEmoji[] = []
@@ -42,7 +61,10 @@ export class EmEmojiPickerComponent implements OnInit {
     @Input() updatePreview = true
     @Input() theme = 'dark'
     @Input() set = 'twitter'
-    @Input() selectedEmoji: string = ''
+    @Input() selectedEmoji: string | null = null
+    @Input() value: Emoji | null = null
+    @Input() styleClass = ''
+    @Output() valueChange = new EventEmitter<Emoji>()
 
     @Output() onEmoji = new EventEmitter<{
         emoji: Emoji
@@ -50,12 +72,19 @@ export class EmEmojiPickerComponent implements OnInit {
     }>()
 
     ngOnInit(): void {
+        if(this.touchUI) this.styleClass += ' inputgroup'
         EmojiMart.init({ data: emojisData })
         this.adminService.getGuildEmojis().subscribe((emojis) => {
             this.loading = false
             this.guildEmojis = emojis
         })
-        this.setSelectedEmoji({ native: '😀' })
+        this.setSelectedEmoji(this.value ?? { native: '😀' })
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if(changes['value'] && !changes['value'].firstChange && changes['value'].currentValue === null) {
+            this.setSelectedEmoji({ native: '😀' })
+        }
     }
 
     toggleOverlay(event: Event) {
@@ -84,6 +113,9 @@ export class EmEmojiPickerComponent implements OnInit {
             set: this.set,
             theme: this.theme,
             skinTonePosition: 'search',
+            perLine: this.touchUI ? 8 : 9,
+            emojiButtonSize: this.touchUI ? 36 : 42,
+            emojiSize: this.touchUI ? 24 : 30,
             custom: [
                 {
                     id: 'bsfr',
@@ -91,7 +123,7 @@ export class EmEmojiPickerComponent implements OnInit {
                     emojis: this.guildEmojis.map((e) => {
                         return {
                             id: e.name,
-                            keywords: [e.identifier],
+                            keywords: [e.identifier, e.id],
                             skins: [{ src: e.iconURL }]
                         }
                     })
@@ -103,14 +135,32 @@ export class EmEmojiPickerComponent implements OnInit {
                 }
             },
             onEmojiSelect: (emoji: Emoji, event: PointerEvent) => {
-                this.overlaypanel.toggle(event)
+                this.value = emoji
+                this.valueChange.emit(emoji)
                 this.onEmoji.emit({ emoji, event })
                 if (this.updatePreview) {
                     this.setSelectedEmoji(emoji)
                 }
+
+                this.overlaypanel?.toggle(event)
+                this.confirmationService?.close()
             }
         }
 
         new EmojiMart.Picker(props)
+    }
+
+    get touchUI() {
+        return this.deviceService.isMobile() || this.deviceService.isTablet()
+    }
+
+    showDialog() {
+        this.confirmationService.confirm({
+            acceptVisible: false,
+            rejectVisible: false
+        })
+        setTimeout(() => {
+            this.showEmojis()
+        }, 100)
     }
 }

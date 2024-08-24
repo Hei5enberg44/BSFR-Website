@@ -67,7 +67,6 @@
       <div>
         <h3 class="mt-0">Aperçu</h3>
         <div class="mb-3" *ngIf="status">
-          <p-confirmDialog />
           @switch (status) {
             @case (1) {
               <p-messages severity="info">
@@ -150,3 +149,4 @@
     </ng-template>
   </ng-container>
 </p-card>
+<p-confirmDialog appendTo="body" [dismissableMask]="true" />

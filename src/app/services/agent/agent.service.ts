@@ -60,4 +60,18 @@ export class AgentService {
             mention
         })
     }
+
+    sendReaction(
+        channelId: string,
+        messageId: string,
+        emoji: string,
+        native: boolean
+    ) {
+        return this.http.post('/api/agent/sendReaction', {
+            channelId,
+            messageId,
+            emoji,
+            native
+        })
+    }
 }

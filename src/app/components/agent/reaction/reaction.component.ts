@@ -1,13 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
+import { Component } from '@angular/core'
 import { NgIf } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { CardModule } from 'primeng/card'
 import { DropdownModule } from 'primeng/dropdown'
 import { AvatarModule } from 'primeng/avatar'
-import { InputGroupModule } from 'primeng/inputgroup'
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon'
-import { InputTextareaModule } from 'primeng/inputtextarea'
-import { SelectButtonModule } from 'primeng/selectbutton'
 import { ButtonModule } from 'primeng/button'
 import {
     EmEmojiPickerComponent,
@@ -40,7 +36,7 @@ interface ChannelMessageItem {
 }
 
 @Component({
-    selector: 'app-agent-message',
+    selector: 'app-agent-reaction',
     standalone: true,
     imports: [
         NgIf,
@@ -48,18 +44,14 @@ interface ChannelMessageItem {
         CardModule,
         DropdownModule,
         AvatarModule,
-        InputGroupModule,
-        InputGroupAddonModule,
-        InputTextareaModule,
         ButtonModule,
-        SelectButtonModule,
         EmEmojiPickerComponent,
         trustHTML
     ],
-    templateUrl: './message.component.html',
-    styleUrl: './message.component.scss'
+    templateUrl: './reaction.component.html',
+    styleUrl: './reaction.component.scss'
 })
-export class AgentMessageComponent implements OnInit {
+export class AgentReactionComponent {
     constructor(
         private agentService: AgentService,
         private toastService: ToastService
@@ -75,12 +67,7 @@ export class AgentMessageComponent implements OnInit {
 
     selectedChannel: string | null = null
     selectedMessage: string | null = null
-    messageContent = ''
-    mention = false
-
-    @ViewChild('ta') textarea!: ElementRef<HTMLTextAreaElement>
-    selectionStart = 0
-    selectionEnd = 0
+    selectedEmoji: Emoji | null = null
 
     ngOnInit(): void {
         this.agentService.getGuildChannels().subscribe((guildChannels) => {
@@ -137,42 +124,19 @@ export class AgentMessageComponent implements OnInit {
                     })
                     this.messagesDisabled = false
                 })
-            this.canSave = this.messageContent.trim() !== ''
+            this.canSave = false
         }
     }
 
-    onMessageSelectionChange(event: Event) {
-        this.selectionStart = (
-            event.target as HTMLTextAreaElement
-        ).selectionStart
-        this.selectionEnd = (event.target as HTMLTextAreaElement).selectionEnd
-    }
-
-    onMessageInput(event: Event) {
-        this.canSave =
-            this.selectedChannel !== null && this.messageContent.trim() !== ''
+    onMessageChange() {
+        const messageId = this.selectedMessage
+        if(messageId) {
+            this.canSave = this.selectedChannel !== null && this.selectedEmoji !== null
+        }
     }
 
     onEmoji(event: { emoji: Emoji; event: PointerEvent }) {
-        const emoji = event.emoji
-        let content = ''
-        if (emoji.native) {
-            content = `${emoji.native} `
-        } else if (emoji.keywords && emoji.keywords[0]) {
-            const identifier = emoji.keywords[0]
-            content = `${identifier} `
-        }
-        this.messageContent =
-            this.messageContent.substring(0, this.selectionStart) +
-            content +
-            this.messageContent.substring(this.selectionEnd)
-        const textarea = this.textarea.nativeElement
-        const selectionStart = textarea.selectionStart + content.length
-        setTimeout(() => {
-            textarea.focus()
-            textarea.setSelectionRange(selectionStart, selectionStart)
-        }, 100)
-        this.canSave = this.selectedChannel !== null
+        this.canSave = this.selectedChannel !== null && this.selectedMessage !== null
     }
 
     send() {
@@ -180,19 +144,29 @@ export class AgentMessageComponent implements OnInit {
             this.toastService.showError('Veuillez sélectionner un salon')
             return
         }
-        if (this.messageContent.trim() === '') {
-            this.toastService.showError('Le message ne peut pas être vide')
+        if (!this.selectedMessage) {
+            this.toastService.showError('Veuillez sélectionner un message')
+            return
+        }
+        if (!this.selectedEmoji) {
+            this.toastService.showError('Veuillez sélectionner une réaction')
+            return
+        }
+
+        const emoji = this.selectedEmoji.native ? this.selectedEmoji.native : (this.selectedEmoji.keywords && this.selectedEmoji.keywords[1]) ? this.selectedEmoji.keywords[1] : undefined
+        if(!emoji) {
+            this.toastService.showError('Impossible d\'envoyer la réaction sélectionnée')
             return
         }
 
         this.saving = true
 
         this.agentService
-            .sendMessage(
+            .sendReaction(
                 this.selectedChannel,
                 this.selectedMessage,
-                this.messageContent.trim(),
-                this.mention
+                emoji,
+                this.selectedEmoji.native !== undefined
             )
             .pipe(
                 finalize(() => {
@@ -202,9 +176,9 @@ export class AgentMessageComponent implements OnInit {
             .subscribe(() => {
                 this.selectedChannel = null
                 this.selectedMessage = null
-                this.messageContent = ''
+                this.selectedEmoji = null
                 this.canSave = false
-                this.toastService.showSuccess('Le message a bien été envoyé')
+                this.toastService.showSuccess('La réaction a bien été envoyée')
             })
     }
 }

@@ -35,7 +35,7 @@
       </p-dropdown>
     </div>
     <div class="flex flex-col w-full gap-y-2">
-      <label for="message">Répondre au message (facultatif)</label>
+      <label for="message">Message</label>
       <p-dropdown
         [options]="channelMessages"
         [(ngModel)]="selectedMessage"
@@ -48,6 +48,7 @@
         [showClear]="true"
         optionLabel="value"
         optionValue="value"
+        (onChange)="onMessageChange()"
         [loading]="loadingMessages"
         [disabled]="messagesDisabled">
         <ng-template pTemplate="selectedItem" let-message>
@@ -74,47 +75,13 @@
         </ng-template>
       </p-dropdown>
     </div>
-  </div>
-  <div class="mt-5">
-    <div class="flex flex-col gap-y-2">
-      <label for="message">Message</label>
-      <p-inputGroup>
-        <textarea
-          #ta
-          rows="5"
-          pInputTextarea
-          [autoResize]="true"
-          [(ngModel)]="messageContent"
-          (selectionchange)="onMessageSelectionChange($event)"
-          (input)="onMessageInput($event)"
-          maxlength="1800"
-          class="w-full"
-          aria-describedby="help-message"></textarea>
-        <p-inputGroupAddon>
-          <app-em-emoji-picker
-            theme="dark"
+    <div class="flex flex-col w-full gap-y-2">
+        <label for="message">Réaction</label>
+        <app-em-emoji-picker
+            [(value)]="selectedEmoji"
+            [updatePreview]="true"
             (onEmoji)="onEmoji($event)"
-            [updatePreview]="false"
-            styleClass="emoji-overlay -ms-[5rem]" />
-        </p-inputGroupAddon>
-      </p-inputGroup>
-    </div>
-  </div>
-  <div class="mt-5">
-    <div class="flex flex-col gap-y-2">
-      <span class="flex items-center gap-x-1">
-        <span class="pi pi-at"></span>
-        Mention
-      </span>
-      <p-selectButton
-        [options]="[
-          { label: 'Non', value: false },
-          { label: 'Oui', value: true }
-        ]"
-        [(ngModel)]="mention"
-        optionLabel="label"
-        optionValue="value"
-        [disabled]="selectedMessage === null" />
+            styleClass="emoji-overlay" />
     </div>
   </div>
   <div class="flex mt-6">

@@ -174,17 +174,12 @@ a:not(.p-menuitem-link):visited {
     border-color: #27272a;
 }
 
-.emoji-overlay.p-overlaypanel {
-    margin-left: -1.15rem;
-}
-
 .emoji-overlay.p-overlaypanel .p-overlaypanel-content {
     padding: 0;
 }
 
-em-emoji-picker {
-    --border-radius: 5px;
-    --category-icon-size: 20px;
+.emoji-dialog {
+    border-radius: 5px;
 }
 
 .emoji-mart-emoji {

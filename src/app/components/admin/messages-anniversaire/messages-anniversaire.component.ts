@@ -105,6 +105,7 @@ export class AdminMessagesAnniversaireComponent {
                 action: 'add'
             },
             header: "Ajouter un message d'anniversaire",
+            dismissableMask: true,
             styleClass: 'w-full md:w-[50rem] sm:max-w-screen-sm mx-2 md:mx-0'
         })
 
@@ -131,6 +132,7 @@ export class AdminMessagesAnniversaireComponent {
                 birthdayMessage
             },
             header: "Modifier un message d'anniversaire",
+            dismissableMask: true,
             styleClass: 'w-full md:w-[50rem] sm:max-w-screen-sm mx-2 md:mx-0'
         })
 
