@@ -150,8 +150,7 @@ export class AgentMessageComponent implements OnInit {
 
     onMessageInput(event: Event) {
         this.canSave =
-            this.selectedChannel !== undefined &&
-            this.messageContent.trim() !== ''
+            this.selectedChannel !== null && this.messageContent.trim() !== ''
     }
 
     onEmoji(event: { emoji: Emoji; event: PointerEvent }) {
@@ -173,6 +172,7 @@ export class AgentMessageComponent implements OnInit {
             textarea.focus()
             textarea.setSelectionRange(selectionStart, selectionStart)
         }, 100)
+        this.canSave = this.selectedChannel !== null
     }
 
     send() {
