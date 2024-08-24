@@ -82,6 +82,7 @@ export class EditDialogComponent implements OnInit {
             textarea.focus()
             textarea.setSelectionRange(selectionStart, selectionStart)
         }, 100)
+        this.canSave = true
     }
 
     saveMessage() {
