@@ -157,6 +157,7 @@ export class AdminMessagesAnniversaireComponent {
     deleteConfirm(event: MouseEvent, table: Table, id: number) {
         this.confirmationService.confirm({
             target: event.target as EventTarget,
+            key: 'delete-message-dialog',
             header: "Supprimer un message d'anniversaire",
             message: 'Confirmer la suppression ?',
             icon: 'pi pi-info-circle',

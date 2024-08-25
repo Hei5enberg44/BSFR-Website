@@ -1,4 +1,4 @@
-@if(!touchUI) {
+@if (!touchUI) {
   <p-button (onClick)="toggleOverlay($event)" [text]="true" [loading]="loading">
     @if (selectedEmoji && !loading) {
       <span
@@ -14,8 +14,7 @@
       </div>
     </ng-template>
   </p-overlayPanel>
-}
-@else {
+} @else {
   <p-button (onClick)="showDialog()" [text]="true" [loading]="loading">
     @if (selectedEmoji && !loading) {
       <span
@@ -24,7 +23,11 @@
     }
   </p-button>
 
-  <p-confirmDialog appendTo="body" [dismissableMask]="true" styleClass="emoji-dialog">
+  <p-confirmDialog
+    key="emoji-picker-dialog"
+    appendTo="body"
+    [dismissableMask]="true"
+    styleClass="emoji-dialog">
     <ng-template pTemplate="headless">
       <div id="picker"></div>
     </ng-template>

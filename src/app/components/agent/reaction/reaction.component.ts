@@ -130,13 +130,15 @@ export class AgentReactionComponent {
 
     onMessageChange() {
         const messageId = this.selectedMessage
-        if(messageId) {
-            this.canSave = this.selectedChannel !== null && this.selectedEmoji !== null
+        if (messageId) {
+            this.canSave =
+                this.selectedChannel !== null && this.selectedEmoji !== null
         }
     }
 
     onEmoji(event: { emoji: Emoji; event: PointerEvent }) {
-        this.canSave = this.selectedChannel !== null && this.selectedMessage !== null
+        this.canSave =
+            this.selectedChannel !== null && this.selectedMessage !== null
     }
 
     send() {
@@ -153,9 +155,15 @@ export class AgentReactionComponent {
             return
         }
 
-        const emoji = this.selectedEmoji.native ? this.selectedEmoji.native : (this.selectedEmoji.keywords && this.selectedEmoji.keywords[1]) ? this.selectedEmoji.keywords[1] : undefined
-        if(!emoji) {
-            this.toastService.showError('Impossible d\'envoyer la réaction sélectionnée')
+        const emoji = this.selectedEmoji.native
+            ? this.selectedEmoji.native
+            : this.selectedEmoji.keywords && this.selectedEmoji.keywords[1]
+              ? this.selectedEmoji.keywords[1]
+              : undefined
+        if (!emoji) {
+            this.toastService.showError(
+                "Impossible d'envoyer la réaction sélectionnée"
+            )
             return
         }
 

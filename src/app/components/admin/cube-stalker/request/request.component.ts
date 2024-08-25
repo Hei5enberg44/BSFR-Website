@@ -118,6 +118,7 @@ export class AdminCubeStalkerRequestComponent {
     confirmDeny(event: MouseEvent, memberId: string) {
         this.confirmationService.confirm({
             target: event.target as EventTarget,
+            key: 'card-request-dialog',
             header: 'Refuser la demande ?',
             acceptButtonStyleClass: 'p-button-danger p-button-text',
             rejectButtonStyleClass: 'p-button-text',
@@ -152,6 +153,7 @@ export class AdminCubeStalkerRequestComponent {
     confirmApproval(event: MouseEvent, memberId: string) {
         this.confirmationService.confirm({
             target: event.target as EventTarget,
+            key: 'card-request-dialog',
             header: 'Approuver la demande ?',
             acceptButtonStyleClass: 'p-button-success p-button-text',
             rejectButtonStyleClass: 'p-button-text',

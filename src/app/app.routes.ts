@@ -26,6 +26,7 @@ import { AdminCubeStalkerRequestComponent } from './components/admin/cube-stalke
 import { AgentComponent } from './components/agent/agent.component'
 import { AgentMessageComponent } from './components/agent/message/message.component'
 import { AgentReactionComponent } from './components/agent/reaction/reaction.component'
+import { AgentSettingsComponent } from './components/agent/settings/settings.component'
 import { PageNotFoundComponent } from './components/errors/page-not-found/page-not-found.component'
 import { UnauthorizedComponent } from './components/errors/unauthorized/unauthorized.component'
 
@@ -202,10 +203,11 @@ export const routes: Routes = [
             {
                 path: 'reaction',
                 component: AgentReactionComponent
+            },
+            {
+                path: 'parametres',
+                component: AgentSettingsComponent
             }
-            // {
-            //     path: 'parametres',
-            // }
         ]
     },
     {

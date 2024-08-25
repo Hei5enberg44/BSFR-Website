@@ -14,6 +14,8 @@
         [filter]="true"
         filterBy="name"
         styleClass="w-full"
+        [loading]="loadingChannels"
+        [disabled]="loadingChannels"
         (onChange)="onChannelChange()">
         <ng-template pTemplate="selectedItem" let-channel>
           <div class="flex items-center gap-x-2">
@@ -101,21 +103,14 @@
     </div>
   </div>
   <div class="mt-5">
-    <div class="flex flex-col gap-y-2">
-      <span class="flex items-center gap-x-1">
-        <span class="pi pi-at"></span>
-        Mention
-      </span>
-      <p-selectButton
-        [options]="[
-          { label: 'Non', value: false },
-          { label: 'Oui', value: true }
-        ]"
-        [(ngModel)]="mention"
-        optionLabel="label"
-        optionValue="value"
-        [disabled]="selectedMessage === null" />
-    </div>
+    <p-toggleButton
+      [(ngModel)]="mention"
+      onLabel="Mention activée"
+      offLabel="Mention désactivée"
+      onIcon="pi pi-at"
+      offIcon="pi pi-at"
+      styleClass="w-56"
+      [disabled]="selectedMessage === null" />
   </div>
   <div class="flex mt-6">
     <p-button

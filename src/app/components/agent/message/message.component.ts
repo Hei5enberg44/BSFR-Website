@@ -7,7 +7,7 @@ import { AvatarModule } from 'primeng/avatar'
 import { InputGroupModule } from 'primeng/inputgroup'
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon'
 import { InputTextareaModule } from 'primeng/inputtextarea'
-import { SelectButtonModule } from 'primeng/selectbutton'
+import { ToggleButtonModule } from 'primeng/togglebutton'
 import { ButtonModule } from 'primeng/button'
 import {
     EmEmojiPickerComponent,
@@ -52,7 +52,7 @@ interface ChannelMessageItem {
         InputGroupAddonModule,
         InputTextareaModule,
         ButtonModule,
-        SelectButtonModule,
+        ToggleButtonModule,
         EmEmojiPickerComponent,
         trustHTML
     ],

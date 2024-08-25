@@ -52,7 +52,11 @@ export class EmEmojiComponent {}
     styleUrl: './em-emoji-picker.component.scss'
 })
 export class EmEmojiPickerComponent implements OnInit {
-    constructor(private adminService: AdminService, private confirmationService: ConfirmationService, private deviceService: DeviceDetectorService) {}
+    constructor(
+        private adminService: AdminService,
+        private confirmationService: ConfirmationService,
+        private deviceService: DeviceDetectorService
+    ) {}
 
     loading = true
     guildEmojis: GuildEmoji[] = []
@@ -72,7 +76,7 @@ export class EmEmojiPickerComponent implements OnInit {
     }>()
 
     ngOnInit(): void {
-        if(this.touchUI) this.styleClass += ' inputgroup'
+        if (this.touchUI) this.styleClass += ' inputgroup'
         EmojiMart.init({ data: emojisData })
         this.adminService.getGuildEmojis().subscribe((emojis) => {
             this.loading = false
@@ -82,7 +86,11 @@ export class EmEmojiPickerComponent implements OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if(changes['value'] && !changes['value'].firstChange && changes['value'].currentValue === null) {
+        if (
+            changes['value'] &&
+            !changes['value'].firstChange &&
+            changes['value'].currentValue === null
+        ) {
             this.setSelectedEmoji({ native: '😀' })
         }
     }
@@ -96,7 +104,7 @@ export class EmEmojiPickerComponent implements OnInit {
 
     setSelectedEmoji(emoji: Emoji) {
         if (emoji.native) {
-            this.selectedEmoji = `<em-emoji set="${this.set}" native="${emoji.native}" size="1.5rem"></em-emoji>`
+            this.selectedEmoji = `<em-emoji set="${this.set}" native="${emoji.native}"${emoji.shortcodes ? ` shortcodes="${emoji.shortcodes}"` : ''} size="1.5rem"></em-emoji>`
         } else {
             this.selectedEmoji = `<img src="${emoji.src}" width="23" height="23" />`
         }
@@ -156,6 +164,7 @@ export class EmEmojiPickerComponent implements OnInit {
 
     showDialog() {
         this.confirmationService.confirm({
+            key: 'emoji-picker-dialog',
             acceptVisible: false,
             rejectVisible: false
         })

@@ -164,12 +164,20 @@ a:not(.p-menuitem-link):visited {
     margin-left: 1rem;
 }
 
-.p-selectbutton .p-button.p-highlight::before {
+.p-selectbutton .p-button.p-highlight::before,
+.p-togglebutton.p-highlight .p-button-label,
+.p-togglebutton.p-highlight:has(.p-button-icon) .p-button-icon {
     background: var(--primary-color);
     border-color: var(--primary-color);
 }
 
-.p-selectbutton .p-button.p-highlight.p-disabled::before {
+.p-togglebutton:has(.p-button-icon) .p-button-icon::before {
+    padding-left: 5px;
+}
+
+.p-selectbutton .p-button.p-highlight.p-disabled::before,
+.p-togglebutton.p-disabled .p-button-label,
+.p-togglebutton.p-disabled:has(.p-button-icon) .p-button-icon {
     background: #27272a;
     border-color: #27272a;
 }

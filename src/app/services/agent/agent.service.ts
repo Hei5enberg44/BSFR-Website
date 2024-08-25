@@ -29,6 +29,24 @@ export interface ChannelMessage {
     createdAt: Date
 }
 
+// Settings
+interface DMSettings {
+    name: 'dm'
+    data: DMSettingsData
+}
+
+export type Setting = DMSettings
+
+// Settings Data
+export interface DMSettingsData {
+    enabled: boolean
+}
+
+export type SettingName = 'dm'
+export type SettingData<S extends SettingName> = S extends 'dm'
+    ? DMSettingsData
+    : never
+
 @Injectable({
     providedIn: 'root'
 })
@@ -72,6 +90,20 @@ export class AgentService {
             messageId,
             emoji,
             native
+        })
+    }
+
+    getSettings() {
+        return this.http.get<Setting[]>('/api/agent/settings')
+    }
+
+    updateSetting<N extends SettingName, D extends SettingData<N>>(
+        name: N,
+        data: D
+    ) {
+        return this.http.post('/api/agent/setting', {
+            name,
+            data
         })
     }
 }

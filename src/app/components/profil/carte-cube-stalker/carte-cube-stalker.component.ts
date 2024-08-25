@@ -150,6 +150,7 @@ export class ProfilCarteCubeStalkerComponent implements OnInit {
         event.preventDefault()
         this.confirmationService.confirm({
             target: event.target as EventTarget,
+            key: 'card-confirm-dialog',
             header: "Annuler la demande d'approbation",
             message: 'Voulez-vous continuer ?',
             icon: 'pi pi-info-circle',
@@ -167,6 +168,7 @@ export class ProfilCarteCubeStalkerComponent implements OnInit {
         event.preventDefault()
         this.confirmationService.confirm({
             target: event.target as EventTarget,
+            key: 'card-confirm-dialog',
             header: 'Revenir à la carte par défaut',
             message: 'Voulez-vous continuer ?',
             icon: 'pi pi-info-circle',
