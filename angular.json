@@ -35,7 +35,10 @@
                             }
                         ],
                         "styles": ["src/styles.scss"],
-                        "scripts": ["./node_modules/emoji-mart/dist/browser.js"]
+                        "scripts": [
+                            "./node_modules/emoji-mart/dist/browser.js",
+                            "./node_modules/howler/dist/howler.min.js"
+                        ]
                     },
                     "configurations": {
                         "production": {
@@ -102,7 +105,10 @@
                             }
                         ],
                         "styles": ["src/styles.scss"],
-                        "scripts": ["./node_modules/emoji-mart/dist/browser.js"]
+                        "scripts": [
+                            "./node_modules/emoji-mart/dist/browser.js",
+                            "./node_modules/howler/dist/howler.min.js"
+                        ]
                     }
                 }
             }

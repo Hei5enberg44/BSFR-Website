@@ -4,15 +4,162 @@
   </p-card>
 </ng-container>
 <ng-template #jeu>
-  <ng-container *ngIf="rankedle">
+  <ng-container *ngIf="rankedleCurrent !== null">
     <p-card
       [header]="
-        'Saison ' + rankedle.seasonId + ' — ' + 'Rankedle #' + rankedle.id
+        'Saison ' +
+        rankedleCurrent.seasonId +
+        ' — ' +
+        'Rankedle #' +
+        rankedleCurrent.id
       "
       styleClass="bg-transparent">
+      <div
+        class="grid md:grid-cols-2 md:grid-rows-none md:gap-x-10 gap-x-0 gap-y-3 grid-cols-none grid-rows-[auto_auto]">
+        <div>
+          @if (rankedleResult === null) {
+            <div class="mb-5">
+              <app-audio-player
+                [barCount]="80"
+                [gap]="8"
+                [barWidth]="8"
+                [skips]="rankedlePlayerScore ? rankedlePlayerScore.skips : 0" />
+            </div>
+            <div class="flex mb-5">
+              <p-autoComplete
+                class="w-full"
+                styleClass="w-full"
+                inputStyleClass="w-full rounded-tr-none rounded-br-none"
+                scrollHeight="500px"
+                appendTo="body"
+                [(ngModel)]="selectedSong"
+                [lazy]="true"
+                [suggestions]="songList"
+                optionLabel="name"
+                optionValue="id"
+                [forceSelection]="true"
+                [showClear]="true"
+                placeholder="Rechercher un artiste/titre de musique"
+                [disabled]="!canSearch || searchLoading"
+                (onSelect)="onSongSelect()"
+                (onClear)="onSongClear()"
+                (completeMethod)="searchSong($event)">
+                <ng-template pTemplate="item" let-song>
+                  <div class="flex items-center gap-x-2 min-w-full max-w-min">
+                    <span
+                      class="text-balance leading-6"
+                      [innerHTML]="song.name | trustHTML"></span>
+                  </div>
+                </ng-template>
+              </p-autoComplete>
+              <p-button
+                label="INDICE"
+                [raised]="true"
+                severity="help"
+                [loading]="hintLoading"
+                [disabled]="!hintAvailable"
+                (onClick)="hintConfirm($event)"
+                styleClass="rounded-tl-none rounded-bl-none" />
+            </div>
+            <div class="flex justify-between mb-5">
+              <p-button
+                [label]="skipLabel"
+                [raised]="true"
+                severity="secondary"
+                [disabled]="!canSkip"
+                [loading]="skipLoading"
+                (onClick)="skip()" />
+              <p-button
+                [label]="submitLabel"
+                [raised]="true"
+                severity="success"
+                [loading]="submitLoading"
+                [disabled]="!canSubmit"
+                (onClick)="submit()" />
+            </div>
+          } @else {
+            <div>
+              <div class="mb-5">
+                <app-audio-player
+                  [barCount]="80"
+                  [gap]="8"
+                  [barWidth]="8"
+                  [map]="rankedleResult ? rankedleResult.map : null" />
+              </div>
+            </div>
+          }
+        </div>
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="m-0">Résumé de la partie</h3>
+            <p-button
+              [label]="shareLabel"
+              [icon]="shareIcon"
+              size="small"
+              (onClick)="share()"
+              [loading]="shareLoading"
+              *ngIf="
+                rankedlePlayerScore && rankedlePlayerScore.success !== null
+              " />
+          </div>
+          <div class="details">
+            <p-messages key="details" [(value)]="detailMessages" />
+          </div>
+          <span *ngIf="detailMessages.length === 0">
+            Vous n'avez pas encore joué
+          </span>
+        </div>
+      </div>
     </p-card>
+    <p-confirmDialog key="hint" appendTo="body" [dismissableMask]="true" #cd>
+      <ng-template pTemplate="headless" let-message>
+        <div class="flex flex-col items-center p-6">
+          @if (hint === null) {
+            <div
+              class="inline-flex justify-center items-center rounded-full w-24 h-24 bg-[var(--primary-color)]">
+              <span class="pi pi-question text-5xl"></span>
+            </div>
+            <span class="font-bold text-2xl block mb-2 mt-4">
+              {{ message.header }}
+            </span>
+            <p class="mb-0">{{ message.message }}</p>
+            <div class="w-full flex items-center gap-x-2 mt-6">
+              <p-button
+                label="Non"
+                [text]="true"
+                [disabled]="hintConfirmLoading"
+                (onClick)="cd.reject()"
+                styleClass="w-full"
+                class="w-full" />
+              <p-button
+                label="Oui"
+                [loading]="hintConfirmLoading"
+                (onClick)="hintAccept()"
+                styleClass="w-full"
+                class="w-full" />
+            </div>
+          } @else {
+            <span class="flex flex-row items-center gap-x-3 mb-4">
+              <div
+                class="inline-flex justify-center items-center rounded-full w-8 h-8 bg-[var(--primary-color)]">
+                <span class="pi pi-question"></span>
+              </div>
+              <span class="font-bold text-xl block">Votre indice</span>
+            </span>
+            <img [src]="'data:image/webp;base64,' + hint" class="rounded" />
+            <div class="flex items-center mt-5">
+              <p-button
+                label="Fermer"
+                icon="pi pi-times"
+                severity="secondary"
+                (onClick)="cd.reject()" />
+            </div>
+          }
+        </div>
+      </ng-template>
+    </p-confirmDialog>
   </ng-container>
-  <ng-container *ngIf="!rankedle">
+  <ng-container *ngIf="!rankedleCurrent">
     <p-card header="Pas de Rankedle en cours" styleClass="bg-transparent">
       <p-messages [enableService]="false" [(value)]="noRankedleMessage" />
     </p-card>

@@ -17,6 +17,7 @@ import { routes } from './app.routes'
 import { ConfirmationService, MessageService } from 'primeng/api'
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core'
 import { TranslateHttpLoader } from '@ngx-translate/http-loader'
+import { IMAGE_CONFIG } from '@angular/common'
 
 function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, './i18n/', '.json')
@@ -41,6 +42,13 @@ export const appConfig: ApplicationConfig = {
             withFetch(),
             withInterceptors([HttpErrorsInterceptor])
         ),
-        importProvidersFrom([TranslateModule.forRoot(provideTranslation())])
+        importProvidersFrom([TranslateModule.forRoot(provideTranslation())]),
+        {
+            provide: IMAGE_CONFIG,
+            useValue: {
+                disableImageSizeWarning: true,
+                disableImageLazyLoadWarning: true
+            }
+        }
     ]
 }

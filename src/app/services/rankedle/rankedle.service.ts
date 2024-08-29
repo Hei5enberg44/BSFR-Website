@@ -2,11 +2,56 @@ import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { BehaviorSubject, Observable } from 'rxjs'
 
-export interface Rankedle {
+export const SKIPS = [1, 2, 3, 4, 5, 14, 0]
+
+export interface RankedleCurrent {
     id: number
     seasonId: number
     mapId: number
     date: Date
+}
+
+export interface RankedlePlayerScore {
+    id: number
+    rankedleId: number
+    memberId: string
+    dateStart: Date
+    dateEnd: Date
+    skips: number
+    details:
+        | {
+              status: 'skip' | 'fail'
+              text: string
+              mapId?: string
+              date: number
+          }[]
+        | null
+    hint: boolean
+    success: boolean | null
+    messageId: number | null
+}
+
+export interface RankedleResultMap {
+    id: string
+    songName: string
+    cover: string
+    levelAuthorName: string
+}
+
+export interface RankedleResult {
+    map: RankedleResultMap
+    score: RankedleScore
+    points: number
+    message: {
+        content: string
+        image: string
+    }
+}
+
+export interface Rankedle {
+    current: RankedleCurrent | null
+    playerScore: RankedlePlayerScore | null
+    result: RankedleResult | null
 }
 
 export interface RankedlePlayerStats {
@@ -52,6 +97,15 @@ interface RankedleHistoryData {
     total: number
 }
 
+export interface HintResponse {
+    hint: string
+}
+
+export interface SearchResult {
+    id: number
+    name: string
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -73,7 +127,29 @@ export class RankedleService {
         this.playerStats.asObservable()
 
     getCurrent() {
-        return this.http.get<Rankedle | null>('/api/rankedle/current')
+        return this.http.get<Rankedle | null>('/api/rankedle')
+    }
+
+    skip() {
+        return this.http.post('/api/rankedle/skip', null)
+    }
+
+    submit(mapId: number) {
+        return this.http.post('/api/rankedle/submit', {
+            mapId
+        })
+    }
+
+    hint() {
+        return this.http.post<HintResponse>('/api/rankedle/hint', null)
+    }
+
+    searchSong(query: string) {
+        return this.http.get<SearchResult[]>('/api/rankedle/song/search', {
+            params: {
+                query
+            }
+        })
     }
 
     getRanking() {
@@ -92,6 +168,12 @@ export class RankedleService {
                 first,
                 rows
             }
+        })
+    }
+
+    shareScore() {
+        return this.http.get('/api/rankedle/share', {
+            responseType: 'text'
         })
     }
 }

@@ -11,8 +11,15 @@ export class ToastService {
 
     constructor(private messageService: MessageService) {}
 
+    private clearAll() {
+        this.messageService.clear('success')
+        this.messageService.clear('info')
+        this.messageService.clear('warn')
+        this.messageService.clear('error')
+    }
+
     showSuccess(message: string, title?: string) {
-        this.messageService.clear()
+        this.clearAll()
         this.messageService.add({
             key: 'success',
             severity: 'success',
@@ -24,7 +31,7 @@ export class ToastService {
     }
 
     showInfo(message: string, title?: string) {
-        this.messageService.clear()
+        this.clearAll()
         this.messageService.add({
             key: 'info',
             severity: 'info',
@@ -36,7 +43,7 @@ export class ToastService {
     }
 
     showWarn(message: string, title?: string) {
-        this.messageService.clear()
+        this.clearAll()
         this.messageService.add({
             key: 'warn',
             severity: 'warn',
@@ -48,7 +55,7 @@ export class ToastService {
     }
 
     showError(message: string, title?: string) {
-        this.messageService.clear()
+        this.clearAll()
         this.messageService.add({
             key: 'error',
             severity: 'error',

@@ -28,7 +28,7 @@
           <span>{{ channelCategory.name }}</span>
         </ng-template>
         <ng-template pTemplate="item" let-channel>
-          <div class="flex items-center gap-x-2">
+          <div class="flex items-center gap-x-2 min-w-full max-w-min">
             <span class="pi pi-hashtag" *ngIf="channel.type === 0"></span>
             <span class="pi pi-volume-up" *ngIf="channel.type === 2"></span>
             <span>{{ channel.name }}</span>

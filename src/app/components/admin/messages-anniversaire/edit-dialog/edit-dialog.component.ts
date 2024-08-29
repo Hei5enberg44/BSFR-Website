@@ -68,7 +68,7 @@ export class EditDialogComponent implements OnInit {
         let content = ''
         if (emoji.native) {
             content = `${emoji.native} `
-        } else if (emoji.keywords && emoji.keywords.length === 1) {
+        } else if (emoji.keywords && emoji.keywords[0]) {
             const identifier = emoji.keywords[0]
             content = `${identifier} `
         }

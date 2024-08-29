@@ -18,7 +18,23 @@ module.exports = {
             '2xl': '1536px'
             // => @media (min-width: 1536px) { ... }
         },
-        extend: {}
+        extend: {
+            keyframes: {
+                rankedlePlayBtn: {
+                    '0%': { color: '#3498db' },
+                    '50%': { color: '#c666c7' },
+                    '100%': { color: '#e74d3c' }
+                },
+                rankedleSong: {
+                    '0%': { left: '5%', opacity: 0 },
+                    '100%': { left: '0', opacity: 1 }
+                }
+            },
+            animation: {
+                rankedlePlayBtn: 'rankedlePlayBtn 30s linear 1',
+                rankedleSong: 'rankedleSong 250ms ease-out 1'
+            }
+        }
     },
     plugins: [],
     corePlugins: {
