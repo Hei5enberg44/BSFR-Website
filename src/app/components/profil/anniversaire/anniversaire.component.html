@@ -1,7 +1,8 @@
 <p-card styleClass="bg-transparent">
-  <p-messages
-    [enableService]="false"
-    [value]="helpMessage"
+  <p-message
+    [severity]="helpMessage.severity"
+    [text]="helpMessage.text"
+    [icon]="helpMessage.icon"
     escape="false"
     [showTransitionOptions]="'0ms'"
     styleClass="mb-6" />

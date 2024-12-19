@@ -36,7 +36,7 @@ module.exports = {
             }
         }
     },
-    plugins: [],
+    plugins: [require('tailwindcss-primeui')],
     corePlugins: {
         preflight: false
     }

@@ -1,9 +1,8 @@
 import { Component } from '@angular/core'
-import { RouterOutlet } from '@angular/router'
+import { RouterModule, RouterOutlet } from '@angular/router'
 import { NgIf } from '@angular/common'
-import { TabMenuModule } from 'primeng/tabmenu'
+import { TabsModule } from 'primeng/tabs'
 import { CardModule } from 'primeng/card'
-import { MenuItem } from 'primeng/api'
 
 import { NotBsfrMemberComponent } from '../not-bsfr-member/not-bsfr-member.component'
 import { UserService } from '../../services/user/user.service'
@@ -12,9 +11,10 @@ import { UserService } from '../../services/user/user.service'
     selector: 'app-profil',
     standalone: true,
     imports: [
+        RouterModule,
         RouterOutlet,
         NgIf,
-        TabMenuModule,
+        TabsModule,
         CardModule,
         NotBsfrMemberComponent
     ],
@@ -30,26 +30,26 @@ export class ProfilComponent {
         })
     }
 
-    items: MenuItem[] = [
+    tabs = [
         {
             label: 'Anniversaire',
-            routerLink: '/profil/anniversaire'
+            route: '/profil/anniversaire'
         },
         {
             label: 'Rôles',
-            routerLink: '/profil/roles'
+            route: '/profil/roles'
         },
         {
             label: 'Ville',
-            routerLink: '/profil/ville'
+            route: '/profil/ville'
         },
         {
             label: 'Twitch',
-            routerLink: '/profil/twitch'
+            route: '/profil/twitch'
         },
         {
             label: 'Image de carte Cube-Stalker',
-            routerLink: '/profil/cube-stalker',
+            route: '/profil/cube-stalker',
             icon: 'custom-icon discord-nitro'
         }
     ]

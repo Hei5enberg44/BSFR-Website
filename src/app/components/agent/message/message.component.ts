@@ -2,11 +2,11 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
 import { NgIf } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { CardModule } from 'primeng/card'
-import { DropdownModule } from 'primeng/dropdown'
+import { Select } from 'primeng/select'
 import { AvatarModule } from 'primeng/avatar'
 import { InputGroupModule } from 'primeng/inputgroup'
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon'
-import { InputTextareaModule } from 'primeng/inputtextarea'
+import { TextareaModule } from 'primeng/textarea'
 import { ToggleButtonModule } from 'primeng/togglebutton'
 import { ButtonModule } from 'primeng/button'
 import {
@@ -46,11 +46,11 @@ interface ChannelMessageItem {
         NgIf,
         FormsModule,
         CardModule,
-        DropdownModule,
+        Select,
         AvatarModule,
         InputGroupModule,
         InputGroupAddonModule,
-        InputTextareaModule,
+        TextareaModule,
         ButtonModule,
         ToggleButtonModule,
         EmEmojiPickerComponent,

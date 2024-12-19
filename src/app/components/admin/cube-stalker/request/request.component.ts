@@ -6,9 +6,9 @@ import { ButtonModule } from 'primeng/button'
 import { SkeletonModule } from 'primeng/skeleton'
 import { AvatarModule } from 'primeng/avatar'
 import { TagModule } from 'primeng/tag'
-import { MessagesModule } from 'primeng/messages'
+import { Message } from 'primeng/message'
 import { ConfirmDialogModule } from 'primeng/confirmdialog'
-import { ConfirmationService, Message } from 'primeng/api'
+import { ConfirmationService, ToastMessageOptions } from 'primeng/api'
 import {
     AdminService,
     CubeStalkerRequest
@@ -33,7 +33,7 @@ import { catchError, finalize } from 'rxjs'
         SkeletonModule,
         AvatarModule,
         TagModule,
-        MessagesModule,
+        Message,
         ConfirmDialogModule
     ],
     templateUrl: './request.component.html',
@@ -57,14 +57,11 @@ export class AdminCubeStalkerRequestComponent {
     canSave = false
     saving = false
 
-    unkownRequestMessage: Message[] = [
-        {
-            closable: false,
-            severity: 'info',
-            icon: 'pi pi-info-circle',
-            detail: "La demande d'image de carte Cube-Stalker recherchée n'existe pas."
-        }
-    ]
+    unkownRequestMessage: ToastMessageOptions = {
+        severity: 'info',
+        icon: 'pi pi-info-circle',
+        detail: "La demande d'image de carte Cube-Stalker recherchée n'existe pas."
+    }
 
     ngOnInit(): void {
         this.adminService

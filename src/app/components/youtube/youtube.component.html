@@ -70,7 +70,10 @@
                 allowfullscreen></iframe>
             </div>
             <ng-template #noVideo>
-              <p-messages [value]="lastVideoNotFound" [enableService]="false" />
+              <p-message
+                [severity]="lastVideoNotFound.severity"
+                [text]="lastVideoNotFound.detail"
+                [icon]="lastVideoNotFound.icon" />
             </ng-template>
           </div>
           <ng-template #videoLoading>
@@ -178,7 +181,7 @@
         <label for="headset"
           >Votre casque VR <sup class="text-red-600 font-bold">*</sup></label
         >
-        <p-dropdown
+        <p-select
           styleClass="w-full"
           [options]="headsets"
           [(ngModel)]="headset"
@@ -190,13 +193,13 @@
               <span>{{ group.label }}</span>
             </div>
           </ng-template>
-        </p-dropdown>
+        </p-select>
       </div>
       <div class="flex flex-col gap-2">
         <label for="ldProfile"
           >Votre grip <sup class="text-red-600 font-bold">*</sup></label
         >
-        <p-dropdown
+        <p-select
           styleClass="w-full"
           [options]="grips"
           [(ngModel)]="grip"
@@ -222,10 +225,10 @@
         <textarea
           rows="5"
           cols="30"
-          pInputTextarea
+          pTextarea
           aria-describedby="comment-help"
           [(ngModel)]="comment"
-          [autoResize]="true"
+          autoResize="true"
           [maxlength]="commentMaxLength"
           (keyup)="commentChange($event)">
         </textarea>

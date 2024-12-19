@@ -16,7 +16,7 @@
       styleClass="bg-transparent">
       <div
         class="grid md:grid-cols-2 md:grid-rows-none md:gap-x-10 gap-x-0 gap-y-3 grid-cols-none grid-rows-[auto_auto]">
-        <div>
+        <div class="mt-3">
           @if (rankedleResult === null) {
             <div class="mb-5">
               <app-audio-player
@@ -44,7 +44,7 @@
                 (onSelect)="onSongSelect()"
                 (onClear)="onSongClear()"
                 (completeMethod)="searchSong($event)">
-                <ng-template pTemplate="item" let-song>
+                <ng-template #item let-song>
                   <div class="flex items-center gap-x-2 min-w-full max-w-min">
                     <span
                       class="text-balance leading-6"
@@ -103,16 +103,66 @@
               " />
           </div>
           <div class="details">
-            <p-messages key="details" [(value)]="detailMessages" />
+            @for (message of detailMessages(); track message) {
+              <p-message
+                [severity]="message.severity"
+                [text]="message.text"
+                [icon]="message.icon"
+                styleClass="mb-2" />
+            }
           </div>
-          <span *ngIf="detailMessages.length === 0">
+          <span *ngIf="detailMessages().length === 0">
             Vous n'avez pas encore joué
           </span>
         </div>
       </div>
+      <p-divider />
+      <div class="p-card-title mb-3">Statistiques du jour</div>
+      <p-table [value]="[[]]" [tableStyle]="{ 'min-width': '60rem' }">
+        <ng-template pTemplate="body">
+          <tr>
+            <td>Nombre de victoires</td>
+            <td>{{ rankedleStats?.victories ?? 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td>Nombre de défaites</td>
+            <td>{{ rankedleStats?.defeats ?? 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td>Premier joueur à avoir trouvé</td>
+            <td>{{ 'N/A' }}</td>
+          </tr>
+          <tr>
+            <td>Joueur le plus rapide</td>
+            <td>
+              @if (rankedleStats && rankedleStats.fastest) {
+                <div class="flex items-center">
+                  <p-avatar
+                    [image]="rankedleStats.fastest.avatar"
+                    styleClass="flex me-4"
+                    size="normal"
+                    shape="circle" />
+                  <span>
+                    {{ rankedleStats.fastest.name }}
+                  </span>
+                  <span class="text-[var(--primary-color)] ms-2">
+                    ({{ rankedleStats.fastest.duration }})
+                  </span>
+                </div>
+              } @else {
+                N/A
+              }
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </p-card>
     <p-confirmDialog key="hint" appendTo="body" [dismissableMask]="true" #cd>
-      <ng-template pTemplate="headless" let-message>
+      <ng-template
+        #headless
+        let-message
+        let-onAccept="onAccept"
+        let-onReject="onReject">
         <div class="flex flex-col items-center p-6">
           @if (hint === null) {
             <div
@@ -128,7 +178,7 @@
                 label="Non"
                 [text]="true"
                 [disabled]="hintConfirmLoading"
-                (onClick)="cd.reject()"
+                (onClick)="onReject()"
                 styleClass="w-full"
                 class="w-full" />
               <p-button
@@ -152,7 +202,7 @@
                 label="Fermer"
                 icon="pi pi-times"
                 severity="secondary"
-                (onClick)="cd.reject()" />
+                (onClick)="onReject()" />
             </div>
           }
         </div>
@@ -161,7 +211,10 @@
   </ng-container>
   <ng-container *ngIf="!rankedleCurrent">
     <p-card header="Pas de Rankedle en cours" styleClass="bg-transparent">
-      <p-messages [enableService]="false" [(value)]="noRankedleMessage" />
+      <p-message
+        severity="info"
+        text="Il n'y a pas de Rankedle en cours. Revenez plus tard."
+        icon="pi pi-info-circle" />
     </p-card>
   </ng-container>
 </ng-template>

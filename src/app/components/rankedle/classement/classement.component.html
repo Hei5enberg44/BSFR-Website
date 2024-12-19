@@ -18,7 +18,10 @@
   <ng-template pTemplate="emptymessage">
     <tr>
       <td colspan="5">
-        <p-messages [enableService]="false" [(value)]="noRankingMessage" />
+        <p-message
+          [severity]="noRankingMessage.severity"
+          [text]="noRankingMessage.detail"
+          [icon]="noRankingMessage.icon" />
       </td>
     </tr>
   </ng-template>

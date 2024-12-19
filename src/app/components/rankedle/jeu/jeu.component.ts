@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, signal } from '@angular/core'
 import { NgIf } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { CardModule } from 'primeng/card'
 import { SkeletonModule } from 'primeng/skeleton'
 import { ButtonModule } from 'primeng/button'
+import { DividerModule } from 'primeng/divider'
+import { TableModule } from 'primeng/table'
+import { AvatarModule } from 'primeng/avatar'
 import {
     AutoCompleteModule,
     AutoCompleteCompleteEvent
 } from 'primeng/autocomplete'
 import { ConfirmDialogModule } from 'primeng/confirmdialog'
-import { MessagesModule } from 'primeng/messages'
-import { ConfirmationService, Message, MessageService } from 'primeng/api'
+import { Message } from 'primeng/message'
+import { ConfirmationService, ToastMessageOptions } from 'primeng/api'
 
 import { AudioPlayerComponent } from './player/player.component'
 import { trustHTML } from '../../../pipes/trustHTML.pipe'
@@ -19,6 +22,7 @@ import {
     Rankedle,
     RankedleCurrent,
     RankedlePlayerScore,
+    RankedleStats,
     RankedleResult,
     RankedleService,
     SearchResult,
@@ -35,9 +39,12 @@ import { finalize } from 'rxjs'
         CardModule,
         SkeletonModule,
         ButtonModule,
+        DividerModule,
+        TableModule,
+        AvatarModule,
         AutoCompleteModule,
         ConfirmDialogModule,
-        MessagesModule,
+        Message,
         AudioPlayerComponent,
         trustHTML
     ],
@@ -47,19 +54,26 @@ import { finalize } from 'rxjs'
 export class RankedleJeuComponent implements OnInit {
     constructor(
         private rankedleService: RankedleService,
-        private messageService: MessageService,
         private confirmationService: ConfirmationService
     ) {}
 
     ngOnInit(): void {
         this.getRankedle()
+        this.checkForNewRankedle()
+    }
+
+    ngOnDestroy(): void {
+        clearInterval(this.checkInterval)
     }
 
     rankedleCurrent: RankedleCurrent | null = null
     rankedlePlayerScore: RankedlePlayerScore | null = null
+    rankedleStats: RankedleStats | null = null
     rankedleResult: RankedleResult | null = null
 
-    detailMessages: Message[] = []
+    checkInterval!: any
+
+    detailMessages = signal<ToastMessageOptions[]>([])
     loading = true
 
     selectedSong: number | null = null
@@ -85,15 +99,6 @@ export class RankedleJeuComponent implements OnInit {
     shareIcon = 'pi pi-share-alt'
     shareLoading = false
 
-    noRankedleMessage: Message[] = [
-        {
-            severity: 'info',
-            icon: 'pi pi-info-circle',
-            closable: false,
-            detail: "Il n'y a pas de Rankedle en cours. Revenez plus tard."
-        }
-    ]
-
     getRankedle() {
         this.rankedleService
             .getCurrent()
@@ -109,8 +114,17 @@ export class RankedleJeuComponent implements OnInit {
 
     init(rankedle: Rankedle | null) {
         if (rankedle) {
+            if (this.rankedleCurrent?.id !== rankedle.current?.id) {
+                this.rankedleCurrent = null
+                this.rankedlePlayerScore = null
+                this.rankedleResult = null
+                this.hint = null
+                this.detailMessages.set([])
+            }
+
             this.rankedleCurrent = rankedle.current
             this.rankedlePlayerScore = rankedle.playerScore
+            this.rankedleStats = rankedle.stats
             this.rankedleResult = rankedle.result
 
             const playerScore = rankedle.playerScore
@@ -139,11 +153,10 @@ export class RankedleJeuComponent implements OnInit {
 
                 if (playerScore.details) {
                     if (this.detailMessages.length === 0) {
-                        const messages: Message[] = []
+                        const messages: ToastMessageOptions[] = []
                         for (const detail of playerScore.details) {
                             messages.push({
                                 key: 'details',
-                                closable: false,
                                 icon: `pi ${detail.status === 'skip' ? 'pi-step-forward' : detail.status === 'fail' ? 'pi-times' : ''}`,
                                 severity:
                                     detail.status === 'skip'
@@ -151,7 +164,7 @@ export class RankedleJeuComponent implements OnInit {
                                         : detail.status === 'fail'
                                           ? 'error'
                                           : 'contrast',
-                                detail:
+                                text:
                                     detail.status === 'skip'
                                         ? 'PASSÉ'
                                         : detail.text
@@ -163,17 +176,16 @@ export class RankedleJeuComponent implements OnInit {
                         ) {
                             messages.push({
                                 key: 'details',
-                                closable: false,
                                 icon: 'pi pi-trophy',
                                 severity: 'success',
-                                detail: this.rankedleResult.map.songName
+                                text: this.rankedleResult.map.songName
                             })
                         }
-                        this.detailMessages = messages
+                        this.detailMessages.set(messages)
                     } else {
                         if (!this.rankedleResult) {
                             const detail = [...playerScore.details.reverse()][0]
-                            this.messageService.add({
+                            const detailMessage = {
                                 key: 'details',
                                 closable: false,
                                 icon: `pi ${detail.status === 'skip' ? 'pi-step-forward' : detail.status === 'fail' ? 'pi-times' : ''}`,
@@ -183,19 +195,27 @@ export class RankedleJeuComponent implements OnInit {
                                         : detail.status === 'fail'
                                           ? 'error'
                                           : 'contrast',
-                                detail:
+                                text:
                                     detail.status === 'skip'
                                         ? 'PASSÉ'
                                         : detail.text
-                            })
+                            }
+                            this.detailMessages.update((messages) => [
+                                ...messages,
+                                detailMessage
+                            ])
                         } else if (this.rankedleResult.score.success === true) {
-                            this.messageService.add({
+                            const detailMessage = {
                                 key: 'details',
                                 closable: false,
                                 icon: 'pi pi-trophy',
                                 severity: 'success',
-                                detail: this.rankedleResult.map.songName
-                            })
+                                text: this.rankedleResult?.map.songName
+                            }
+                            this.detailMessages.update((messages) => [
+                                ...messages,
+                                detailMessage
+                            ])
                         }
                     }
                 }
@@ -234,7 +254,11 @@ export class RankedleJeuComponent implements OnInit {
             this.confirmationService.confirm({
                 key: 'hint',
                 message: "Êtes-vous sûr(e) de vouloir prendre l'indice ?",
-                header: 'Indice'
+                header: 'Indice',
+                accept: () => {
+                    this.hintAccept()
+                },
+                reject: () => {}
             })
         } else {
             this.showHint()
@@ -347,5 +371,22 @@ export class RankedleJeuComponent implements OnInit {
                     this.shareIcon = shareIcon
                 }, 1000)
             })
+    }
+
+    checkForNewRankedle() {
+        this.checkInterval = setInterval(() => {
+            this.rankedleService
+                .getCurrent()
+                .pipe(
+                    finalize(() => {
+                        this.loading = false
+                    })
+                )
+                .subscribe((rankedle) => {
+                    if (rankedle?.current?.id !== this.rankedleCurrent?.id)
+                        this.init(rankedle)
+                    if (rankedle) this.rankedleStats = rankedle.stats
+                })
+        }, 60000)
     }
 }

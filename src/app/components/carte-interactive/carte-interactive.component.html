@@ -7,12 +7,13 @@
   <p-card
     header="Localisation des membres de BSFR"
     styleClass="rounded-md bg-black/30 backdrop-blur-[64px] shadow-lg ring-1 ring-white/10">
-    <p-messages
-      [value]="helpMessage"
-      [enableService]="false"
+    <p-message
+      [severity]="helpMessage.severity"
+      [text]="helpMessage.detail"
+      [icon]="helpMessage.icon"
       escape="false"
       styleClass="mb-6">
-    </p-messages>
+    </p-message>
     <div
       style="height: 600px; outline: none"
       leaflet

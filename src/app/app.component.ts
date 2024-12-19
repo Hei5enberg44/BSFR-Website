@@ -4,7 +4,7 @@ import { NavbarComponent } from './components/navbar/navbar.component'
 import { FooterComponent } from './components/footer/footer.component'
 import { ToastComponent } from './components/toast/toast.component'
 import { TranslateService } from '@ngx-translate/core'
-import { PrimeNGConfig } from 'primeng/api'
+import { PrimeNG } from 'primeng/config'
 
 @Component({
     selector: 'app-root',
@@ -15,12 +15,12 @@ import { PrimeNGConfig } from 'primeng/api'
 })
 export class AppComponent implements OnInit {
     constructor(
-        private primengConfig: PrimeNGConfig,
+        private primeng: PrimeNG,
         private translateService: TranslateService
     ) {}
 
     ngOnInit(): void {
-        this.primengConfig.ripple = true
+        this.primeng.ripple.set(true)
 
         this.translateService.setDefaultLang('fr')
         const browserLang = this.translateService.getBrowserLang()
@@ -29,6 +29,6 @@ export class AppComponent implements OnInit {
         )
         this.translateService
             .get(browserLang?.match(/en|fr/) ? browserLang : 'fr')
-            .subscribe((res) => this.primengConfig.setTranslation(res))
+            .subscribe((res) => this.primeng.setTranslation(res))
     }
 }

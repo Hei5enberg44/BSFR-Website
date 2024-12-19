@@ -3,7 +3,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog'
 import { FormsModule } from '@angular/forms'
 import { InputGroupModule } from 'primeng/inputgroup'
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon'
-import { InputTextareaModule } from 'primeng/inputtextarea'
+import { TextareaModule } from 'primeng/textarea'
 import { ButtonModule } from 'primeng/button'
 import {
     EmEmojiPickerComponent,
@@ -22,7 +22,7 @@ type Action = 'add' | 'modify'
         FormsModule,
         InputGroupModule,
         InputGroupAddonModule,
-        InputTextareaModule,
+        TextareaModule,
         ButtonModule,
         EmEmojiPickerComponent
     ],

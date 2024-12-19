@@ -14,13 +14,15 @@
           </div>
           <div class="grid gap-y-3">
             <div *ngFor="let role of roleCategory.roles">
-              <p-checkbox
-                [(ngModel)]="selected[role.name]"
-                [label]="role.name"
-                [binary]="true"
-                (onChange)="
-                  rolesUpdated($event, roleCategory.categoryName, role)
-                " />
+              <div class="flex items-center">
+                <p-checkbox
+                  [(ngModel)]="selected[role.name]"
+                  [binary]="true"
+                  (onChange)="
+                    rolesUpdated($event, roleCategory.categoryName, role)
+                  " />
+                <label class="ml-2">{{ role.name }}</label>
+              </div>
             </div>
           </div>
         </div>

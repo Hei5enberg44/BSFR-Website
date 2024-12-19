@@ -4,12 +4,10 @@ import {
     Output,
     EventEmitter,
     OnInit,
-    ViewChild,
     SimpleChanges
 } from '@angular/core'
 import { NgIf } from '@angular/common'
 import { ButtonModule } from 'primeng/button'
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel'
 import { ConfirmDialogModule } from 'primeng/confirmdialog'
 import { ConfirmationService } from 'primeng/api'
 
@@ -44,7 +42,6 @@ export class EmEmojiComponent {}
         NgIf,
         EmEmojiComponent,
         ButtonModule,
-        OverlayPanelModule,
         ConfirmDialogModule,
         trustHTML
     ],
@@ -61,7 +58,6 @@ export class EmEmojiPickerComponent implements OnInit {
     loading = true
     guildEmojis: GuildEmoji[] = []
 
-    @ViewChild('op') overlaypanel!: OverlayPanel
     @Input() updatePreview = true
     @Input() theme = 'dark'
     @Input() set = 'twitter'
@@ -76,7 +72,7 @@ export class EmEmojiPickerComponent implements OnInit {
     }>()
 
     ngOnInit(): void {
-        if (this.touchUI) this.styleClass += ' inputgroup'
+        this.styleClass += ' inputgroup'
         EmojiMart.init({ data: emojisData })
         this.adminService.getGuildEmojis().subscribe((emojis) => {
             this.loading = false
@@ -93,13 +89,6 @@ export class EmEmojiPickerComponent implements OnInit {
         ) {
             this.setSelectedEmoji({ native: '😀' })
         }
-    }
-
-    toggleOverlay(event: Event) {
-        const target =
-            (event.target as Element).closest('.p-inputgroup-addon') ??
-            undefined
-        this.overlaypanel.toggle(event, target)
     }
 
     setSelectedEmoji(emoji: Emoji) {
@@ -149,8 +138,6 @@ export class EmEmojiPickerComponent implements OnInit {
                 if (this.updatePreview) {
                     this.setSelectedEmoji(emoji)
                 }
-
-                this.overlaypanel?.toggle(event)
                 this.confirmationService?.close()
             }
         }

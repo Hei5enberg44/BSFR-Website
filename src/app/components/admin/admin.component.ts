@@ -1,46 +1,45 @@
 import { Component } from '@angular/core'
-import { RouterOutlet } from '@angular/router'
+import { RouterModule, RouterOutlet } from '@angular/router'
 import { NgIf } from '@angular/common'
-import { TabMenuModule } from 'primeng/tabmenu'
+import { TabsModule } from 'primeng/tabs'
 import { CardModule } from 'primeng/card'
-import { MenuItem } from 'primeng/api'
 
 @Component({
     selector: 'app-admin',
     standalone: true,
-    imports: [RouterOutlet, NgIf, TabMenuModule, CardModule],
+    imports: [RouterModule, RouterOutlet, NgIf, TabsModule, CardModule],
     templateUrl: './admin.component.html',
     styleUrl: './admin.component.scss'
 })
 export class AdminComponent {
-    items: MenuItem[] = [
+    tabs = [
         {
             label: 'Anniversaires',
-            routerLink: '/admin/anniversaires'
+            route: '/admin/anniversaires'
         },
         {
             label: 'Mutes',
-            routerLink: '/admin/mutes'
+            route: '/admin/mutes'
         },
         {
             label: 'Bans',
-            routerLink: '/admin/bans'
+            route: '/admin/bans'
         },
         {
             label: "Messages d'anniversaire",
-            routerLink: '/admin/messages-anniversaire'
+            route: '/admin/messages-anniversaire'
         },
         {
             label: 'Chaînes Twitch',
-            routerLink: '/admin/twitch'
+            route: '/admin/twitch'
         },
         {
             label: 'Demandes Cube-Stalker',
-            routerLink: '/admin/cube-stalker'
+            route: '/admin/cube-stalker'
         },
         {
             label: 'Logs Rankedle',
-            routerLink: '/admin/logs-rankedle'
+            route: '/admin/logs-rankedle'
         }
     ]
 }

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core'
+import { RouterModule } from '@angular/router'
 import { NgIf, NgFor, AsyncPipe } from '@angular/common'
 import { SidebarModule } from 'primeng/sidebar'
 import { ButtonModule } from 'primeng/button'
 import { RippleModule } from 'primeng/ripple'
 import { DividerModule } from 'primeng/divider'
 import { AvatarModule } from 'primeng/avatar'
-import { TieredMenuModule } from 'primeng/tieredmenu'
+import { Menu } from 'primeng/menu'
 import { MenuItem } from 'primeng/api'
 import { MenuService } from '../../services/menu/menu.service'
 import { UserService } from '../../services/user/user.service'
@@ -15,6 +16,7 @@ import { svgPipe } from '../../pipes/svg.pipe'
     selector: 'app-navbar',
     standalone: true,
     imports: [
+        RouterModule,
         NgIf,
         NgFor,
         AsyncPipe,
@@ -24,7 +26,7 @@ import { svgPipe } from '../../pipes/svg.pipe'
         RippleModule,
         DividerModule,
         AvatarModule,
-        TieredMenuModule
+        Menu
     ],
     templateUrl: './navbar.component.html',
     styleUrl: './navbar.component.scss'

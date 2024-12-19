@@ -1,7 +1,8 @@
-import { Component, ViewChild, OnInit } from '@angular/core'
+import { Component, ViewChild, OnInit, signal } from '@angular/core'
 import { NgIf, AsyncPipe } from '@angular/common'
 import { CardModule } from 'primeng/card'
 import { ButtonModule } from 'primeng/button'
+import { Message } from 'primeng/message'
 import { SkeletonModule } from 'primeng/skeleton'
 import {
     FileSelectEvent,
@@ -11,7 +12,7 @@ import {
     FileUploadModule
 } from 'primeng/fileupload'
 import { ConfirmDialogModule } from 'primeng/confirmdialog'
-import { ConfirmationService, Message } from 'primeng/api'
+import { ConfirmationService, ToastMessageOptions } from 'primeng/api'
 import {
     CardPreviewResponse,
     MemberCardStatus,
@@ -29,6 +30,7 @@ import { catchError } from 'rxjs'
         AsyncPipe,
         CardModule,
         ButtonModule,
+        Message,
         SkeletonModule,
         FileUploadModule,
         ConfirmDialogModule
@@ -44,15 +46,6 @@ export class ProfilCarteCubeStalkerComponent implements OnInit {
     ) {}
 
     user$ = this.userService.user$
-
-    requireNitroMessage: Message[] = [
-        {
-            closable: false,
-            severity: 'info',
-            icon: 'pi pi-info-circle',
-            detail: 'Vous devez booster le serveur Discord afin de pouvoir utiliser cette fonctionnalité'
-        }
-    ]
 
     ngOnInit(): void {
         this.user$.subscribe((user) => {
@@ -72,7 +65,7 @@ export class ProfilCarteCubeStalkerComponent implements OnInit {
     fileTypes = ['image/jpg', 'image/png', 'image/webp']
     file: UploadedFile | null = null
     uploadedFile: UploadedFile | null = null
-    errorMessages: Message[] = []
+    errorMessages = signal<ToastMessageOptions[]>([])
 
     @ViewChild('fileInput') fileInput!: FileUpload
 
@@ -101,7 +94,7 @@ export class ProfilCarteCubeStalkerComponent implements OnInit {
     }
 
     onSelect(event: FileSelectEvent) {
-        this.errorMessages = []
+        this.errorMessages.set([])
 
         if (this.fileInput.msgs) {
             const msgs = this.fileInput.msgs
@@ -136,14 +129,14 @@ export class ProfilCarteCubeStalkerComponent implements OnInit {
     }
 
     showError(error: string) {
-        this.errorMessages = [
-            {
-                closable: true,
+        this.errorMessages.update((m) => {
+            const nm = {
                 severity: 'error',
                 icon: 'pi pi-times-circle',
-                detail: error
+                text: error
             }
-        ]
+            return [...m, nm]
+        })
     }
 
     cancelConfirm(event: MouseEvent) {

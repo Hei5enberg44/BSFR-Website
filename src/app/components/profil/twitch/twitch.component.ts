@@ -7,8 +7,7 @@ import { InputTextModule } from 'primeng/inputtext'
 import { InputGroupModule } from 'primeng/inputgroup'
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon'
 
-import { MessagesModule } from 'primeng/messages'
-import { Message } from 'primeng/api'
+import { Message } from 'primeng/message'
 
 import { ToastService } from '../../../services/toast/toast.service'
 import { UserService } from '../../../services/user/user.service'
@@ -26,7 +25,7 @@ import { catchError } from 'rxjs'
         InputTextModule,
         InputGroupModule,
         InputGroupAddonModule,
-        MessagesModule
+        Message
     ],
     templateUrl: './twitch.component.html',
     styleUrl: './twitch.component.scss'
@@ -45,15 +44,6 @@ export class ProfilTwitchComponent implements OnInit {
     loading = true
     canSave = false
     saving = false
-
-    helpMessage: Message[] = [
-        {
-            closable: false,
-            icon: 'pi pi-info-circle',
-            severity: 'info',
-            detail: "Indiquer le nom votre chaîne Twitch afin qu'une notification soit envoyée sur le serveur pour prévenir que vous êtes en live."
-        }
-    ]
 
     getTwitchChannel() {
         this.channelName = ''

@@ -31,6 +31,17 @@ export interface RankedlePlayerScore {
     messageId: number | null
 }
 
+export interface RankedleStats {
+    victories: number
+    defeats: number
+    fastest: {
+        memberId: string
+        name: string
+        avatar: string
+        duration: string
+    }
+}
+
 export interface RankedleResultMap {
     id: string
     songName: string
@@ -51,6 +62,7 @@ export interface RankedleResult {
 export interface Rankedle {
     current: RankedleCurrent | null
     playerScore: RankedlePlayerScore | null
+    stats: RankedleStats | null
     result: RankedleResult | null
 }
 

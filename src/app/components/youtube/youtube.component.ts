@@ -4,14 +4,14 @@ import { FormsModule } from '@angular/forms'
 import { ButtonModule } from 'primeng/button'
 import { CardModule } from 'primeng/card'
 import { SkeletonModule } from 'primeng/skeleton'
-import { MessagesModule } from 'primeng/messages'
+import { Message } from 'primeng/message'
 import { DividerModule } from 'primeng/divider'
 import { IconFieldModule } from 'primeng/iconfield'
 import { InputIconModule } from 'primeng/inputicon'
 import { InputTextModule } from 'primeng/inputtext'
-import { DropdownModule } from 'primeng/dropdown'
-import { InputTextareaModule } from 'primeng/inputtextarea'
-import { SelectItem, SelectItemGroup, Message } from 'primeng/api'
+import { Select } from 'primeng/select'
+import { TextareaModule } from 'primeng/textarea'
+import { SelectItem, SelectItemGroup, ToastMessageOptions } from 'primeng/api'
 import {
     YoutubeService,
     YouTubeVideo
@@ -30,15 +30,15 @@ import { UserService } from '../../services/user/user.service'
         trustResUrl,
         CardModule,
         SkeletonModule,
-        MessagesModule,
+        Message,
         FormsModule,
         ButtonModule,
         DividerModule,
         IconFieldModule,
         InputIconModule,
         InputTextModule,
-        DropdownModule,
-        InputTextareaModule,
+        Select,
+        TextareaModule,
         NotBsfrMemberComponent
     ],
     templateUrl: './youtube.component.html',
@@ -127,14 +127,12 @@ export class YouTubeComponent {
 
     lastVideo: YouTubeVideo | null = null
     lastVideoLoading = true
-    lastVideoNotFound: Message[] = [
-        {
-            severity: 'error',
-            icon: 'pi pi-times-circle',
-            detail: 'Pas de vidéo trouvée',
-            closable: false
-        }
-    ]
+    lastVideoNotFound: ToastMessageOptions = {
+        severity: 'error',
+        icon: 'pi pi-times-circle',
+        detail: 'Pas de vidéo trouvée',
+        closable: false
+    }
 
     ngOnInit() {
         this.youtubeService.getLastVideo().subscribe((res) => {

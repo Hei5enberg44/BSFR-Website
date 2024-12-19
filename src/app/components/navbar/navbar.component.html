@@ -30,46 +30,31 @@
           shape="circle"
           class="ms-3 cursor-pointer"
           (click)="avatarMenu.toggle($event)" />
-        <p-tieredMenu
+        <p-menu
           #avatarMenu
           [model]="user.isAdmin ? adminMenuItems : userMenuItems"
           [popup]="true">
-          <ng-template pTemplate="item" let-item let-hasSubmenu="hasSubmenu">
+          <ng-template #item let-item>
             <ng-container *ngIf="item.route; else withoutRoute">
               <a
                 [routerLink]="item.route"
                 routerLinkActive="!text-[var(--primary-color)]"
-                [href]="item.href"
-                class="p-menuitem-link py-3">
-                <span [class]="item.icon" class="me-2"></span>
+                class="p-menu-item-link">
+                <span [class]="item.icon"></span>
                 <span class="ml-2">{{ item.label }}</span>
               </a>
             </ng-container>
             <ng-template #withoutRoute>
-              <ng-container *ngIf="item.url; else withoutUrl">
-                <a
-                  [href]="item.url"
-                  [target]="item.target"
-                  class="p-menuitem-link py-3">
-                  <span [class]="item.icon" class="me-2"></span>
-                  <span class="ml-2">{{ item.label }}</span>
-                  <span
-                    *ngIf="hasSubmenu"
-                    class="pi pi-angle-right ml-auto"></span>
-                </a>
-              </ng-container>
-              <ng-template #withoutUrl>
-                <a class="p-menuitem-link py-3">
-                  <span [class]="item.icon" class="me-2"></span>
-                  <span class="ml-2">{{ item.label }}</span>
-                  <span
-                    *ngIf="hasSubmenu"
-                    class="pi pi-angle-right ml-auto"></span>
-                </a>
-              </ng-template>
+              <a
+                [href]="item.url"
+                [target]="item.target"
+                class="p-menu-item-link">
+                <span [class]="item.icon"></span>
+                <span class="ml-2">{{ item.label }}</span>
+              </a>
             </ng-template>
           </ng-template>
-        </p-tieredMenu>
+        </p-menu>
       </div>
       <ng-template #userLoading>
         <p-button [loading]="true" disabled="true" [text]="true" size="large" />
@@ -114,7 +99,7 @@
   <ul class="list-none p-0 m-0">
     <li *ngFor="let menuItem of menuItems">
       <p-button
-        styleClass="w-full p-4"
+        styleClass="w-full p-4 justify-start"
         [text]="!rla.isActive"
         [routerLink]="menuItem.path"
         routerLinkActive=""
@@ -132,7 +117,7 @@
     <ul class="list-none p-0 m-0" *ngIf="user.isAdmin">
       <li *ngFor="let menuItem of mobileAdminMenuItems">
         <p-button
-          styleClass="w-full p-4"
+          styleClass="w-full p-4 justify-start"
           [text]="!rla.isActive"
           [routerLink]="menuItem.path"
           routerLinkActive=""
@@ -152,7 +137,7 @@
       *ngIf="user$ | async as user; else userNotLoggedMobile">
       <p-button
         [text]="!rla.isActive"
-        styleClass="w-full p-4"
+        styleClass="w-full p-4 justify-start"
         routerLink="/profil"
         routerLinkActive=""
         [routerLinkActiveOptions]="{ exact: true }"

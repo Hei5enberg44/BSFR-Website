@@ -21,7 +21,10 @@
   <ng-template pTemplate="emptymessage">
     <tr>
       <td colspan="5">
-        <p-messages [enableService]="false" [(value)]="noHistoryMessage" />
+        <p-message
+          severity="info"
+          text="Il n'y a pas eu de Rankedle pour le moment."
+          icon="pi pi-info-circle" />
       </td>
     </tr>
   </ng-template>

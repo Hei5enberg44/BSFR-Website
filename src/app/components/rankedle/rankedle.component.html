@@ -6,7 +6,16 @@
   <!-- <ng-template #page> -->
   <div
     class="rounded-md bg-black/30 backdrop-blur-[64px] shadow-lg ring-1 ring-white/10">
-    <p-tabMenu [model]="items" [scrollable]="true"> </p-tabMenu>
+    <p-tabs [value]="tabs[0].route" scrollable="true">
+      <p-tablist>
+        @for (tab of tabs; track tab.route) {
+          <p-tab [value]="tab.route" [routerLink]="tab.route">
+            <i [class]="tab.icon"></i>
+            <span>{{ tab.label }}</span>
+          </p-tab>
+        }
+      </p-tablist>
+    </p-tabs>
     <router-outlet></router-outlet>
   </div>
   <!-- </ng-template> -->

@@ -7,7 +7,10 @@
       routerLink="../" />
   </div>
   <ng-container *ngIf="!requestLoading && invalidRequest; else request">
-    <p-messages [value]="unkownRequestMessage" [enableService]="false" />
+    <p-message
+      [severity]="unkownRequestMessage.severity"
+      [text]="unkownRequestMessage.detail"
+      [icon]="unkownRequestMessage.icon" />
   </ng-container>
   <ng-template #request>
     <div class="mb-5">

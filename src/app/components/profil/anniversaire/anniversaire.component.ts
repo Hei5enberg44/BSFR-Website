@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms'
 import { CardModule } from 'primeng/card'
 import { ButtonModule } from 'primeng/button'
 import { CalendarModule } from 'primeng/calendar'
-import { MessagesModule } from 'primeng/messages'
-import { Message } from 'primeng/api'
+import { Message } from 'primeng/message'
+import { ToastMessageOptions } from 'primeng/api'
 
 import { ToastService } from '../../../services/toast/toast.service'
 import { DeviceDetectorService } from 'ngx-device-detector'
@@ -14,13 +14,7 @@ import { catchError } from 'rxjs'
 @Component({
     selector: 'app-profil-anniversaire',
     standalone: true,
-    imports: [
-        CardModule,
-        ButtonModule,
-        FormsModule,
-        CalendarModule,
-        MessagesModule
-    ],
+    imports: [CardModule, ButtonModule, FormsModule, CalendarModule, Message],
     templateUrl: './anniversaire.component.html',
     styleUrl: './anniversaire.component.scss'
 })
@@ -40,14 +34,11 @@ export class ProfilAnniversaireComponent implements OnInit {
     canSave = false
     saving = false
 
-    helpMessage: Message[] = [
-        {
-            closable: false,
-            icon: 'pi pi-info-circle',
-            severity: 'info',
-            detail: "Indiquez votre date de naissance afin qu'<strong>@Agent</strong> vous souhaite votre anniversaire sur le serveur Discord."
-        }
-    ]
+    helpMessage: ToastMessageOptions = {
+        icon: 'pi pi-info-circle',
+        severity: 'info',
+        text: "Indiquez votre date de naissance afin qu'<strong>@Agent</strong> vous souhaite votre anniversaire sur le serveur Discord."
+    }
 
     private date = new Date()
     maxDate = new Date(this.date.setFullYear(this.date.getFullYear() - 13))

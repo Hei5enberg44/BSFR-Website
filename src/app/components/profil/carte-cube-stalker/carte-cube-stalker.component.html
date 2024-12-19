@@ -58,7 +58,12 @@
               </p>
             </div>
             <div class="mt-3">
-              <p-messages [enableService]="false" [value]="errorMessages" />
+              @for (message of errorMessages(); track message) {
+                <p-message
+                  [severity]="message.severity"
+                  [text]="message.text"
+                  [icon]="message.icon" />
+              }
             </div>
           </ng-template>
         </p-fileUpload>
@@ -69,7 +74,7 @@
         <div class="mb-3" *ngIf="status">
           @switch (status) {
             @case (1) {
-              <p-messages severity="info">
+              <p-message severity="info">
                 <ng-template pTemplate>
                   <div class="flex flex-col">
                     <span class="font-bold mb-2">
@@ -88,10 +93,10 @@
                     </span>
                   </div>
                 </ng-template>
-              </p-messages>
+              </p-message>
             }
             @case (2) {
-              <p-messages severity="success">
+              <p-message severity="success">
                 <ng-template pTemplate>
                   <div class="flex flex-col">
                     <span class="font-bold mb-2">
@@ -107,10 +112,10 @@
                     </span>
                   </div>
                 </ng-template>
-              </p-messages>
+              </p-message>
             }
             @case (3) {
-              <p-messages severity="error">
+              <p-message severity="error">
                 <ng-template pTemplate>
                   <div class="flex flex-col">
                     <span class="font-bold mb-2"> Image de carte refusée </span>
@@ -120,7 +125,7 @@
                     </span>
                   </div>
                 </ng-template>
-              </p-messages>
+              </p-message>
             }
           }
         </div>
@@ -145,7 +150,10 @@
       </div>
     </ng-container>
     <ng-template #requireNitro>
-      <p-messages [value]="requireNitroMessage" [enableService]="false" />
+      <p-message
+        severity="info"
+        text="Vous devez booster le serveur Discord afin de pouvoir utiliser cette fonctionnalité"
+        icon="pi pi-info-circle" />
     </ng-template>
   </ng-container>
 </p-card>

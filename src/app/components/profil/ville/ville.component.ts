@@ -7,8 +7,7 @@ import {
     AutoCompleteModule,
     AutoCompleteCompleteEvent
 } from 'primeng/autocomplete'
-import { MessagesModule } from 'primeng/messages'
-import { Message } from 'primeng/api'
+import { Message } from 'primeng/message'
 
 import { ToastService } from '../../../services/toast/toast.service'
 import { UserService, City } from '../../../services/user/user.service'
@@ -22,7 +21,7 @@ import { catchError } from 'rxjs'
         CardModule,
         ButtonModule,
         AutoCompleteModule,
-        MessagesModule
+        Message
     ],
     templateUrl: './ville.component.html',
     styleUrl: './ville.component.scss'
@@ -42,15 +41,6 @@ export class ProfilVilleComponent implements OnInit {
     loading = true
     canSave = false
     saving = false
-
-    helpMessage: Message[] = [
-        {
-            closable: false,
-            icon: 'pi pi-info-circle',
-            severity: 'info',
-            detail: 'Indiquer votre ville afin de pouvoir apparaître sur la <a href="#" (click)="navigateToInteractiveMap($event)">carte interactive</a>.'
-        }
-    ]
 
     navigateToInteractiveMap(event: MouseEvent) {
         event.preventDefault()

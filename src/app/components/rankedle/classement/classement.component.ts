@@ -4,8 +4,8 @@ import { TableModule, TableRowExpandEvent } from 'primeng/table'
 import { SkeletonModule } from 'primeng/skeleton'
 import { ButtonModule } from 'primeng/button'
 import { AvatarModule } from 'primeng/avatar'
-import { MessagesModule } from 'primeng/messages'
-import { Message } from 'primeng/api'
+import { Message } from 'primeng/message'
+import { ToastMessageOptions } from 'primeng/api'
 
 import { roundPipe } from '../../../pipes/round.pipe'
 
@@ -27,7 +27,7 @@ import { finalize } from 'rxjs'
         SkeletonModule,
         ButtonModule,
         AvatarModule,
-        MessagesModule,
+        Message,
         roundPipe
     ],
     templateUrl: './classement.component.html',
@@ -44,14 +44,12 @@ export class RankedleClassementComponent implements OnInit {
     loading: boolean = false
     rankingExpandedRows: { [key: string]: any } = {}
 
-    noRankingMessage: Message[] = [
-        {
-            severity: 'info',
-            icon: 'pi pi-info-circle',
-            closable: false,
-            detail: "Il n'y a pas de classement pour le moment."
-        }
-    ]
+    noRankingMessage: ToastMessageOptions = {
+        severity: 'info',
+        icon: 'pi pi-info-circle',
+        closable: false,
+        detail: "Il n'y a pas de classement pour le moment."
+    }
 
     getRanking() {
         this.ranking = []

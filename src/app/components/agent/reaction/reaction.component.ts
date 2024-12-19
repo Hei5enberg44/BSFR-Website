@@ -2,7 +2,7 @@ import { Component } from '@angular/core'
 import { NgIf } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { CardModule } from 'primeng/card'
-import { DropdownModule } from 'primeng/dropdown'
+import { Select } from 'primeng/select'
 import { AvatarModule } from 'primeng/avatar'
 import { ButtonModule } from 'primeng/button'
 import {
@@ -42,7 +42,7 @@ interface ChannelMessageItem {
         NgIf,
         FormsModule,
         CardModule,
-        DropdownModule,
+        Select,
         AvatarModule,
         ButtonModule,
         EmEmojiPickerComponent,

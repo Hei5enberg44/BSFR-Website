@@ -3,8 +3,7 @@ import { NgIf, NgFor, NgClass } from '@angular/common'
 import { TableModule, TablePageEvent } from 'primeng/table'
 import { SkeletonModule } from 'primeng/skeleton'
 import { AvatarModule } from 'primeng/avatar'
-import { MessagesModule } from 'primeng/messages'
-import { Message } from 'primeng/api'
+import { Message } from 'primeng/message'
 
 import {
     RankedleHistory,
@@ -22,7 +21,7 @@ import { finalize } from 'rxjs'
         TableModule,
         SkeletonModule,
         AvatarModule,
-        MessagesModule
+        Message
     ],
     templateUrl: './historique.component.html',
     styleUrl: './historique.component.scss'
@@ -38,15 +37,6 @@ export class RankedleHistoriqueComponent implements OnInit {
     first = 0
     total = 0
     loading = false
-
-    noHistoryMessage: Message[] = [
-        {
-            severity: 'info',
-            icon: 'pi pi-info-circle',
-            closable: false,
-            detail: "Il n'y a pas eu de Rankedle pour le moment."
-        }
-    ]
 
     getHistory(first: number = 0, rows: number = 10) {
         this.loading = true
