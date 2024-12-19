@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { RouterModule, RouterOutlet } from '@angular/router'
+import { RouterModule, RouterOutlet, Router } from '@angular/router'
 import { TabsModule } from 'primeng/tabs'
 import { CardModule } from 'primeng/card'
 
@@ -21,37 +21,40 @@ import { UserService } from '../../services/user/user.service'
 export class RankedleComponent {
     isBSFR: boolean = false
 
-    constructor(private userService: UserService) {
+    constructor(private userService: UserService, private router: Router) {
         this.userService.user$.subscribe((user) => {
             this.isBSFR = user?.isBSFR ?? false
         })
+        this.activeRoute = router.url
     }
 
     tabs = [
         {
             label: 'Jeu',
-            route: 'jeu',
+            route: '/rankedle/jeu',
             icon: 'pi pi-play'
         },
         {
             label: 'Classement',
-            route: 'classement',
+            route: '/rankedle/classement',
             icon: 'pi pi-chart-bar'
         },
         {
             label: 'Statistiques',
-            route: 'statistiques',
+            route: '/rankedle/statistiques',
             icon: 'pi pi-chart-pie'
         },
         {
             label: 'Historique',
-            route: 'historique',
+            route: '/rankedle/historique',
             icon: 'pi pi-history'
         },
         {
             label: 'Aide',
-            route: 'aide',
+            route: '/rankedle/aide',
             icon: 'pi pi-question-circle'
         }
     ]
+
+    activeRoute = this.tabs[0].route
 }

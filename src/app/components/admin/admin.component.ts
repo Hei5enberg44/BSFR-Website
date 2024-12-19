@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { RouterModule, RouterOutlet } from '@angular/router'
+import { RouterModule, RouterOutlet, Router } from '@angular/router'
 import { NgIf } from '@angular/common'
 import { TabsModule } from 'primeng/tabs'
 import { CardModule } from 'primeng/card'
@@ -11,6 +11,10 @@ import { CardModule } from 'primeng/card'
     styleUrl: './admin.component.scss'
 })
 export class AdminComponent {
+    constructor(private router: Router) {
+        this.activeRoute = router.url
+    }
+
     tabs = [
         {
             label: 'Anniversaires',
@@ -41,4 +45,6 @@ export class AdminComponent {
             route: '/admin/logs-rankedle'
         }
     ]
+
+    activeRoute = this.tabs[0].route
 }

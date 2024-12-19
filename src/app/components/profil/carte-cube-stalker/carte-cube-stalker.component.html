@@ -75,56 +75,50 @@
           @switch (status) {
             @case (1) {
               <p-message severity="info">
-                <ng-template pTemplate>
-                  <div class="flex flex-col">
-                    <span class="font-bold mb-2">
-                      Image de carte en attente d'approbation
-                    </span>
-                    <span class="leading-6">
-                      Votre image de carte Cube-Stalker est en attente
-                      d'approbation de la part d'un
-                      administrateur/modérateur.<br />
-                      Vous serez avertis lorsque celle-ci aura été approuvée ou
-                      non.<br />
-                      Vous pouvez annuler cette demande d'approbation en
-                      <a href="#" (click)="cancelConfirm($event)"
-                        >cliquant ici</a
-                      >.
-                    </span>
-                  </div>
-                </ng-template>
+                <div class="flex flex-col">
+                  <span class="font-bold mb-2">
+                    Image de carte en attente d'approbation
+                  </span>
+                  <span class="leading-6 text-white">
+                    Votre image de carte Cube-Stalker est en attente
+                    d'approbation de la part d'un
+                    administrateur/modérateur.<br />
+                    Vous serez avertis lorsque celle-ci aura été approuvée ou
+                    non.<br />
+                    Vous pouvez annuler cette demande d'approbation en
+                    <a href="#" (click)="cancelConfirm($event)"
+                      >cliquant ici</a
+                    >.
+                  </span>
+                </div>
               </p-message>
             }
             @case (2) {
               <p-message severity="success">
-                <ng-template pTemplate>
-                  <div class="flex flex-col">
-                    <span class="font-bold mb-2">
-                      Image de carte approuvée
-                    </span>
-                    <span class="leading-6">
-                      Votre image de carte Cube-Stalker a été approuvée par un
-                      administrateur/modérateur.<br />
-                      Vous pouvez revenir à la carte par défaut à tout moment en
-                      <a href="#" (click)="removeConfirm($event)"
-                        >cliquant ici</a
-                      >.
-                    </span>
-                  </div>
-                </ng-template>
+                <div class="flex flex-col">
+                  <span class="font-bold mb-2">
+                    Image de carte approuvée
+                  </span>
+                  <span class="leading-6 text-white">
+                    Votre image de carte Cube-Stalker a été approuvée par un
+                    administrateur/modérateur.<br />
+                    Vous pouvez revenir à la carte par défaut à tout moment en
+                    <a href="#" (click)="removeConfirm($event)"
+                      >cliquant ici</a
+                    >.
+                  </span>
+                </div>
               </p-message>
             }
             @case (3) {
               <p-message severity="error">
-                <ng-template pTemplate>
-                  <div class="flex flex-col">
-                    <span class="font-bold mb-2"> Image de carte refusée </span>
-                    <span class="leading-6">
-                      Votre image de carte Cube-Stalker a été refusée par un
-                      administrateur/modérateur.
-                    </span>
-                  </div>
-                </ng-template>
+                <div class="flex flex-col">
+                  <span class="font-bold mb-2"> Image de carte refusée </span>
+                  <span class="leading-6 text-white">
+                    Votre image de carte Cube-Stalker a été refusée par un
+                    administrateur/modérateur.
+                  </span>
+                </div>
               </p-message>
             }
           }

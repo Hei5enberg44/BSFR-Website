@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { RouterModule, RouterOutlet } from '@angular/router'
+import { RouterModule, RouterOutlet, Router } from '@angular/router'
 import { NgIf } from '@angular/common'
 import { TabsModule } from 'primeng/tabs'
 import { CardModule } from 'primeng/card'
@@ -11,6 +11,10 @@ import { CardModule } from 'primeng/card'
     styleUrl: './agent.component.scss'
 })
 export class AgentComponent {
+    constructor(private router: Router) {
+        this.activeRoute = router.url
+    }
+
     tabs = [
         {
             label: 'Envoyer un message',
@@ -25,4 +29,6 @@ export class AgentComponent {
             route: '/agent/parametres'
         }
     ]
+
+    activeRoute = this.tabs[0].route
 }

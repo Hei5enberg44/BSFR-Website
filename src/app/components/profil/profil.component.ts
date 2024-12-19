@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { RouterModule, RouterOutlet } from '@angular/router'
+import { RouterModule, RouterOutlet, Router } from '@angular/router'
 import { NgIf } from '@angular/common'
 import { TabsModule } from 'primeng/tabs'
 import { CardModule } from 'primeng/card'
@@ -23,10 +23,11 @@ import { UserService } from '../../services/user/user.service'
 export class ProfilComponent {
     isBSFR: boolean = false
 
-    constructor(private userService: UserService) {
+    constructor(private userService: UserService, private router: Router) {
         this.userService.user$.subscribe((user) => {
             this.isBSFR = user?.isBSFR ?? false
         })
+        this.activeRoute = router.url
     }
 
     tabs = [
@@ -52,4 +53,6 @@ export class ProfilComponent {
             icon: 'custom-icon discord-nitro'
         }
     ]
+
+    activeRoute = this.tabs[0].route
 }
