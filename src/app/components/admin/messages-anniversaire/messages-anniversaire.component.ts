@@ -19,7 +19,6 @@ import { catchError, finalize, map } from 'rxjs'
 
 @Component({
     selector: 'app-admin-messages-anniversaire',
-    standalone: true,
     imports: [
         NgIf,
         NgFor,

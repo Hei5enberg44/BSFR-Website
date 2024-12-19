@@ -11,7 +11,6 @@ import { NgIf } from '@angular/common'
 
 @Component({
     selector: 'app-audio-player',
-    standalone: true,
     imports: [
         NgIf,
         FormsModule,

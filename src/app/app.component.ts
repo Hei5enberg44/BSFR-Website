@@ -8,7 +8,6 @@ import { PrimeNG } from 'primeng/config'
 
 @Component({
     selector: 'app-root',
-    standalone: true,
     imports: [RouterOutlet, NavbarComponent, FooterComponent, ToastComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'

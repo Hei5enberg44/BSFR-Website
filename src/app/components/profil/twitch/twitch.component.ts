@@ -15,7 +15,6 @@ import { catchError } from 'rxjs'
 
 @Component({
     selector: 'app-profil-twitch',
-    standalone: true,
     imports: [
         FormsModule,
         NgIf,

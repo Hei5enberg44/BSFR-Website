@@ -10,7 +10,6 @@ import { finalize, map } from 'rxjs'
 
 @Component({
     selector: 'app-admin-bans',
-    standalone: true,
     imports: [NgIf, NgFor, SkeletonModule, TableModule, AvatarModule],
     templateUrl: './bans.component.html',
     styleUrl: './bans.component.scss'

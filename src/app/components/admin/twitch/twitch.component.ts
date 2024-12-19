@@ -13,7 +13,6 @@ import { finalize } from 'rxjs'
 
 @Component({
     selector: 'app-admin-twitch',
-    standalone: true,
     imports: [NgIf, NgFor, SkeletonModule, TableModule, AvatarModule],
     templateUrl: './twitch.component.html',
     styleUrl: './twitch.component.scss'

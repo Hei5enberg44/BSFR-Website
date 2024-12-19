@@ -24,7 +24,6 @@ import { catchError } from 'rxjs'
 
 @Component({
     selector: 'app-profil-carte-cube-stalker',
-    standalone: true,
     imports: [
         NgIf,
         AsyncPipe,

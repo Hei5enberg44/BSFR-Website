@@ -23,7 +23,6 @@ import { UserService } from '../../services/user/user.service'
 
 @Component({
     selector: 'app-youtube',
-    standalone: true,
     imports: [
         NgIf,
         AsyncPipe,

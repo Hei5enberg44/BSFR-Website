@@ -37,7 +37,6 @@ export class EmEmojiComponent {}
 
 @Component({
     selector: 'app-em-emoji-picker',
-    standalone: true,
     imports: [
         NgIf,
         EmEmojiComponent,

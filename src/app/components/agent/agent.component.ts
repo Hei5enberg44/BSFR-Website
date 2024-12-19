@@ -6,7 +6,6 @@ import { CardModule } from 'primeng/card'
 
 @Component({
     selector: 'app-agent',
-    standalone: true,
     imports: [RouterModule, RouterOutlet, NgIf, TabsModule, CardModule],
     templateUrl: './agent.component.html',
     styleUrl: './agent.component.scss'

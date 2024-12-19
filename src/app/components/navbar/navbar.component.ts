@@ -14,7 +14,6 @@ import { svgPipe } from '../../pipes/svg.pipe'
 
 @Component({
     selector: 'app-navbar',
-    standalone: true,
     imports: [
         RouterModule,
         NgIf,

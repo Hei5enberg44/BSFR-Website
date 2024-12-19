@@ -6,7 +6,6 @@ import { CardModule } from 'primeng/card'
 
 @Component({
     selector: 'app-admin',
-    standalone: true,
     imports: [RouterModule, RouterOutlet, NgIf, TabsModule, CardModule],
     templateUrl: './admin.component.html',
     styleUrl: './admin.component.scss'

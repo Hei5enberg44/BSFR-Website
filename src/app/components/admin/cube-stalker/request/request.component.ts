@@ -23,7 +23,6 @@ import { catchError, finalize } from 'rxjs'
 
 @Component({
     selector: 'app-admin-cube-stalker-request',
-    standalone: true,
     imports: [
         RouterModule,
         NgIf,

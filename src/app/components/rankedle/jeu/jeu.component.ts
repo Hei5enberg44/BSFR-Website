@@ -32,7 +32,6 @@ import { finalize } from 'rxjs'
 
 @Component({
     selector: 'app-rankedle-jeu',
-    standalone: true,
     imports: [
         NgIf,
         FormsModule,
@@ -170,17 +169,6 @@ export class RankedleJeuComponent implements OnInit {
                                         : detail.text
                             })
                         }
-                        if (
-                            this.rankedleResult &&
-                            this.rankedleResult.score.success === true
-                        ) {
-                            messages.push({
-                                key: 'details',
-                                icon: 'pi pi-trophy',
-                                severity: 'success',
-                                text: this.rankedleResult.map.songName
-                            })
-                        }
                         this.detailMessages.set(messages)
                     } else {
                         if (!this.rankedleResult) {
@@ -218,6 +206,20 @@ export class RankedleJeuComponent implements OnInit {
                             ])
                         }
                     }
+                }
+                if (
+                    this.rankedleResult &&
+                    this.rankedleResult.score.success === true
+                ) {
+                    this.detailMessages.update((messages) => [
+                        ...messages,
+                        {
+                            key: 'details',
+                            icon: 'pi pi-trophy',
+                            severity: 'success',
+                            text: this.rankedleResult?.map.songName
+                        }
+                    ])
                 }
             } else {
                 this.canSearch = true

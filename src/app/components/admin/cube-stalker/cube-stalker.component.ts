@@ -18,7 +18,6 @@ import { finalize } from 'rxjs'
 
 @Component({
     selector: 'app-admin-cube-stalker',
-    standalone: true,
     imports: [
         NgIf,
         NgFor,

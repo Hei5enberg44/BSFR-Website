@@ -120,19 +120,37 @@
       <div class="p-card-title mb-3">Statistiques du jour</div>
       <p-table [value]="[[]]" [tableStyle]="{ 'min-width': '60rem' }">
         <ng-template pTemplate="body">
-          <tr>
+          <tr height="50px">
             <td>Nombre de victoires</td>
             <td>{{ rankedleStats?.victories ?? 'N/A' }}</td>
           </tr>
-          <tr>
+          <tr height="50px">
             <td>Nombre de défaites</td>
             <td>{{ rankedleStats?.defeats ?? 'N/A' }}</td>
           </tr>
-          <tr>
+          <tr height="50px">
             <td>Premier joueur à avoir trouvé</td>
-            <td>{{ 'N/A' }}</td>
+            <td>
+              @if (rankedleStats && rankedleStats.first) {
+                <div class="flex items-center">
+                  <p-avatar
+                    [image]="rankedleStats.first.avatar"
+                    styleClass="flex me-4"
+                    size="normal"
+                    shape="circle" />
+                  <span>
+                    {{ rankedleStats.first.name }}
+                  </span>
+                  <span class="text-[var(--primary-color)] ms-2">
+                    ({{ rankedleStats.first.date }})
+                  </span>
+                </div>
+              } @else {
+                N/A
+              }
+            </td>
           </tr>
-          <tr>
+          <tr height="50px">
             <td>Joueur le plus rapide</td>
             <td>
               @if (rankedleStats && rankedleStats.fastest) {

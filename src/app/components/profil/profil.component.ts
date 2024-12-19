@@ -9,7 +9,6 @@ import { UserService } from '../../services/user/user.service'
 
 @Component({
     selector: 'app-profil',
-    standalone: true,
     imports: [
         RouterModule,
         RouterOutlet,

@@ -13,7 +13,6 @@ import { finalize } from 'rxjs'
 
 @Component({
     selector: 'app-rankedle-statistiques',
-    standalone: true,
     imports: [NgIf, NgFor, CardModule, SkeletonModule, roundPipe],
     templateUrl: './statistiques.component.html',
     styleUrl: './statistiques.component.scss'

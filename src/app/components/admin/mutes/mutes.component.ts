@@ -10,7 +10,6 @@ import { finalize, map } from 'rxjs'
 
 @Component({
     selector: 'app-admin-mutes',
-    standalone: true,
     imports: [NgIf, NgFor, SkeletonModule, TableModule, AvatarModule],
     templateUrl: './mutes.component.html',
     styleUrl: './mutes.component.scss'

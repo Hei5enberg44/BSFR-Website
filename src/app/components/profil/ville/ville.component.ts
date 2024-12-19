@@ -15,7 +15,6 @@ import { catchError } from 'rxjs'
 
 @Component({
     selector: 'app-profil-ville',
-    standalone: true,
     imports: [
         FormsModule,
         CardModule,

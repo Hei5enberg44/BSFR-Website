@@ -11,7 +11,6 @@ import { catchError, finalize } from 'rxjs'
 
 @Component({
     selector: 'app-agent-settings',
-    standalone: true,
     imports: [FormsModule, CardModule, TableModule, InputSwitchModule],
     templateUrl: './settings.component.html',
     styleUrl: './settings.component.scss'

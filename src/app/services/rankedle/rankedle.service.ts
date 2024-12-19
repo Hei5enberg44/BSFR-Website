@@ -34,6 +34,12 @@ export interface RankedlePlayerScore {
 export interface RankedleStats {
     victories: number
     defeats: number
+    first: {
+        memberId: string
+        name: string
+        avatar: string
+        date: string
+    }
     fastest: {
         memberId: string
         name: string

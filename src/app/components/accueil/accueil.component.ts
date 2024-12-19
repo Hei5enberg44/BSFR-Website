@@ -12,7 +12,6 @@ import { ToastService } from '../../services/toast/toast.service'
 
 @Component({
     selector: 'app-accueil',
-    standalone: true,
     imports: [
         NgIf,
         AsyncPipe,

@@ -37,7 +37,6 @@ interface ChannelMessageItem {
 
 @Component({
     selector: 'app-agent-reaction',
-    standalone: true,
     imports: [
         NgIf,
         FormsModule,

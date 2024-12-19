@@ -8,7 +8,6 @@ import { catchError, throwError } from 'rxjs'
 
 @Component({
     selector: 'app-login',
-    standalone: true,
     imports: [ProgressSpinnerModule],
     templateUrl: './login.component.html'
 })

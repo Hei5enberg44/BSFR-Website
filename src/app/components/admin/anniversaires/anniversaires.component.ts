@@ -10,7 +10,6 @@ import { finalize, map } from 'rxjs'
 
 @Component({
     selector: 'app-admin-anniversaires',
-    standalone: true,
     imports: [NgIf, NgFor, SkeletonModule, TableModule, AvatarModule],
     templateUrl: './anniversaires.component.html',
     styleUrl: './anniversaires.component.scss'

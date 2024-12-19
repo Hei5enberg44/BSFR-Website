@@ -17,7 +17,6 @@ import { finalize } from 'rxjs'
 
 @Component({
     selector: 'app-rankedle-classement',
-    standalone: true,
     imports: [
         NgIf,
         AsyncPipe,

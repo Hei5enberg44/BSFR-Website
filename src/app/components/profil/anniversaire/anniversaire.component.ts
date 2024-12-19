@@ -13,7 +13,6 @@ import { catchError } from 'rxjs'
 
 @Component({
     selector: 'app-profil-anniversaire',
-    standalone: true,
     imports: [CardModule, ButtonModule, FormsModule, CalendarModule, Message],
     templateUrl: './anniversaire.component.html',
     styleUrl: './anniversaire.component.scss'

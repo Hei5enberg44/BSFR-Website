@@ -23,7 +23,6 @@ interface PopupData {
 
 @Component({
     selector: 'app-carteinteractive',
-    standalone: true,
     imports: [NgIf, CardModule, Message, LeafletModule, NotBsfrMemberComponent],
     templateUrl: './carte-interactive.component.html',
     styleUrl: './carte-interactive.component.scss'

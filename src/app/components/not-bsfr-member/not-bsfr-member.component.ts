@@ -5,7 +5,6 @@ import { environment } from '../../../environments/environment'
 
 @Component({
     selector: 'app-not-bsfr-member',
-    standalone: true,
     imports: [Message],
     templateUrl: './not-bsfr-member.component.html',
     styleUrl: './not-bsfr-member.component.scss'

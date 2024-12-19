@@ -17,7 +17,6 @@ import { catchError } from 'rxjs'
 
 @Component({
     selector: 'app-profil-roles',
-    standalone: true,
     imports: [
         FormsModule,
         NgIf,

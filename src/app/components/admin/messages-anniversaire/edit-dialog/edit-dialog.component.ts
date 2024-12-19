@@ -17,7 +17,6 @@ type Action = 'add' | 'modify'
 
 @Component({
     selector: 'app-edit-dialog',
-    standalone: true,
     imports: [
         FormsModule,
         InputGroupModule,

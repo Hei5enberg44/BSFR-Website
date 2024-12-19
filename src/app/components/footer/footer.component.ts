@@ -8,7 +8,6 @@ import { svgPipe } from '../../pipes/svg.pipe'
 
 @Component({
     selector: 'app-footer',
-    standalone: true,
     imports: [
         RouterLink,
         NavbarComponent,

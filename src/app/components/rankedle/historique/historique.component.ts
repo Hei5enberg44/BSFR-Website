@@ -13,7 +13,6 @@ import { finalize } from 'rxjs'
 
 @Component({
     selector: 'app-rankedle-historique',
-    standalone: true,
     imports: [
         NgIf,
         NgFor,
