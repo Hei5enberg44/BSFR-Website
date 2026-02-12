@@ -1,0 +1,14 @@
+<div class="py-6">
+  <!-- Page title -->
+  <h2>Carte interactive</h2>
+
+  <p-card class="rounded-md bg-(--p-content-background) overflow-hidden">
+    <p-message severity="info" icon="pi pi-info-circle" styleClass="mb-6">
+      Utilisez la commande <span class="code">/ville</span> dans le salon
+      <strong>#rôles-auto-assignable</strong> afin d\'apparaître sur la carte.
+    </p-message>
+    <div style="height: 600px; outline: none" leaflet [leafletOptions]="options">
+      <div [leafletLayers]="markers()"></div>
+    </div>
+  </p-card>
+</div>

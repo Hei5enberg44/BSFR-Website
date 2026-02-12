@@ -1,0 +1,37 @@
+<p-inputGroup>
+  <textarea
+    #ta
+    rows="5"
+    pTextarea
+    autoResize="true"
+    [(ngModel)]="message"
+    (selectionchange)="onSelectionChange($event)"
+    (input)="onChange($event)"
+    maxlength="1000"
+    class="w-full"
+    aria-describedby="help-message"></textarea>
+  <p-inputGroupAddon>
+    <app-em-emoji-picker
+      theme="dark"
+      (onEmoji)="onEmoji($event)"
+      [updatePreview]="false"
+      styleClass="emoji-overlay" />
+  </p-inputGroupAddon>
+</p-inputGroup>
+<small id="help-message"
+  >Utilisez <strong>!p</strong> pour insérer le pseudo de l'utilisateur</small
+>
+
+<div class="flex flex-row mt-3">
+  <p-button
+    label="Annuler"
+    [text]="true"
+    severity="secondary"
+    class="ms-auto me-2"
+    (onClick)="closeDialog()" />
+  <p-button
+    label="Sauvegarder"
+    severity="success"
+    (onClick)="saveMessage()"
+    [disabled]="!canSave" />
+</div>

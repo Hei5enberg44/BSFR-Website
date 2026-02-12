@@ -1,0 +1,122 @@
+<p-table
+  [value]="mutes()"
+  [paginator]="true"
+  [rows]="rows()"
+  [first]="first()"
+  [lazy]="true"
+  [totalRecords]="total()"
+  [tableStyle]="{ 'min-width': '100rem' }"
+  [loading]="loading()"
+  sortField="member.name"
+  (onLazyLoad)="onLazyLoad($event)">
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="member.name" class="w-[270px]">
+        Membre <p-sortIcon field="member.name" />
+      </th>
+      <th pSortableColumn="author.name" class="w-[270px]">
+        Muté par <p-sortIcon field="author.name" />
+      </th>
+      <th pSortableColumn="reason">Raison</th>
+      <th pSortableColumn="muteDate" class="w-[255px]">
+        Date de mute <p-sortIcon field="muteDate" />
+      </th>
+      <th pSortableColumn="muteDate" class="w-[255px]">
+        Date de démute <p-sortIcon field="unmuteDate" />
+      </th>
+    </tr>
+    <tr>
+      <th>
+        <p-columnFilter
+          type="text"
+          field="member.name"
+          matchMode="contains"
+          placeholder="Rechercher un membre"
+          class="block max-w-[250px]" />
+      </th>
+      <th>
+        <p-columnFilter
+          type="text"
+          field="author.name"
+          matchMode="contains"
+          placeholder="Rechercher un membre"
+          class="block max-w-[250px]" />
+      </th>
+      <th>
+        <p-columnFilter
+          type="text"
+          field="reason"
+          matchMode="contains"
+          placeholder="Rechercher une raison"
+          class="block max-w-[250px]" />
+      </th>
+      <th>
+        <p-columnFilter
+          type="date"
+          field="muteDate"
+          matchMode="dateIs"
+          placeholder="Rechercher une date"
+          class="block max-w-[250px]" />
+      </th>
+      <th>
+        <p-columnFilter
+          type="date"
+          field="unmuteDate"
+          matchMode="dateIs"
+          placeholder="Rechercher une date"
+          class="block max-w-[250px]" />
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr style="height: 64px">
+      <td colspan="5" class="text-center">Aucun résultat</td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="loadingbody">
+    @if (mutes().length === 0) {
+      @for (i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track i) {
+        <tr style="height: 64px">
+          <td class="min-w-[270px]">
+            <div class="flex items-center">
+              <p-skeleton shape="circle" size="42px" styleClass="me-4" />
+              <p-skeleton width="10rem" />
+            </div>
+          </td>
+          <td class="min-w-[270px]">
+            <div class="flex items-center">
+              <p-skeleton shape="circle" size="42px" styleClass="me-4" />
+              <p-skeleton width="10rem" />
+            </div>
+          </td>
+          <td><p-skeleton /></td>
+          <td class="w-[255px]"><p-skeleton width="10rem" /></td>
+          <td class="w-[255px]"><p-skeleton width="10rem" /></td>
+        </tr>
+      }
+    }
+  </ng-template>
+  <ng-template pTemplate="body" let-mute>
+    <tr style="height: 64px">
+      <td>
+        <div class="flex items-center">
+          <p-avatar [image]="mute.member.avatar" class="flex me-4" size="large" shape="circle" />
+          <span>
+            {{ mute.member.name }}
+          </span>
+        </div>
+      </td>
+      <td>
+        <div class="flex items-center">
+          <p-avatar [image]="mute.author.avatar" class="flex me-4" size="large" shape="circle" />
+          <span>
+            {{ mute.author.name }}
+          </span>
+        </div>
+      </td>
+      <td>{{ mute.reason }}</td>
+      <td>{{ mute.muteDate }}</td>
+      <td>{{ mute.unmuteDate }}</td>
+    </tr>
+  </ng-template>
+</p-table>

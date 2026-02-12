@@ -1,0 +1,44 @@
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+@import 'tailwindcss-primeui';
+@import 'primeicons/primeicons.css';
+
+html {
+    font-size: 15px;
+    font-family:
+        InterVariable,
+        -apple-system,
+        BlinkMacSystemFont,
+        Segoe UI,
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif,
+        'Apple Color Emoji',
+        'Segoe UI Emoji',
+        'Segoe UI Symbol';
+    font-feature-settings:
+        'liga' 1,
+        'calt' 1,
+        'cv01' 1,
+        'cv02' 1,
+        'cv03' 1,
+        'cv04' 1,
+        'cv05' 1,
+        'ss03' 1,
+        'cv08' 1,
+        'cv11' 1;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--color-surface-950);
+}
+
+.p-tablist .p-tab i {
+    vertical-align: -2px;
+}

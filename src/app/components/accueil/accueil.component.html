@@ -1,0 +1,43 @@
+<div class="py-6">
+  <!-- Page title -->
+  <h2>Accueil</h2>
+
+  <div class="grid grid-cols-2 gap-3">
+    <p-card header="Bienvenue" class="col-span-2">
+      <p>Bienvenue sur le site officiel de la communauté francophone de Beat Saber !</p>
+    </p-card>
+    <p-card header="Sabres BSFR">
+      <p>Vous pouvez obtenir les modèles de sabres personnalisés à l'image de BSFR ici :</p>
+      <div class="flex gap-3 mt-2">
+        <p-button icon="pi pi-file" label="BSFR_Saber_v1.4.saber" />
+        <p-button icon="pi pi-file" label="BSFR_Saber_v1.4_Rainbow.saber" />
+      </div>
+      <p>⚠️ Compatibles PCVR uniquement.</p>
+      <div class="mt-4">
+        <i class="text-surface-200 text-sm">Merci à @ralex91 ❤️</i>
+      </div>
+    </p-card>
+    <p-card header="Versions de Beat Saber">
+      <p>
+        Envie de revenir à une version précédente du jeu ? Vous pouvez les obtenir ici
+        <sup>*</sup> :
+      </p>
+      <div class="flex items-center gap-x-3">
+        <p-select
+          [options]="bsVersions()"
+          [(ngModel)]="selectedBsVersion"
+          [loading]="bsVersionsLoading()"
+          placeholder="Séléctionnez une version"
+          class="w-full" />
+        <p-button
+          icon="pi pi-download"
+          label="Télécharger"
+          [disabled]="!selectedBsVersion"
+          (onClick)="downloadBeatSaber()" />
+      </div>
+      <div class="mt-4">
+        <i class="text-surface-200 text-sm">* : version Steam uniquement</i>
+      </div>
+    </p-card>
+  </div>
+</div>

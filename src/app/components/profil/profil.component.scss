@@ -1,0 +1,13 @@
+:host ::ng-deep .custom-icon {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 1rem;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+:host ::ng-deep .custom-icon.discord-nitro {
+    background-image: url(/images/nitro.png);
+}

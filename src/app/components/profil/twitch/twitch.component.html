@@ -1,0 +1,34 @@
+<p-card>
+  <p-message
+    severity="info"
+    icon="pi pi-info-circle"
+    [motionOptions]="{ disabled: true }"
+    styleClass="mb-6">
+    Indiquer le nom votre chaîne Twitch afin qu'une notification soit envoyée sur le serveur pour
+    prévenir que vous êtes en live.
+  </p-message>
+
+  <label for="twitch_channel" class="font-bold block mb-2">Nom de votre chaîne Twitch</label>
+
+  <p-inputGroup class="w-auto">
+    <p-inputGroupAddon>https://www.twitch.tv/</p-inputGroupAddon>
+    <input
+      type="text"
+      pInputText
+      id="twitch_channel"
+      autocomplete="off"
+      [(ngModel)]="channelName"
+      (keyup)="channelNameUpdated()" />
+  </p-inputGroup>
+
+  <div class="flex mt-6">
+    <p-button
+      label="Sauvegarder"
+      severity="success"
+      class="ms-auto"
+      icon="pi pi-save"
+      [disabled]="!canSave()"
+      [loading]="saving()"
+      (onClick)="save()" />
+  </div>
+</p-card>

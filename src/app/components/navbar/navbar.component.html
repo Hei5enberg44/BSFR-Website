@@ -1,0 +1,138 @@
+<div
+  class="h-20 w-full px-4 grid md:grid-cols-[auto_1fr] grid-cols-[auto_1fr_auto] md:gap-8 gap-0 items-center rounded-md">
+  <div class="flex items-center gap-x-5">
+    <a routerLink="/" routerLinkActive="" [routerLinkActiveOptions]="{ exact: true }">
+      <img src="images/logo/transparent_animated.webp" alt="Logo BSFR" width="48" height="48" />
+    </a>
+    <h2>Beat Saber France</h2>
+  </div>
+  <div
+    class="md:flex md:gap-2 md:justify-end md:whitespace-nowrap md:items-center text-(--text-color) hidden">
+    @for (menuItem of menuItems; track menuItem.label) {
+      <p-button
+        [label]="menuItem.label"
+        [text]="!rla.isActive"
+        [routerLink]="menuItem.path"
+        routerLinkActive=""
+        #rla="routerLinkActive" />
+    }
+    @if (isLogged()) {
+      @if (user(); as user) {
+        <p-avatar
+          [image]="user.avatarURL"
+          size="large"
+          shape="circle"
+          class="ms-3 cursor-pointer"
+          (click)="avatarMenu.toggle($event)" />
+        <p-menu #avatarMenu [model]="userMenuItems" [popup]="true">
+          <ng-template #item let-item>
+            @if (item.route) {
+              <a
+                [routerLink]="item.route"
+                routerLinkActive="text(--primary-color)!"
+                class="p-menu-item-link">
+                <span [class]="item.icon"></span>
+                <span class="ml-2">{{ item.label }}</span>
+              </a>
+            } @else {
+              <a [href]="item.url" [target]="item.target" class="p-menu-item-link">
+                <span [class]="item.icon"></span>
+                <span class="ml-2">{{ item.label }}</span>
+              </a>
+            }
+          </ng-template>
+        </p-menu>
+      } @else {
+        <p-button [loading]="true" disabled="true" [text]="true" size="large" />
+      }
+    } @else {
+      <p-button icon="pi pi-user" [text]="true" size="large" (click)="login()" />
+    }
+  </div>
+  <div class="block md:hidden justify-self-end">
+    <p-button icon="pi pi-bars" [text]="true" size="large" (onClick)="setIsOpen(!isOpen())" />
+  </div>
+</div>
+<div
+  [classList]="
+    'fixed z-10 top-0 left-0 bottom-0 right-0 bg-black/50 md:hidden transition-opacity duration-300 ' +
+    (isOpen() ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none')
+  "
+  (click)="setIsOpen(false)"></div>
+<div
+  [classList]="
+    'h-full w-[300px] max-w-[80%] fixed z-20 top-0 p-4 md:hidden grid grid-rows-[100px_1fr_auto] grid-cols-1 bg-surface-950 transition-all duration-300 overflow-y-scroll ' +
+    (isOpen() ? 'left-0' : '-left-[300px]')
+  ">
+  <div class="place-self-center">
+    <img src="images/logo/transparent_animated.webp" alt="Logo BSFR" width="64" height="64" />
+  </div>
+  <ul class="list-none p-0 m-0">
+    @for (menuItem of menuItems; track menuItem.label) {
+      <li>
+        <p-button
+          styleClass="w-full p-4 justify-start"
+          [text]="!rla.isActive"
+          [routerLink]="menuItem.path"
+          routerLinkActive=""
+          [routerLinkActiveOptions]="{ exact: true }"
+          #rla="routerLinkActive"
+          (click)="setIsOpen(false)">
+          <span [innerHTML]="menuItem.icon | svg: '16'" class="me-3 flex items-center"></span>
+          <span>{{ menuItem.label }}</span>
+        </p-button>
+      </li>
+    }
+  </ul>
+  @if (user()) {
+    @if (mobileUserMenuItems.length) {
+      <ul class="list-none p-0 m-0">
+        @for (menuItem of mobileUserMenuItems; track menuItem.label) {
+          <li>
+            <p-button
+              styleClass="w-full p-4 justify-start"
+              [text]="!rla.isActive"
+              [routerLink]="menuItem.path"
+              routerLinkActive=""
+              [routerLinkActiveOptions]="{ exact: true }"
+              #rla="routerLinkActive"
+              (click)="setIsOpen(false)">
+              <span [class]="menuItem.icon" class="me-3"></span>
+              <span>{{ menuItem.label }}</span>
+            </p-button>
+          </li>
+        }
+      </ul>
+    }
+  }
+  <div>
+    <p-divider />
+    @if (user(); as user) {
+      <div class="grid grid-cols-[1fr_auto] gap-2">
+        <p-button
+          [text]="!rla.isActive"
+          styleClass="w-full p-4 justify-start"
+          routerLink="/profil"
+          routerLinkActive=""
+          [routerLinkActiveOptions]="{ exact: true }"
+          #rla="routerLinkActive"
+          (click)="setIsOpen(false)">
+          <p-avatar
+            [image]="user.avatarURL"
+            class="me-4 flex items-center"
+            size="large"
+            shape="circle" />
+          <span class="text-ellipsis overflow-hidden whitespace-nowrap">{{ user.username }}</span>
+        </p-button>
+        <p-button [text]="true" styleClass="w-full h-full p-4" (click)="logout()">
+          <span class="pi pi-sign-out"></span>
+        </p-button>
+      </div>
+    } @else {
+      <p-button [text]="true" styleClass="w-full p-4 flex justify-between" (click)="login()">
+        <span>Connexion</span>
+        <span class="pi pi-sign-in"></span>
+      </p-button>
+    }
+  </div>
+</div>

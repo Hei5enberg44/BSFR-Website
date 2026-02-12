@@ -1,0 +1,17 @@
+<p-button (onClick)="showDialog()" [text]="true" [loading]="loading()">
+  @if (selectedEmoji && !loading()) {
+    <span
+      [innerHTML]="selectedEmoji | trustHTML"
+      class="flex items-center pt-1 w-[22px] h-[34px]"></span>
+  }
+</p-button>
+
+<p-confirmDialog
+  key="emoji-picker-dialog"
+  appendTo="body"
+  [dismissableMask]="true"
+  styleClass="emoji-dialog">
+  <ng-template pTemplate="headless">
+    <div id="picker"></div>
+  </ng-template>
+</p-confirmDialog>

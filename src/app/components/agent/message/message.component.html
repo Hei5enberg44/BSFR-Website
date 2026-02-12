@@ -1,0 +1,127 @@
+<p-card class="rounded-tl-none rounded-tr-none" #card>
+  <div class="flex flex-col gap-y-4">
+    <div class="flex flex-col w-full gap-y-2">
+      <label for="channel">Salon</label>
+      <p-select
+        id="channel"
+        [options]="guildChannels()"
+        [(ngModel)]="selectedChannel"
+        placeholder="Sélectionnez un salon"
+        emptyMessage="Aucun salon"
+        [group]="true"
+        appendTo="body"
+        scrollHeight="400px"
+        [filter]="true"
+        filterBy="name"
+        class="w-full"
+        [loading]="loadingChannels()"
+        [disabled]="loadingChannels()"
+        (onChange)="onChannelChange()">
+        <ng-template #selectedItem let-channel>
+          <div class="flex items-center gap-x-2">
+            @if (channel.type === 0) {
+              <span class="pi pi-hashtag"></span>
+            }
+            @if (channel.type === 2) {
+              <span class="pi pi-volume-up"></span>
+            }
+            <span>{{ channel.name }}</span>
+          </div>
+        </ng-template>
+        <ng-template #group let-channelCategory>
+          <span>{{ channelCategory.name }}</span>
+        </ng-template>
+        <ng-template #item let-channel>
+          <div class="flex items-center gap-x-2 min-w-full max-w-min">
+            @if (channel.type === 0) {
+              <span class="pi pi-hashtag"></span>
+            }
+            @if (channel.type === 2) {
+              <span class="pi pi-volume-up"></span>
+            }
+            <span>{{ channel.name }}</span>
+          </div>
+        </ng-template>
+      </p-select>
+    </div>
+    <div class="flex flex-col w-full gap-y-2">
+      <label for="message">Répondre au message (facultatif)</label>
+      <p-select
+        [options]="channelMessages()"
+        [(ngModel)]="selectedMessage"
+        placeholder="Sélectionnez un message ou entrez son identifiant"
+        emptyMessage="Aucun message"
+        appendTo="body"
+        scrollHeight="400px"
+        class="w-full"
+        [editable]="true"
+        [showClear]="true"
+        optionLabel="value"
+        optionValue="value"
+        [loading]="loadingMessages()"
+        [disabled]="messagesDisabled()">
+        <ng-template #selectedItem let-message>
+          <span>{{ message.value }}</span>
+        </ng-template>
+        <ng-template #item let-message>
+          <div class="flex gap-x-4 min-w-full max-w-min">
+            <p-avatar [image]="message.author.avatar" size="large" shape="circle" />
+            <div class="flex flex-col gap-y-2">
+              <div class="flex items-center gap-x-2">
+                <span class="font-bold">{{ message.author.name }}</span>
+                <span class="text-gray-400 text-[11px]">{{ message.date }}</span>
+              </div>
+              <span
+                class="text-balance *:m-0 leading-6"
+                [innerHTML]="message.content | trustHTML"></span>
+            </div>
+          </div>
+        </ng-template>
+      </p-select>
+    </div>
+  </div>
+  <div class="mt-5">
+    <div class="flex flex-col gap-y-2">
+      <label for="message">Message</label>
+      <p-inputGroup>
+        <textarea
+          #ta
+          rows="5"
+          pTextarea
+          autoResize="true"
+          [(ngModel)]="messageContent"
+          (selectionchange)="onMessageSelectionChange($event)"
+          (input)="onMessageInput($event)"
+          maxlength="1800"
+          class="w-full"
+          aria-describedby="help-message"></textarea>
+        <p-inputGroupAddon>
+          <app-em-emoji-picker
+            theme="dark"
+            (onEmoji)="onEmoji($event)"
+            [updatePreview]="false"
+            styleClass="emoji-overlay -ms-[5rem]" />
+        </p-inputGroupAddon>
+      </p-inputGroup>
+    </div>
+  </div>
+  <div class="mt-5">
+    <p-toggleButton
+      [(ngModel)]="mention"
+      [onLabel]="'Mention activée'"
+      [offLabel]="'Mention désactivée'"
+      [onIcon]="'pi pi-at'"
+      [offIcon]="'pi pi-at'"
+      class="w-56"
+      [disabled]="selectedMessage === null" />
+  </div>
+  <div class="flex mt-6">
+    <p-button
+      label="Envoyer"
+      class="ms-auto"
+      icon="pi pi-send"
+      [disabled]="!canSave()"
+      [loading]="saving()"
+      (onClick)="send()" />
+  </div>
+</p-card>

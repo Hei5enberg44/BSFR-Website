@@ -1,0 +1,34 @@
+<p-card>
+  <p-message severity="info" icon="pi pi-info-circle" styleClass="mb-6">
+    Indiquer votre ville afin de pouvoir apparaître sur la
+    <a href="#" (click)="navigateToInteractiveMap($event)" class="underline!">carte interactive</a>.
+  </p-message>
+
+  <label for="city" class="font-bold block mb-2">Votre ville</label>
+
+  <p-autoComplete
+    [(ngModel)]="city"
+    [suggestions]="suggestions()"
+    optionLabel="name"
+    inputId="city"
+    [minLength]="3"
+    [forceSelection]="true"
+    [showClear]="true"
+    placeholder="Rechercher une ville"
+    (completeMethod)="search($event)"
+    (onSelect)="cityUpdated()"
+    (onClear)="cityUpdated()"
+    appendTo="body"
+    [disabled]="loading()" />
+
+  <div class="flex mt-6">
+    <p-button
+      label="Sauvegarder"
+      severity="success"
+      class="ms-auto"
+      icon="pi pi-save"
+      [disabled]="!canSave()"
+      [loading]="saving()"
+      (onClick)="save()" />
+  </div>
+</p-card>

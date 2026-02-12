@@ -1,0 +1,41 @@
+<p-card>
+  @if (loading()) {
+    <div class="grid items-center justify-center">
+      <p-progressSpinner ariaLabel="chargement" />
+    </div>
+  } @else {
+    <div class="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10">
+      @for (roleCategory of roles(); track roleCategory.categoryName) {
+        <div>
+          <div class="mb-3 font-bold">
+            {{ roleCategory.categoryName }}
+          </div>
+          <div class="grid gap-y-3">
+            @for (role of roleCategory.roles; track role.id) {
+              <div>
+                <div class="flex items-center">
+                  <p-checkbox
+                    [(ngModel)]="selected[role.name]"
+                    [binary]="true"
+                    (onChange)="rolesUpdated($event, roleCategory.categoryName, role)" />
+                  <label class="ml-2">{{ role.name }}</label>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="flex mt-6">
+      <p-button
+        label="Sauvegarder"
+        severity="success"
+        class="ms-auto"
+        icon="pi pi-save"
+        [disabled]="!canSave()"
+        [loading]="saving()"
+        (onClick)="save()" />
+    </div>
+  }
+</p-card>

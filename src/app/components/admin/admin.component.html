@@ -1,0 +1,17 @@
+<div class="py-6">
+  <!-- Page title -->
+  <h2>Administration</h2>
+
+  <div class="rounded-md bg-(--p-content-background) overflow-hidden">
+    <p-tabs [value]="activeRoute" scrollable="true">
+      <p-tablist>
+        @for (tab of tabs; track tab.route) {
+          <p-tab [value]="tab.route" [routerLink]="tab.route">
+            <span>{{ tab.label }}</span>
+          </p-tab>
+        }
+      </p-tablist>
+    </p-tabs>
+    <router-outlet></router-outlet>
+  </div>
+</div>

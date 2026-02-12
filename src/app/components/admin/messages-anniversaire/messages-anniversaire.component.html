@@ -1,0 +1,118 @@
+<p-table
+  #dt
+  [value]="birthdayMessages()"
+  [paginator]="true"
+  [rows]="rows()"
+  [first]="first()"
+  [lazy]="true"
+  [totalRecords]="total()"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [loading]="loading()"
+  [sortField]="sortField"
+  [sortOrder]="sortOrder"
+  [filters]="filters"
+  (onLazyLoad)="onLazyLoad($event)">
+  <ng-template pTemplate="caption">
+    <div class="flex flex-row items-center">
+      <p-button
+        label="Ajouter"
+        icon="pi pi-plus"
+        class="ms-auto"
+        (onClick)="showAddMessageDialog()" />
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="message" class="min-w-[300px]">
+        Message <p-sortIcon field="message" />
+      </th>
+      <th pSortableColumn="member.name" class="min-w-[270px]">
+        Ajouté par <p-sortIcon field="member.name" />
+      </th>
+      <th pSortableColumn="date" class="min-w-[255px]">Date d'ajout <p-sortIcon field="date" /></th>
+      <th class="w-[105px]"></th>
+    </tr>
+    <tr>
+      <th>
+        <p-columnFilter
+          type="text"
+          field="message"
+          matchMode="contains"
+          placeholder="Rechercher un message"
+          class="block max-w-[250px]" />
+      </th>
+      <th>
+        <p-columnFilter
+          type="text"
+          field="member.name"
+          matchMode="contains"
+          placeholder="Rechercher un membre"
+          class="block max-w-[250px]" />
+      </th>
+      <th>
+        <p-columnFilter
+          type="date"
+          field="date"
+          matchMode="dateIs"
+          placeholder="Rechercher une date"
+          class="block max-w-[250px]" />
+      </th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr style="height: 64px">
+      <td colspan="4" class="text-center">Aucun résultat</td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="loadingbody">
+    @if (birthdayMessages().length === 0) {
+      @for (i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track i) {
+        <tr style="height: 64px">
+          <td class="w-full"><p-skeleton /></td>
+          <td class="w-[270px]">
+            <div class="flex items-center">
+              <p-skeleton shape="circle" size="42px" class="me-4" />
+              <p-skeleton width="10rem" />
+            </div>
+          </td>
+          <td class="w-[180px]"><p-skeleton width="10rem" /></td>
+          <td class="min-w-[105px]"><p-skeleton /></td>
+        </tr>
+      }
+    }
+  </ng-template>
+  <ng-template pTemplate="body" let-birthdayMessage>
+    <tr style="height: 64px">
+      <td>{{ birthdayMessage.message }}</td>
+      <td>
+        <div class="flex items-center">
+          <p-avatar
+            [image]="birthdayMessage.member.avatar"
+            class="flex me-4"
+            size="large"
+            shape="circle" />
+          <span>
+            {{ birthdayMessage.member.name }}
+          </span>
+        </div>
+      </td>
+      <td>{{ birthdayMessage.date }}</td>
+      <td>
+        <div class="flex items-center">
+          <p-button
+            icon="pi pi-pencil"
+            [text]="true"
+            class="me-2"
+            (onClick)="showEditMessageDialog(birthdayMessage)" />
+          <p-button
+            icon="pi pi-times"
+            [text]="true"
+            severity="danger"
+            (onClick)="deleteConfirm($event, dt, birthdayMessage.id)" />
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+<p-confirmDialog key="delete-message-dialog" appendTo="body" />
