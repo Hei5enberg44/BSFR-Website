@@ -41,6 +41,9 @@ export const appConfig: ApplicationConfig = {
                     prefix: 'p',
                     darkModeSelector: '.p-dark'
                 }
+            },
+            csp: {
+                nonce: 'NGINX_CSP_NONCE'
             }
         }),
         provideHttpClient(withFetch(), withInterceptors([HttpErrorsInterceptor])),
